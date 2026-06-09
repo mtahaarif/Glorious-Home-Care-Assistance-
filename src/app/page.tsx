@@ -56,7 +56,7 @@ export default function Home() {
                   {homeCallouts.callToAction}
                 </Link>
                 <Link
-                  href="/services"
+                  href="/home-health-care-operations"
                   className="rounded-full border border-white/70 px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white transition hover:bg-white/10"
                 >
                   {homeCallouts.optionsPrompt}
@@ -139,7 +139,7 @@ export default function Home() {
                 {homeCallouts.callToAction}
               </Link>
               <Link
-                href="/services"
+                href="/home-health-care-operations"
                 className="rounded-full border border-white/70 px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white transition hover:bg-white/10"
               >
                 {homeCallouts.optionsPrompt}
