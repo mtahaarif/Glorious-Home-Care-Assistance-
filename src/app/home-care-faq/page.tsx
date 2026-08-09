@@ -1,24 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Container from "@/components/Container";
-import DetailCard from "@/components/DetailCard";
 import Reveal from "@/components/Reveal";
 import SectionHeading from "@/components/SectionHeading";
-import ServiceCard from "@/components/ServiceCard";
+import FaqAccordion from "@/components/FaqAccordion";
 import { contactInfo, servicesCta } from "@/data/global";
-import { 
-  servicesHero, 
-  mainServices, 
-  companionCareServices, 
-  aideServices 
-} from "@/data/services";
+import { faqHero, faqIntro, faqCategories } from "@/data/faqs";
 
 export const metadata: Metadata = {
-  title: "Services",
-  description: "Supporting Independence at Home. Providing Peace of Mind for Families.",
+  title: "Frequently Asked Questions | Glorious Home Care Assistance",
+  description: "Get answers to common questions about home care services, caregiver screening, costs, and insurance coverage in San Jose and Santa Clara County.",
 };
 
-export default function ServicesPage() {
+export default function FaqPage() {
   return (
     <div className="flex flex-col">
       
@@ -29,54 +23,54 @@ export default function ServicesPage() {
         <Container className="relative py-20 sm:py-24">
           <Reveal className="max-w-3xl space-y-4">
             <p className="text-sm uppercase tracking-[0.2em] text-white/80">
-              {servicesHero.title}
+              {faqHero.title}
             </p>
             <h1 className="text-4xl font-semibold leading-tight sm:text-5xl lg:text-6xl">
-              {servicesHero.subtitle}
+              {faqHero.subtitle}
             </h1>
           </Reveal>
         </Container>
       </section>
 
-      {/* MAIN SERVICES GRID */}
+      {/* INTRO SECTION */}
       <section className="bg-surface">
         <Container className="py-16 md:py-24">
-          <SectionHeading title="Home Care Options" subtitle="Compassionate Care You Can Trust" />
-          
-          <div className="mt-12 grid gap-6 sm:grid-cols-1 lg:grid-cols-2 xl:gap-8">
-            {mainServices.map((service, index) => (
-              <Reveal key={service.title} delay={index * 0.05}>
-                <div className="flex h-full flex-col justify-between rounded-2xl border border-brand-cream bg-white p-8 shadow-sm transition hover:shadow-md">
-                  <div>
-                    <h3 className="text-xl font-bold text-brand-red">{service.title}</h3>
-                    <p className="mt-4 text-base leading-relaxed text-muted">
-                      {service.description}
-                    </p>
+          <div className="max-w-3xl">
+            <Reveal className="space-y-6">
+              <SectionHeading title={faqIntro.title} />
+              {faqIntro.paragraphs.map((paragraph, index) => (
+                <p key={index} className="text-lg leading-relaxed text-muted">
+                  {paragraph}
+                </p>
+              ))}
+            </Reveal>
+          </div>
+        </Container>
+      </section>
+
+      {/* FAQ ACCORDION SECTION */}
+      <section className="bg-brand-cream border-t border-brand-gold/10">
+        <Container className="py-16 md:py-24">
+          <div className="mx-auto max-w-4xl space-y-12">
+            {faqCategories.map((category, index) => (
+              <Reveal key={category.categoryTitle} delay={index * 0.1}>
+                <div className="rounded-3xl border border-white bg-white p-6 shadow-sm sm:p-10">
+                  <h2 className="mb-6 text-2xl font-bold text-brand-red">
+                    {category.categoryTitle}
+                  </h2>
+                  <div className="flex flex-col">
+                    {category.questions.map((faq) => (
+                      <FaqAccordion 
+                        key={faq.question} 
+                        question={faq.question} 
+                        answer={faq.answer} 
+                      />
+                    ))}
                   </div>
                 </div>
               </Reveal>
             ))}
           </div>
-        </Container>
-      </section>
-
-      {/* GRANULAR DETAIL CARDS (Retained for SEO & Depth) */}
-      <section className="bg-brand-cream">
-        <Container className="grid gap-8 py-16 md:grid-cols-2 md:py-24">
-          <Reveal>
-            <DetailCard
-              title={companionCareServices.title}
-              intro={companionCareServices.intro}
-              items={companionCareServices.items}
-            />
-          </Reveal>
-          <Reveal delay={0.1}>
-            <DetailCard
-              title={aideServices.title}
-              intro={aideServices.intro}
-              items={aideServices.items}
-            />
-          </Reveal>
         </Container>
       </section>
 
@@ -92,15 +86,21 @@ export default function ServicesPage() {
                 {servicesCta.body}
               </h2>
               <p className="mt-4 text-base text-white/90">
-                Compassionate Care That Feels Like Family. Schedule Your Free In-Home Assessment today.
+                Didn't find the answer you were looking for? Reach out to our care coordinators today.
               </p>
             </div>
-            <div className="flex shrink-0 gap-4">
+            <div className="flex flex-wrap gap-4 shrink-0">
               <Link
                 href={contactInfo.phoneHref}
                 className="rounded-full bg-white px-8 py-4 text-sm font-bold uppercase tracking-wide text-brand-red shadow-lg transition hover:bg-white/90"
               >
                 Call {contactInfo.phone}
+              </Link>
+              <Link
+                href="/request-care"
+                className="rounded-full border-2 border-white/70 px-8 py-4 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-white/10"
+              >
+                Request Care
               </Link>
             </div>
           </Reveal>

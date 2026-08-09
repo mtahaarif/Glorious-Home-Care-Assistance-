@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { brandTagline, contactInfo, navLinks } from "@/data/content";
-
+import { brandTagline, contactInfo, navLinks } from "@/data/global";
 export default function Footer() {
   return (
     <footer className="bg-brand-ink text-white">
@@ -27,8 +26,6 @@ export default function Footer() {
               {contactInfo.textLabel}: {contactInfo.text}
             </p>
             <p>Email: {contactInfo.email}</p>
-            <p>Website: {contactInfo.website}</p>
-            <p>License Number: {contactInfo.licenseNumber}</p>
           </div>
         </div>
 
