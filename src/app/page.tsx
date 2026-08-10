@@ -32,8 +32,10 @@ export default function Home() {
       <section className="relative overflow-hidden bg-gradient-to-br from-brand-red via-brand-red-dark to-brand-gold text-white">
         <div className="absolute -left-24 top-12 h-56 w-56 rounded-full bg-white/15 blur-3xl" />
         <div className="absolute -bottom-24 right-10 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
-        <Container className="relative py-20 sm:py-24 md:py-32">
-          <div className="max-w-3xl space-y-6">
+        
+        {/* Adjusted padding here to reduce vertical height */}
+        <Container className="relative py-12 sm:py-16 md:py-20">
+          <div className="max-w-3xl space-y-4">
             <Reveal>
               <div className="flex items-center gap-3">
                 <p className="text-sm uppercase tracking-[0.2em] text-white/80">

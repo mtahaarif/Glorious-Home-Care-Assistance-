@@ -1,15 +1,22 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fffaf6;
-  --foreground: #1b1b1b;
-  --brand-red: #ff3131;
-  --brand-red-dark: #c72439;
-  --brand-gold: #ebb35e;
-  --brand-gold-dark: #d79a3d;
-  --brand-cream: #fff2e8;
-  --surface: #ffffff;
-  --muted: #5f5f5f;
+  /* Core Page Backgrounds */
+  --background: #fffcf8; /* A very soft, warm white to let the rich colors pop */
+  --foreground: #3b0808; /* A very dark, warm espresso instead of flat black */
+  
+  /* Primary Brand Colors (Derived from the new crop) */
+  --brand-red: #701313; /* A strong, visible red for standard buttons/links */
+  --brand-red-dark: #3b0808; /* EXACT MATCH: The deep maroon/chocolate from the banner background */
+  
+  /* Accent Colors (Derived from the new crop) */
+  --brand-gold: #935d12; /* EXACT MATCH: The vibrant gold/orange from the icons and text */
+  --brand-gold-dark: #8b5918; /* A slightly darker gold for hover effects */
+  
+  /* Surface & Muted Tones */
+  --brand-cream: #f4e8dc; /* A warm cream for secondary sections or cards */
+  --surface: #ffffff; /* Crisp white for floating elements */
+  --muted: #735a5a; /* A complementary muted tone for secondary text */
 }
 
 @theme inline {

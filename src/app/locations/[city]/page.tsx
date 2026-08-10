@@ -6,7 +6,7 @@ import Reveal from "@/components/Reveal";
 import SectionHeading from "@/components/SectionHeading";
 import { contactInfo, servicesCta } from "@/data/global";
 import { serviceAreas } from "@/data/locations";
-import { mainServices } from "@/data/services";
+import { mainServices } from "@/data/services"; // Corrected Import!
 
 // 1. Generate static paths for all cities in our locations.ts data
 export function generateStaticParams() {
@@ -16,8 +16,9 @@ export function generateStaticParams() {
 }
 
 // 2. Generate dynamic SEO metadata for each specific city
-export function generateMetadata({ params }: { params: { city: string } }): Metadata {
-  const area = serviceAreas.find((a) => a.slug === params.city);
+export async function generateMetadata({ params }: { params: Promise<{ city: string }> }): Promise<Metadata> {
+  const resolvedParams = await params;
+  const area = serviceAreas.find((a) => a.slug === resolvedParams.city);
   
   if (!area) {
     return {
@@ -32,9 +33,11 @@ export function generateMetadata({ params }: { params: { city: string } }): Meta
 }
 
 // 3. The Dynamic Page Component
-export default function CityLocationPage({ params }: { params: { city: string } }) {
+export default async function CityLocationPage({ params }: { params: Promise<{ city: string }> }) {
+  const resolvedParams = await params;
+  
   // Find the current city data based on the URL slug
-  const area = serviceAreas.find((a) => a.slug === params.city);
+  const area = serviceAreas.find((a) => a.slug === resolvedParams.city);
 
   // If someone types a random city URL that isn't in our array, show a 404
   if (!area) {
@@ -48,7 +51,7 @@ export default function CityLocationPage({ params }: { params: { city: string } 
       <section className="relative overflow-hidden bg-gradient-to-r from-brand-red via-brand-red-dark to-brand-gold text-white">
         <div className="absolute -left-16 top-10 h-48 w-48 rounded-full bg-white/15 blur-3xl" />
         <div className="absolute -bottom-20 right-6 h-60 w-60 rounded-full bg-white/10 blur-3xl" />
-        <Container className="relative py-20 sm:py-24 md:py-32">
+        <Container className="relative py-12 sm:py-16 md:py-20">
           <Reveal className="max-w-3xl space-y-4">
             <Link 
               href="/locations" 
@@ -117,7 +120,7 @@ export default function CityLocationPage({ params }: { params: { city: string } 
           />
           
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {/* We will slice the top 3 services to give a quick preview without overwhelming the page */}
+            {/* Mapping over mainServices */}
             {mainServices.slice(0, 3).map((service, index) => (
               <Reveal key={service.title} delay={index * 0.1}>
                 <div className="flex h-full flex-col rounded-2xl border border-white bg-white p-8 shadow-sm transition hover:shadow-md">

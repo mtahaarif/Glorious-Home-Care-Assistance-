@@ -3,26 +3,14 @@ import Link from "next/link";
 import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
 import SectionHeading from "@/components/SectionHeading";
+import LocationsDirectory from "@/components/LocationsDirectory";
 import { contactInfo, servicesCta } from "@/data/global";
-import { locationsHero, locationsIntro, serviceAreas } from "@/data/locations";
+import { locationsHero, locationsIntro } from "@/data/locations";
 
 export const metadata: Metadata = {
-  title: "Areas We Serve | San Jose & Santa Clara County",
-  description: "Glorious Home Care Assistance provides compassionate in-home care across San Jose, Santa Clara, Sunnyvale, Cupertino, Milpitas, and Campbell.",
+  title: "Areas We Serve | Bay Area & Northern California",
+  description: "Glorious Home Care Assistance provides compassionate in-home care across Santa Clara, Alameda, San Francisco, San Mateo, and surrounding California counties.",
 };
-
-// Custom Map Pin Icon for the location cards
-const MapPinIcon = () => (
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    viewBox="0 0 24 24" 
-    fill="currentColor" 
-    className="h-6 w-6 text-brand-red"
-    aria-hidden="true"
-  >
-    <path fillRule="evenodd" d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
-  </svg>
-);
 
 export default function LocationsPage() {
   return (
@@ -32,7 +20,7 @@ export default function LocationsPage() {
       <section className="relative overflow-hidden bg-gradient-to-r from-brand-red via-brand-red-dark to-brand-gold text-white">
         <div className="absolute -left-16 top-10 h-48 w-48 rounded-full bg-white/15 blur-3xl" />
         <div className="absolute -bottom-20 right-6 h-60 w-60 rounded-full bg-white/10 blur-3xl" />
-        <Container className="relative py-20 sm:py-24">
+        <Container className="relative py-12 sm:py-16 md:py-20">
           <Reveal className="max-w-3xl space-y-4">
             <p className="text-sm uppercase tracking-[0.2em] text-white/80">
               {locationsHero.title}
@@ -73,34 +61,10 @@ export default function LocationsPage() {
         </Container>
       </section>
 
-      {/* LOCATIONS GRID */}
-      <section className="bg-brand-cream border-t border-brand-gold/20">
+      {/* COMBINED DIRECTORY SECTION (Interactive Client Component) */}
+      <section className="bg-[#fafafb] border-t border-brand-gold/20 relative">
         <Container className="py-16 md:py-24">
-          <SectionHeading title="Cities We Serve"/>
-          
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {serviceAreas.map((area, index) => (
-              <Reveal key={area.slug} delay={index * 0.05}>
-                <Link 
-                  href={`/locations/${area.slug}`}
-                  className="group flex h-full flex-col rounded-2xl border border-white bg-white p-8 shadow-sm transition hover:border-brand-red/20 hover:shadow-md"
-                >
-                  <div className="flex items-center gap-3">
-                    <MapPinIcon />
-                    <h3 className="text-xl font-bold text-brand-ink group-hover:text-brand-red transition-colors">
-                      {area.name}
-                    </h3>
-                  </div>
-                  <p className="mt-4 flex-1 text-sm leading-relaxed text-muted">
-                    {area.description}
-                  </p>
-                  <span className="mt-6 inline-block text-sm font-semibold text-brand-red group-hover:underline">
-                    View Care in {area.name} &rarr;
-                  </span>
-                </Link>
-              </Reveal>
-            ))}
-          </div>
+          <LocationsDirectory />
         </Container>
       </section>
 

@@ -1,60 +1,63 @@
 export const servicesHero = {
   title: "Our Services",
-  subtitle: "Supporting Independence at Home. Providing Peace of Mind for Families.",
+  subtitle: "Compassionate Care You Can Trust",
 };
 
+export const servicesIntro = {
+  title: "Supporting Independence at Home",
+  paragraphs: [
+    "Our caregivers provide dependable support and companionship when family members cannot be present, giving families peace of mind knowing their loved one is safe, supported, and cared for at home.",
+    "Whether for short visits or 24-hour care, our trained aides assist with daily activities, light housekeeping, emotional support, and companionship to help seniors and adults remain comfortable and independent in their own homes.",
+    "Our professional caregivers are available 24 hours a day, 7 days a week, and can provide care at home, in the hospital, or in other care facilities whenever support is needed."
+  ]
+};
+
+// This is the primary array with slugs for dynamic routing!
+// Filtered to the 7 core services requested.
 export const mainServices = [
   {
     title: "Companion Care",
     slug: "companion-care",
-    description: "Provides meaningful social interaction and emotional support for individuals who may feel isolated or lonely. Our caregivers engage clients through conversation, activities, hobbies, and companionship to promote overall well-being and quality of life.",
+    description: "Provides meaningful social interaction and emotional support for individuals who may feel isolated or lonely. Our caregivers engage clients through conversation, activities, hobbies, and companionship to promote overall well-being and quality of life."
   },
   {
     title: "Personal Care Assistance",
     slug: "personal-care",
-    description: "We help clients maintain their dignity, comfort, and independence with daily living activities. Support may include assistance with bathing, grooming, dressing, mobility, and personal hygiene according to each client's individual needs.",
+    description: "We help clients maintain their dignity, comfort, and independence with daily living activities. Support may include assistance with bathing, grooming, dressing, mobility, and personal hygiene according to each client's individual needs."
   },
   {
-    title: "Dementia Care",
-    slug: "dementia-care",
-    description: "Specialized, compassionate care for individuals living with Alzheimer's or other forms of dementia. We focus on maintaining a safe, familiar environment, establishing calming routines, and providing cognitive engagement.",
+    title: "Transportation Services",
+    slug: "transportation",
+    description: "We provide safe and reliable transportation to medical appointments, errands, social engagements, and community activities. Our goal is to help clients remain active, connected, and engaged while maintaining their independence."
   },
   {
     title: "Respite Care",
     slug: "respite-care",
-    description: "Respite Care offers temporary relief for family caregivers who need time to rest, attend to personal responsibilities, or simply recharge. Families can have peace of mind knowing their loved one is receiving compassionate and attentive care in their absence.",
-  },
-  {
-    title: "Post-Hospital Recovery Care",
-    slug: "post-hospital-care",
-    description: "Crucial support during the critical transition from hospital to home. Our caregivers assist with discharge instructions, medication reminders, mobility support, and daily tasks to help prevent readmission and ensure a safe recovery.",
-  },
-  {
-    title: "Mobility Assistance",
-    slug: "mobility-assistance",
-    description: "Safe, reliable support for individuals with physical limitations. We assist with transferring, walking, wheelchair navigation, and fall prevention to help clients navigate their homes safely and confidently.",
-  },
-  {
-    title: "Meal Preparation",
-    slug: "meal-preparation",
-    description: "We assist with meal planning and preparation to help clients enjoy nutritious, balanced meals that align with their preferences and dietary needs. Our caregivers can also assist with grocery shopping and kitchen organization.",
+    description: "Respite Care offers temporary relief for family caregivers who need time to rest, attend to personal responsibilities, or simply recharge. Families can have peace of mind knowing their loved one is receiving compassionate and attentive care in their absence."
   },
   {
     title: "Medication Reminders",
     slug: "medication-reminders",
-    description: "Our caregivers provide friendly medication reminders to help clients stay on schedule with prescribed medications. While we do not administer medications, we help support consistency and adherence to established care plans.",
+    description: "Our caregivers provide friendly medication reminders to help clients stay on schedule with prescribed medications. While we do not administer medications, we help support consistency and adherence to established care plans."
   },
   {
-    title: "Overnight Care",
-    slug: "overnight-care",
-    description: "Around-the-clock peace of mind. Our caregivers provide attentive overnight monitoring, assistance with nighttime bathroom visits, and immediate support for clients who may wander or experience confusion during the night.",
+    title: "Light Housekeeping",
+    slug: "light-housekeeping",
+    description: "A clean and organized home contributes to safety, comfort, and overall well-being. Our Light Housekeeping services include assistance with routine household tasks such as laundry, dishes, tidying living spaces, and maintaining a comfortable environment."
+  },
+  {
+    title: "Meal Preparation",
+    slug: "meal-preparation",
+    description: "We assist with meal planning and preparation to help clients enjoy nutritious, balanced meals that align with their preferences and dietary needs. Our caregivers can also assist with grocery shopping and kitchen organization to support healthy daily living."
   }
 ];
 
+// Fallback alias so older components don't crash
+export const serviceHighlights = mainServices;
+
 export const companionCareServices = {
-  title: "Companion Care Services Details",
-  intro:
-    "Your caregiver will not provide hands-on care for the client, but will provide companionship, offer encouragement, and perform light housekeeping tasks, including, but not limited to:",
+  title: "Companion Care Services",
+  intro: "Your caregiver will not provide hands-on care for the client, but will provide companionship, offer encouragement, and perform light housekeeping tasks, including, but not limited to:",
   items: [
     "Taking the client to appointments",
     "Running errands such as grocery shopping",
@@ -66,18 +69,20 @@ export const companionCareServices = {
     "Changing bedding",
     "Watering plants",
     "Taking care of pets",
+    "Dementia care and specialized cognitive support", // Merged sub-type
   ],
 };
 
 export const aideServices = {
-  title: "Personal Care Aide Details",
-  intro:
-    "Our aide attendants can serve the same functions as a companion, but also may provide hands-on care of the client. Duties may include:",
+  title: "Aide Services",
+  intro: "Our aide attendants can serve the same functions as a companion, but also may provide hands-on care of the client. Duties may include:",
   items: [
     "Bathing, hair washing, and shaving",
     "Dressing assistance",
     "Medication reminders",
     "Assistance with toileting",
     "Other personal care needs",
+    "Mobility assistance and fall prevention", // Merged sub-type
+    "Overnight care and active monitoring",    // Merged sub-type
   ],
 };
