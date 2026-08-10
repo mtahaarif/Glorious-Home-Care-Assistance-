@@ -1,6 +1,7 @@
 export const aboutHero = {
-  title: "About Glorious Home Care Assistance",
-  subtitle: "We are here to help families know their loved one is safe at home",
+  title: "About Us",
+  subtitle: "Dedicated to Compassionate Home Care",
+  bannerImage: "/about.jpg", // Path to your banner image in public/images/
 };
 
 export const ourStory = {

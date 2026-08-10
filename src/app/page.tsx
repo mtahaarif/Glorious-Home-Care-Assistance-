@@ -1,4 +1,8 @@
+"use client"; // Required for the useEffect image slider
+
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
 import SectionHeading from "@/components/SectionHeading";
@@ -13,6 +17,7 @@ import {
   whoWeServe, 
   clientReviews 
 } from "@/data/home";
+import { sharedServiceContent } from "@/data/services";
 
 const HeartIcon = () => (
   <svg
@@ -26,33 +31,74 @@ const HeartIcon = () => (
 );
 
 export default function Home() {
+  // Image Slider State
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Automatically cycle through images every 5 seconds
+  useEffect(() => {
+    if (!homeHero.bgImages || homeHero.bgImages.length === 0) return;
+    
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => 
+        prevIndex === homeHero.bgImages.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 5000); // 5000ms = 5 seconds per image
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="flex flex-col">
-      {/* HERO SECTION */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-brand-red via-brand-red-dark to-brand-gold text-white">
-        <div className="absolute -left-24 top-12 h-56 w-56 rounded-full bg-white/15 blur-3xl" />
-        <div className="absolute -bottom-24 right-10 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
+      
+      {/* 1. DYNAMIC HOMEPAGE HERO BANNER (FIXED HEIGHT) */}
+      <section className="relative overflow-hidden bg-[color:var(--brand-ink)] text-white h-[330px] sm:h-[370px] lg:h-[410px] flex items-center">
         
-        {/* Adjusted padding here to reduce vertical height */}
-        <Container className="relative py-12 sm:py-16 md:py-20">
+        {/* Background Image Carousel Container */}
+        <div className="absolute inset-0 bg-[color:var(--brand-ink)] z-0">
+          {homeHero.bgImages && homeHero.bgImages.map((src, index) => (
+            <Image
+              key={src}
+              src={src}
+              alt={`Glorious Home Care Banner ${index + 1}`}
+              fill
+              priority={index === 0}
+              className={`object-cover object-right transition-opacity duration-[2000ms] ease-in-out ${
+                index === currentImageIndex ? "opacity-100" : "opacity-0"
+              }`}
+              style={{
+                maskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.4) 35%, black 70%)',
+                WebkitMaskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.4) 35%, black 70%)',
+              }}
+            />
+          ))}
+
+          {/* Dark Tint Overlay */}
+          <div className="absolute inset-0 bg-[color:var(--brand-ink)]/40 pointer-events-none" />
+        </div>
+
+        {/* Abstract Blur Orbs */}
+        <div className="absolute -left-24 top-12 h-56 w-56 rounded-full bg-white/10 blur-3xl z-10 pointer-events-none" />
+        <div className="absolute -bottom-24 right-10 h-64 w-64 rounded-full bg-white/5 blur-3xl z-10 pointer-events-none" />
+        
+        <Container className="relative z-20 w-full py-0">
           <div className="max-w-3xl space-y-4">
             <Reveal>
               <div className="flex items-center gap-3">
                 <p className="text-sm uppercase tracking-[0.2em] text-white/80">
                   {homeHero.welcome}
                 </p>
-                <span className="rounded-full bg-white/20 px-3 py-1 text-xs font-medium backdrop-blur-sm">
+                <span className="rounded-full bg-white/20 border border-white/30 px-3 py-1 text-xs font-bold backdrop-blur-sm shadow-sm">
                   {homeHero.badge}
                 </span>
               </div>
             </Reveal>
             <Reveal delay={0.05}>
-              <h1 className="text-4xl font-semibold leading-tight sm:text-5xl lg:text-6xl">
+              <h1 className="text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl drop-shadow-md">
                 {homeHero.headline}
               </h1>
             </Reveal>
             <Reveal delay={0.1}>
-              <p className="text-base leading-relaxed text-white/90 sm:text-lg">
+              <p className="text-base leading-relaxed text-white/90 sm:text-lg max-w-2xl drop-shadow-sm">
                 {homeHero.subhead}
               </p>
             </Reveal>
@@ -60,13 +106,13 @@ export default function Home() {
               <div className="flex flex-wrap gap-4 pt-4">
                 <Link
                   href={contactInfo.phoneHref}
-                  className="rounded-full bg-white px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-brand-red transition hover:bg-white/90 hover:shadow-lg"
+                  className="rounded-full bg-[color:var(--brand-gold)] px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-[color:var(--brand-red-dark)] shadow-xl transition-all hover:scale-105 hover:bg-white"
                 >
                   {homeCallouts.callToAction}
                 </Link>
                 <Link
                   href="/services"
-                  className="rounded-full border border-white/70 px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-white/10"
+                  className="rounded-full border-2 border-white/60 px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition-all hover:bg-white hover:text-[color:var(--brand-ink)]"
                 >
                   {homeCallouts.optionsPrompt}
                 </Link>
@@ -200,33 +246,37 @@ export default function Home() {
       </section>
 
       {/* BOTTOM CTA SECTION */}
-      <section className="bg-gradient-to-r from-brand-red to-brand-gold text-white">
-        <Container className="py-16 md:py-20">
-          <Reveal className="flex flex-col items-start gap-8 md:flex-row md:items-center md:justify-between">
-            <div className="max-w-2xl">
-              <p className="text-sm uppercase tracking-[0.2em] text-white/80">
-                {homeCallouts.optionsPrompt}
+      <section className="bg-brand-red-dark py-10 text-center text-white md:py-10">
+        <Container className="max-w-3xl">
+          <Reveal className="space-y-4">
+            <h2 className="whitespace-pre-line text-4xl font-bold leading-tight sm:text-5xl">
+              {sharedServiceContent.bottomCta.message}
+            </h2>
+            
+            <div className="flex flex-col items-center gap-4">
+              <p className="text-sm font-bold uppercase tracking-[0.2em] text-brand-gold">
+                {sharedServiceContent.bottomCta.action}
               </p>
-              <h2 className="mt-3 text-3xl font-semibold sm:text-4xl">
-                {homeCallouts.callToAction}
-              </h2>
-              <p className="mt-4 text-base text-white/90">
-                Compassionate home care services designed to help individuals remain safe, comfortable, and independent while providing peace of mind to their families.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-4 shrink-0">
+              
               <Link
                 href={contactInfo.phoneHref}
-                className="rounded-full bg-white px-8 py-4 text-sm font-bold uppercase tracking-wide text-brand-red transition hover:bg-white/90 shadow-lg"
+                className="inline-block transform rounded-full bg-brand-gold px-12 py-5 text-xl font-black text-brand-red-dark shadow-xl transition-all hover:scale-105 hover:bg-white sm:text-2xl"
               >
-                {homeCallouts.callToAction}
+                {sharedServiceContent.bottomCta.phone}
               </Link>
-              <Link
-                href="/services"
-                className="rounded-full border-2 border-white/70 px-8 py-4 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-white/10"
+              
+              <a 
+                href={`mailto:${sharedServiceContent.bottomCta.email}`} 
+                className="mt-4 font-medium text-white/80 transition hover:text-white"
               >
-                Learn More
-              </Link>
+                {sharedServiceContent.bottomCta.email}
+              </a>
+            </div>
+
+            <div className="mx-auto mt-12 max-w-lg border-t border-white/10 pt-8">
+              <p className="text-sm font-semibold uppercase tracking-widest text-white/60">
+                {sharedServiceContent.bottomCta.tagline}
+              </p>
             </div>
           </Reveal>
         </Container>

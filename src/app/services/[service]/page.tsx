@@ -1,139 +1,356 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
-import SectionHeading from "@/components/SectionHeading";
-import { contactInfo, servicesCta } from "@/data/global";
-import { mainServices } from "@/data/services";
+import { contactInfo, homeCallouts } from "@/data/global";
+import { mainServices, servicesHero, sharedServiceContent } from "@/data/services";
+import { homeHero } from "@/data/home";
+const HeartIcon = () => (
+  <svg className="mb-4 h-10 w-10 text-brand-red" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+  </svg>
+);
 
-// 1. Tell Next.js which routes to build statically based on our slugs
 export function generateStaticParams() {
-  return mainServices.map((service) => ({
-    service: service.slug,
-  }));
+  return mainServices.map((service) => ({ service: service.slug }));
 }
 
-// 2. Generate dynamic SEO tags for each service page
-export function generateMetadata({ params }: { params: { service: string } }): Metadata {
-  const currentService = mainServices.find((s) => s.slug === params.service);
-  
-  if (!currentService) {
-    return {
-      title: "Service Not Found",
-    };
-  }
+export async function generateMetadata({ params }: { params: Promise<{ service: string }> }): Promise<Metadata> {
+  const resolvedParams = await params;
+  const currentService = mainServices.find((s) => s.slug === resolvedParams.service);
+  if (!currentService) return { title: "Service Not Found" };
 
   return {
-    title: `${currentService.title} in San Jose, CA | Glorious Home Care`,
-    description: currentService.description.substring(0, 160) + "...", // Truncates description for optimal SEO length
+    title: currentService.pageData?.seoTitle || `${currentService.title} in San Jose, CA | Glorious Home Care`,
+    description: currentService.description.substring(0, 160) + "...", 
   };
 }
 
-// 3. The Dynamic Page Component
-export default function ServiceDetailPage({ params }: { params: { service: string } }) {
-  const currentService = mainServices.find((s) => s.slug === params.service);
+export default async function ServiceDetailPage({ params }: { params: Promise<{ service: string }> }) {
+  const resolvedParams = await params;
+  const currentService = mainServices.find((s) => s.slug === resolvedParams.service);
 
-  // Trigger a 404 error if a user enters an invalid URL
-  if (!currentService) {
+  if (!currentService || !currentService.pageData) {
     notFound();
   }
+
+  // Destructured iconImage instead of Icon
+  const { pageData, iconImage, bannerImage } = currentService; 
 
   return (
     <div className="flex flex-col">
       
-      {/* HERO SECTION */}
-      <section className="relative overflow-hidden bg-gradient-to-r from-brand-red via-brand-red-dark to-brand-gold text-white">
-        <div className="absolute -left-16 top-10 h-48 w-48 rounded-full bg-white/15 blur-3xl" />
-        <div className="absolute -bottom-20 right-6 h-60 w-60 rounded-full bg-white/10 blur-3xl" />
-        <Container className="relative py-20 sm:py-24 md:py-32">
-          <Reveal className="max-w-3xl space-y-4">
-            <Link 
-              href="/services" 
-              className="inline-flex items-center text-sm font-semibold uppercase tracking-widest text-white/80 transition hover:text-white"
-            >
-              &larr; All Services
-            </Link>
-            <h1 className="mt-4 text-4xl font-semibold leading-tight sm:text-5xl lg:text-6xl">
-              {currentService.title}
-            </h1>
-            <p className="text-lg text-white/90">
-              Compassionate, reliable support in the comfort of home.
-            </p>
-          </Reveal>
+{/* STATIC HERO BANNER WITH WELCOME BADGE & ACTION BUTTONS */}
+      <section className="relative overflow-hidden bg-[color:var(--brand-ink)] text-white min-h-[380px] sm:min-h-[420px] lg:min-h-[450px] py-12 flex items-center">
+        
+        {/* Background Image Container */}
+        <div className="absolute inset-0 bg-[color:var(--brand-ink)] z-0">
+          <Image 
+            src={servicesHero.bannerImage} // Replace with page source: servicesHero.bannerImage, heroImage, etc.
+            alt={servicesHero.title}
+            fill 
+            className="object-cover object-right"
+            style={{
+              maskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.4) 35%, black 70%)',
+              WebkitMaskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.4) 35%, black 70%)',
+            }}
+            priority
+          />
+          
+          {/* Dark Tint Overlay */}
+          <div className="absolute inset-0 bg-[color:var(--brand-ink)]/40 pointer-events-none" />
+        </div>
+
+        {/* Abstract Blur Orbs */}
+        <div className="absolute -left-20 top-10 h-48 w-48 rounded-full bg-white/10 blur-3xl z-10 pointer-events-none" />
+        <div className="absolute -bottom-16 right-6 h-56 w-56 rounded-full bg-white/5 blur-3xl z-10 pointer-events-none" />
+
+        <Container className="relative z-20 w-full">
+          <div className="max-w-3xl space-y-4">
+            
+            {/* Top Welcome Title + Badge */}
+            <Reveal>
+              <div className="flex items-center gap-3">
+                <p className="text-sm uppercase tracking-[0.2em] text-white/80">
+                  {homeHero.welcome}
+                </p>
+                <span className="rounded-full bg-white/20 border border-white/30 px-3 py-1 text-xs font-bold backdrop-blur-sm shadow-sm">
+                  {homeHero.badge}
+                </span>
+              </div>
+            </Reveal>
+
+            {/* Page Heading Title */}
+            <Reveal delay={0.05}>
+              <h1 className="text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl drop-shadow-md">
+                {servicesHero.title}
+              </h1>
+            </Reveal>
+
+            {/* Subtitle / Description (If available) */}
+            {servicesHero.subtitle && (
+              <Reveal delay={0.1}>
+                <p className="text-base leading-relaxed text-white/90 sm:text-lg max-w-2xl drop-shadow-sm">
+                  {servicesHero.subtitle}
+                </p>
+              </Reveal>
+            )}
+
+            {/* Call to Action Buttons */}
+            <Reveal delay={0.15}>
+              <div className="flex flex-wrap gap-4 pt-4">
+                <Link
+                  href={contactInfo.phoneHref}
+                  className="rounded-full bg-[color:var(--brand-gold)] px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-[color:var(--brand-red-dark)] shadow-xl transition-all hover:scale-105 hover:bg-white"
+                >
+                  {homeCallouts.callToAction}
+                </Link>
+                <Link
+                  href="/services"
+                  className="rounded-full border-2 border-white/60 px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition-all hover:bg-white hover:text-[color:var(--brand-ink)]"
+                >
+                  {homeCallouts.optionsPrompt}
+                </Link>
+              </div>
+            </Reveal>
+
+          </div>
         </Container>
       </section>
 
-      {/* SERVICE DETAILS & CONTACT CARD */}
-      <section className="bg-surface">
-        <Container className="grid gap-12 py-16 md:grid-cols-[1fr_0.8fr] md:py-24">
+      {/* 2. HEADING 1 & DESCRIPTION 1 */}
+      <section className="bg-background pt-16 md:pt-24 pb-12">
+        <Container className="max-w-4xl text-center">
           <Reveal className="space-y-6">
-            <SectionHeading 
-              title={`About Our ${currentService.title}`} 
-              subtitle="Personalized Care" 
-            />
-            <div className="rounded-2xl border-l-4 border-brand-red bg-brand-cream/40 p-6 sm:p-8">
-              <p className="text-lg leading-relaxed text-brand-ink">
-                {currentService.description}
-              </p>
-            </div>
-            <p className="text-base leading-relaxed text-muted">
-              At Glorious Home Care Assistance, we understand that every individual's needs are completely unique. During our free in-home assessment, we will work closely with you and your family to develop a customized care plan that perfectly aligns with your schedule, preferences, and health requirements.
+            <h2 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
+              <span className="block text-brand-red-dark">{pageData.heading1.line1}</span>
+              <span className="block text-brand-red">{pageData.heading1.line2}</span>
+            </h2>
+            <p className="mx-auto max-w-2xl text-lg font-medium leading-relaxed text-brand-red sm:text-xl">
+              {pageData.description1}
             </p>
-          </Reveal>
-
-          {/* Dedicated Contact Card */}
-          <Reveal className="h-fit rounded-3xl border border-brand-red/10 bg-brand-cream p-8 shadow-sm" delay={0.1}>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-red">
-              Free Assessment
-            </p>
-            <h3 className="mt-2 text-2xl font-bold text-brand-ink">
-              Request {currentService.title}
-            </h3>
-            <p className="mt-3 text-sm leading-relaxed text-muted">
-              Call our care coordinators today to discuss how we can support your family.
-            </p>
-            <Link
-              href={contactInfo.phoneHref}
-              className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-brand-red px-6 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-brand-red-dark"
-            >
-              Call {contactInfo.phone}
-            </Link>
-            <div className="mt-4 text-center">
-              <span className="text-xs font-semibold text-muted">OR</span>
-            </div>
-            <Link
-              href="/request-care"
-              className="mt-4 inline-flex w-full items-center justify-center rounded-full border-2 border-brand-ink px-6 py-3.5 text-sm font-bold uppercase tracking-wide text-brand-ink transition hover:bg-brand-ink hover:text-white"
-            >
-              Submit Online Request
-            </Link>
           </Reveal>
         </Container>
       </section>
 
-      {/* BOTTOM CTA SECTION */}
-      <section className="bg-gradient-to-r from-brand-red to-brand-gold text-white">
-        <Container className="py-16 md:py-20">
-          <Reveal className="flex flex-col items-start gap-8 md:flex-row md:items-center md:justify-between">
-            <div className="max-w-2xl">
-              <p className="text-sm uppercase tracking-[0.2em] text-white/80">
-                {servicesCta.title}
-              </p>
-              <h2 className="mt-3 text-3xl font-semibold sm:text-4xl">
-                {servicesCta.body}
-              </h2>
-              <p className="mt-4 text-base text-white/90">
-                Let us provide the support and peace of mind you deserve.
-              </p>
+{/* 3. ASYMMETRIC LIQUID GLASS GRID (APPLE-STYLE) */}
+      <section className="bg-background pb-16 md:pb-24">
+        <Container className="max-w-6xl">
+          <Reveal>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 grid-flow-dense">
+              {pageData.bentoBox.items.map((item, index, array) => {
+                const totalItems = array.length;
+                const rowIndex = Math.floor(index / 3);
+                const rowType = rowIndex % 3;
+                const itemsInThisRow = Math.min(3, totalItems - rowIndex * 3);
+                const positionInRow = index % 3;
+
+                let colSpanClass = "col-span-1";
+                let isBig = false;
+
+                if (itemsInThisRow === 3) {
+                  if (rowType === 0 && positionInRow === 0) isBig = true;
+                  else if (rowType === 1 && positionInRow === 1) isBig = true;
+                  else if (rowType === 2 && positionInRow === 2) isBig = true;
+                  colSpanClass = isBig ? "col-span-2" : "col-span-1";
+                } else if (itemsInThisRow === 2) {
+                  isBig = rowType === 0 ? positionInRow === 0 : positionInRow === 1;
+                  colSpanClass = isBig ? "col-span-2 md:col-span-3" : "col-span-2 md:col-span-1";
+                } else if (itemsInThisRow === 1) {
+                  isBig = true;
+                  colSpanClass = "col-span-2 md:col-span-4"; 
+                }
+
+                return (
+                  <div 
+                    key={index} 
+                    className={`
+                      group relative flex flex-col justify-between rounded-2xl md:rounded-3xl transition-all duration-500 ease-out cursor-default overflow-hidden
+                      backdrop-blur-xl md:backdrop-blur-2xl
+                      hover:-translate-y-1 md:hover:-translate-y-2 hover:scale-[1.02]
+                      ${colSpanClass}
+                      ${isBig 
+                        // BIG GRID: Red Glass, Subtly glowing red shadow, delicate white edge
+                        ? 'min-h-[160px] md:min-h-[200px] p-5 sm:p-6 md:p-8 bg-brand-red/90 border border-white/20 shadow-[0_8px_32px_rgb(255,49,49,0.25)] hover:bg-brand-red/90 hover:shadow-[0_16px_48px_rgb(255,49,49,0.4)] ring-1 ring-inset ring-white/10' 
+                        
+                        // SMALL GRID: Gold Glass, Gold/Amber shadow, prominent white edge
+                        : 'min-h-[140px] md:min-h-[200px] p-4 sm:p-5 md:p-8 bg-brand-gold/70 border border-white/40 shadow-[0_8px_32px_rgb(235,179,94,0.15)] hover:bg-brand-gold/40 hover:shadow-[0_16px_48px_rgb(235,179,94,0.25)] ring-1 ring-inset ring-white/40'
+                      }
+                    `}
+                  >
+                    {/* APPLE-STYLE GLASS GLARE: The subtle diagonal light reflection */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/70 via-white/5 to-transparent pointer-events-none mix-blend-overlay z-0" />
+
+                    <div className="relative z-10 mb-4 md:mb-8 flex items-center justify-between">
+                      {isBig ? (
+                        <div className="rounded-full bg-white/10 border border-white/20 p-2 md:p-3 backdrop-blur-md shadow-inner transition-transform duration-500 group-hover:scale-110 group-hover:bg-white/20">
+                          {/* BIG GRID: Custom Image Icon */}
+                          <div className="relative h-6 w-6 sm:h-8 sm:w-8">
+                            <Image 
+                              src={iconImage} 
+                              alt={`${currentService.title} Icon`}
+                              fill
+                              className="object-contain brightness-0 invert opacity-90" 
+                            />
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="rounded-full bg-white/50 border border-white/60 p-2 md:p-3 shadow-[0_4px_15px_rgb(255,49,49,0.1)] backdrop-blur-md transition-all duration-500 group-hover:bg-white/70 group-hover:scale-110">
+                          <div className="scale-75 md:scale-100">
+                             {/* SMALL GRID: Custom Image Icon */}
+                             <div className="relative h-5 w-5 sm:h-6 sm:w-6">
+                              <Image 
+                                src={iconImage} 
+                                alt={`${currentService.title} Icon`}
+                                fill
+                                className="object-contain" 
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <span 
+                      className={`relative z-10 font-bold leading-snug transition-colors duration-300 drop-shadow-sm
+                        ${isBig 
+                          ? 'text-lg sm:text-xl md:text-2xl text-white group-hover:text-white/70' 
+                          : 'text-sm sm:text-base md:text-2xl text-brand-red-dark group-hover:text-brand-red'
+                        }
+                      `}
+                    >
+                      {item}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
-            <div className="flex flex-wrap gap-4 shrink-0">
+            
+            {pageData.bentoBox.disclaimer && (
+              <p className="mt-8 md:mt-12 text-center text-xs md:text-sm font-medium italic text-muted">
+                * {pageData.bentoBox.disclaimer}
+              </p>
+            )}
+          </Reveal>
+        </Container>
+      </section>
+
+      {/* 4. HEADING 2 */}
+      <section className="bg-white py-16 md:py-24">
+        <Container className="max-w-4xl text-center">
+          <Reveal className="space-y-4">
+            <h2 className="text-3xl font-bold uppercase tracking-wide text-brand-red sm:text-4xl">
+              {pageData.heading2.line1}
+            </h2>
+            <p className="mx-auto max-w-3xl text-xl font-semibold leading-relaxed text-brand-red-dark sm:text-2xl">
+              {pageData.heading2.line2}
+            </p>
+          </Reveal>
+        </Container>
+      </section>
+
+{/* 5. FEATURE BAR (Modern Typographic Ribbon) */}
+      <section className="border-y border-[color:var(--brand-gold)]/20 bg-white py-16 md:py-24 overflow-hidden">
+        
+        {/* CSS for perfect seamless scrolling */}
+        <style dangerouslySetInnerHTML={{__html: `
+          @keyframes scroll-marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(-100% - 3rem)); } /* 3rem matches gap-12 perfectly */
+          }
+          .animate-marquee {
+            animation: scroll-marquee 60s linear infinite;
+          }
+        `}} />
+
+        <Container>
+          <Reveal className="mb-12 md:mb-20 text-center">
+            <h3 className="whitespace-pre-line text-2xl font-bold uppercase tracking-[0.15em] text-[color:var(--brand-ink)]/60 sm:text-3xl">
+              {sharedServiceContent.areaHeading.replace('\n', ' ')}
+            </h3>
+          </Reveal>
+        </Container>
+
+        {/* Marquee Wrapper */}
+        <div className="group relative flex gap-12 overflow-hidden py-4 w-full">
+          
+          {/* Left Fading Edge */}
+          <div className="absolute left-0 top-0 z-10 h-full w-24 sm:w-48 bg-gradient-to-r from-white to-transparent pointer-events-none" />
+
+          {/* Track 1 */}
+          <div className="flex shrink-0 items-center justify-around gap-12 flex-nowrap animate-marquee group-hover:[animation-play-state:paused]">
+            {/* Array is tripled so it seamlessly covers even 4K ultra-wide monitors */}
+            {[...pageData.featureBar, ...pageData.featureBar, ...pageData.featureBar].map((feature, index) => (
+              <div 
+                key={index} 
+                className="flex items-center gap-12 cursor-default transition-transform duration-500 hover:scale-105"
+              >
+                <HeartIcon />
+                <span className="text-4xl sm:text-5xl md:text-7xl font-black uppercase tracking-tight text-[color:var(--brand-ink)] transition-colors duration-500 hover:text-[color:var(--brand-red-dark)]">
+                  {feature}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* Track 2 (Identical Duplicate for the Infinite Loop) */}
+          <div 
+            className="flex shrink-0 items-center justify-around gap-12 flex-nowrap animate-marquee group-hover:[animation-play-state:paused]" 
+            aria-hidden="true"
+          >
+            {[...pageData.featureBar, ...pageData.featureBar, ...pageData.featureBar].map((feature, index) => (
+              <div 
+                key={index} 
+                className="flex items-center gap-12 cursor-default transition-transform duration-500 hover:scale-105"
+              >
+                <HeartIcon />
+                <span className="text-4xl sm:text-5xl md:text-7xl font-black uppercase tracking-tight text-[color:var(--brand-ink)] transition-colors duration-500 hover:text-[color:var(--brand-red-dark)]">
+                  {feature}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* Right Fading Edge */}
+          <div className="absolute right-0 top-0 z-10 h-full w-24 sm:w-48 bg-gradient-to-l from-white to-transparent pointer-events-none" />
+
+        </div>
+      </section>
+
+      {/* 6. BOTTOM CTA SECTION */}
+      <section className="bg-brand-red-dark py-10 text-center text-white md:py-10">
+        <Container className="max-w-3xl">
+          <Reveal className="space-y-4">
+            <h2 className="whitespace-pre-line text-4xl font-bold leading-tight sm:text-5xl">
+              {sharedServiceContent.bottomCta.message}
+            </h2>
+            
+            <div className="flex flex-col items-center gap-4">
+              <p className="text-sm font-bold uppercase tracking-[0.2em] text-brand-gold">
+                {sharedServiceContent.bottomCta.action}
+              </p>
+              
               <Link
                 href={contactInfo.phoneHref}
-                className="rounded-full bg-white px-8 py-4 text-sm font-bold uppercase tracking-wide text-brand-red shadow-lg transition hover:bg-white/90"
+                className="inline-block transform rounded-full bg-brand-gold px-12 py-5 text-xl font-black text-brand-red-dark shadow-xl transition-all hover:scale-105 hover:bg-white sm:text-2xl"
               >
-                Call {contactInfo.phone}
+                {sharedServiceContent.bottomCta.phone}
               </Link>
+              
+              <a 
+                href={`mailto:${sharedServiceContent.bottomCta.email}`} 
+                className="mt-4 font-medium text-white/80 transition hover:text-white"
+              >
+                {sharedServiceContent.bottomCta.email}
+              </a>
+            </div>
+
+            <div className="mx-auto mt-12 max-w-lg border-t border-white/10 pt-8">
+              <p className="text-sm font-semibold uppercase tracking-widest text-white/60">
+                {sharedServiceContent.bottomCta.tagline}
+              </p>
             </div>
           </Reveal>
         </Container>

@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image"; // Added Import
 import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
 import SectionHeading from "@/components/SectionHeading";
 import TestimonialCard from "@/components/TestimonialCard";
-import { contactInfo } from "@/data/global";
+import { contactInfo, homeCallouts } from "@/data/global";
+import {homeHero} from "@/data/home";
+
 import { 
   aboutHero, 
   ourStory, 
@@ -30,19 +33,81 @@ export default function AboutPage() {
   return (
     <div className="flex flex-col">
       
-      {/* HERO SECTION */}
-      <section className="relative overflow-hidden bg-gradient-to-r from-brand-red via-brand-red-dark to-brand-gold text-white">
-        <div className="absolute -left-20 top-10 h-48 w-48 rounded-full bg-white/15 blur-3xl" />
-        <div className="absolute -bottom-16 right-6 h-56 w-56 rounded-full bg-white/10 blur-3xl" />
-        <Container className="relative py-20 sm:py-24">
-          <Reveal className="max-w-3xl space-y-4">
-            <p className="text-sm uppercase tracking-[0.2em] text-white/80">
-              {aboutHero.title}
-            </p>
-            <h1 className="text-4xl font-semibold leading-tight sm:text-5xl lg:text-6xl">
-              {aboutHero.subtitle}
-            </h1>
-          </Reveal>
+{/* STATIC HERO BANNER WITH WELCOME BADGE & ACTION BUTTONS */}
+      <section className="relative overflow-hidden bg-[color:var(--brand-ink)] text-white min-h-[380px] sm:min-h-[420px] lg:min-h-[450px] py-12 flex items-center">
+        
+        {/* Background Image Container */}
+        <div className="absolute inset-0 bg-[color:var(--brand-ink)] z-0">
+          <Image 
+            src={aboutHero.bannerImage} // Replace with page source: servicesHero.bannerImage, heroImage, etc.
+            alt={aboutHero.title}
+            fill 
+            className="object-cover object-right"
+            style={{
+              maskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.4) 35%, black 70%)',
+              WebkitMaskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.4) 35%, black 70%)',
+            }}
+            priority
+          />
+          
+          {/* Dark Tint Overlay */}
+          <div className="absolute inset-0 bg-[color:var(--brand-ink)]/40 pointer-events-none" />
+        </div>
+
+        {/* Abstract Blur Orbs */}
+        <div className="absolute -left-20 top-10 h-48 w-48 rounded-full bg-white/10 blur-3xl z-10 pointer-events-none" />
+        <div className="absolute -bottom-16 right-6 h-56 w-56 rounded-full bg-white/5 blur-3xl z-10 pointer-events-none" />
+
+        <Container className="relative z-20 w-full">
+          <div className="max-w-3xl space-y-4">
+            
+            {/* Top Welcome Title + Badge */}
+            <Reveal>
+              <div className="flex items-center gap-3">
+                <p className="text-sm uppercase tracking-[0.2em] text-white/80">
+                  {homeHero.welcome}
+                </p>
+                <span className="rounded-full bg-white/20 border border-white/30 px-3 py-1 text-xs font-bold backdrop-blur-sm shadow-sm">
+                  {homeHero.badge}
+                </span>
+              </div>
+            </Reveal>
+
+            {/* Page Heading Title */}
+            <Reveal delay={0.05}>
+              <h1 className="text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl drop-shadow-md">
+                {aboutHero.title}
+              </h1>
+            </Reveal>
+
+            {/* Subtitle / Description (If available) */}
+            {aboutHero.subtitle && (
+              <Reveal delay={0.1}>
+                <p className="text-base leading-relaxed text-white/90 sm:text-lg max-w-2xl drop-shadow-sm">
+                  {aboutHero.subtitle}
+                </p>
+              </Reveal>
+            )}
+
+            {/* Call to Action Buttons */}
+            <Reveal delay={0.15}>
+              <div className="flex flex-wrap gap-4 pt-4">
+                <Link
+                  href={contactInfo.phoneHref}
+                  className="rounded-full bg-[color:var(--brand-gold)] px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-[color:var(--brand-red-dark)] shadow-xl transition-all hover:scale-105 hover:bg-white"
+                >
+                  {homeCallouts.callToAction}
+                </Link>
+                <Link
+                  href="/services"
+                  className="rounded-full border-2 border-white/60 px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition-all hover:bg-white hover:text-[color:var(--brand-ink)]"
+                >
+                  {homeCallouts.optionsPrompt}
+                </Link>
+              </div>
+            </Reveal>
+
+          </div>
         </Container>
       </section>
 

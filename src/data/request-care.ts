@@ -1,6 +1,8 @@
 export const requestCareHero = {
   title: "Request a Care Consultation",
   subtitle: "Take the First Step Towards Peace of Mind",
+      bannerImage: "/request-care.jpg", // Path to your banner image in public/images/
+
 };
 
 export const requestCareIntro = {

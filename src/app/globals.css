@@ -3,7 +3,7 @@
 :root {
   /* Core Page Backgrounds */
   --background: #fffcf8; /* A very soft, warm white to let the rich colors pop */
-  --foreground: #3b0808; /* A very dark, warm espresso instead of flat black */
+  --foreground: #400303; /* A very dark, warm espresso instead of flat black */
   
   /* Primary Brand Colors (Derived from the new crop) */
   --brand-red: #701313; /* A strong, visible red for standard buttons/links */

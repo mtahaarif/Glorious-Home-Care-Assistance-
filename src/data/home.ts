@@ -1,9 +1,15 @@
 export const homeHero = {
-  welcome: "Safe. Independent. Supported.",
-  headline: "Caring Support, Right at Home",
-  subhead:
-    "Glorious Home Care Assistance provides compassionate non-medical home care, companionship, transportation, and daily living support so clients can remain safe, comfortable, and independent.",
-  badge: "Rated 4.8 out of 5 on Google",
+  welcome: "Welcome to Glorious Home Care",
+  badge: "Trusted Care",
+  headline: "Compassionate Care In the Comfort of Home",
+  subhead: "Providing dependable non-medical home care, companion care, and daily living support across San Jose and the Bay Area.",
+  // ADD THIS ARRAY OF IMAGES
+  bgImages: [
+    "/home-banner-1.jpg", 
+    "/home-banner-2.jpg", 
+    "/home-banner-3.jpg", 
+    "/home-banner-4.jpg"
+  ]
 };
 
 export const homeAbout = {

@@ -44,16 +44,17 @@ const extendedCounties = serviceCounties.filter(
   c => !["Santa Clara County", "Alameda County", "Contra Costa County", "San Francisco County", "San Mateo County"].includes(c)
 );
 
-// Icons
+// Modern Minimal Icons
 const MapPinIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 text-brand-ink group-hover:text-brand-red transition-colors" aria-hidden="true">
-    <path fillRule="evenodd" d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="h-6 w-6">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
   </svg>
 );
 
-const CheckIcon = () => (
-  <svg className="h-5 w-5 text-brand-gold shrink-0" viewBox="0 0 20 20" fill="currentColor">
-    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
+const DiagonalArrowIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="h-5 w-5">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
   </svg>
 );
 
@@ -70,7 +71,7 @@ export default function LocationsDirectory() {
           }
         });
       },
-      { rootMargin: "-20% 0px -75% 0px" } // Triggers the transition smoothly as content enters the upper third of the screen
+      { rootMargin: "-20% 0px -75% 0px" } // Triggers transition smoothly as content enters upper third
     );
 
     groupedRegions.forEach((region) => {
@@ -91,14 +92,14 @@ export default function LocationsDirectory() {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row gap-12 items-start">
+    <div className="flex flex-col lg:flex-row gap-16 items-start">
       
-      {/* LEFT: STICKY SIDEBAR */}
-      <aside className="w-full lg:w-[30%] shrink-0 lg:sticky lg:top-28 space-y-2 z-10">
-        <h3 className="text-[0.7rem] font-bold uppercase tracking-[0.15em] text-muted mb-6 ml-2">
-          Filter by Service District
+      {/* LEFT: STICKY SIDEBAR (Modern Tab Navigation) */}
+      <aside className="w-full lg:w-[28%] shrink-0 lg:sticky lg:top-32 z-10">
+        <h3 className="text-[0.65rem] font-black uppercase tracking-[0.2em] text-[color:var(--brand-ink)]/50 mb-6 pl-4">
+          Service Districts
         </h3>
-        <div className="flex flex-col gap-3">
+        <nav className="flex flex-col gap-2 relative border-l-2 border-black/5 pl-4">
           {groupedRegions.map((region) => {
             const isActive = activeSection === region.id;
             return (
@@ -106,23 +107,28 @@ export default function LocationsDirectory() {
                 key={region.id} 
                 href={`#${region.id}`}
                 onClick={(e) => scrollToSection(e, region.id)}
-                className={`group flex items-center justify-between p-4 rounded-xl border shadow-sm transition-all duration-500 ease-out ${
+                className={`group relative flex items-center justify-between py-4 pr-4 pl-6 rounded-r-2xl transition-all duration-500 ease-out overflow-hidden ${
                   isActive 
-                    ? "bg-brand-ink text-white border-brand-ink scale-[1.02] shadow-md" 
-                    : "bg-white border-gray-100 text-brand-ink hover:bg-brand-ink/5"
+                    ? "bg-[color:var(--brand-red-dark)] text-white shadow-lg translate-x-2" 
+                    : "bg-transparent text-[color:var(--brand-ink)]/70 hover:bg-white hover:shadow-sm"
                 }`}
               >
-                <span className={`font-bold transition-colors duration-300 ${isActive ? "text-white" : "text-brand-ink group-hover:text-brand-red"}`}>
+                {/* Active Indicator Line */}
+                {isActive && (
+                  <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-[color:var(--brand-gold)]" />
+                )}
+                
+                <span className={`font-bold transition-colors duration-300 text-sm sm:text-base ${
+                  isActive ? "text-white" : "group-hover:text-[color:var(--brand-red-dark)]"
+                }`}>
                   {region.name}
                 </span>
-                <div className="flex items-center gap-3">
-                  <span className={`text-xs font-bold px-3 py-1 rounded-full transition-colors duration-300 ${isActive ? "bg-white/20 text-white" : "bg-brand-cream text-brand-ink group-hover:bg-brand-red/10 group-hover:text-brand-red"}`}>
-                    {region.cities.length} Areas
-                  </span>
-                  <span className={`transition-transform duration-300 ${isActive ? "text-brand-gold translate-x-1" : "text-gray-300 group-hover:text-brand-gold group-hover:translate-x-1"}`}>
-                    &rarr;
-                  </span>
-                </div>
+                
+                <span className={`text-xs font-bold transition-all duration-300 ${
+                  isActive ? "opacity-100 text-[color:var(--brand-gold)]" : "opacity-0 -translate-x-4"
+                }`}>
+                  {region.cities.length} Areas
+                </span>
               </a>
             );
           })}
@@ -131,93 +137,102 @@ export default function LocationsDirectory() {
           <a 
             href="#extended-regions"
             onClick={(e) => scrollToSection(e, "extended-regions")}
-            className={`group flex items-center justify-between p-4 rounded-xl border shadow-sm transition-all duration-500 ease-out ${
+            className={`group relative flex items-center justify-between py-4 pr-4 pl-6 rounded-r-2xl transition-all duration-500 ease-out overflow-hidden mt-4 ${
               activeSection === "extended-regions" 
-                ? "bg-brand-ink text-white border-brand-ink scale-[1.02] shadow-md" 
-                : "bg-white border-gray-100 text-brand-ink hover:bg-brand-ink/5"
+                ? "bg-[color:var(--brand-red-dark)] text-white shadow-lg translate-x-2" 
+                : "bg-transparent text-[color:var(--brand-ink)]/70 hover:bg-white hover:shadow-sm"
             }`}
           >
-            <span className={`font-bold transition-colors duration-300 ${activeSection === "extended-regions" ? "text-white" : "text-brand-ink group-hover:text-brand-red"}`}>
-              Extended Regions
+            {activeSection === "extended-regions" && (
+              <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-[color:var(--brand-gold)]" />
+            )}
+            <span className={`font-bold transition-colors duration-300 text-sm sm:text-base ${
+              activeSection === "extended-regions" ? "text-white" : "group-hover:text-[color:var(--brand-red-dark)]"
+            }`}>
+              Extended Coverage
             </span>
-            <div className="flex items-center gap-3">
-              <span className={`text-xs font-bold px-3 py-1 rounded-full transition-colors duration-300 ${activeSection === "extended-regions" ? "bg-white/20 text-white" : "bg-brand-cream text-brand-ink group-hover:bg-brand-red/10 group-hover:text-brand-red"}`}>
-                {extendedCounties.length} Counties
-              </span>
-              <span className={`transition-transform duration-300 ${activeSection === "extended-regions" ? "text-brand-gold translate-x-1" : "text-gray-300 group-hover:text-brand-gold group-hover:translate-x-1"}`}>
-                &rarr;
-              </span>
-            </div>
+            <span className={`transition-transform duration-300 ${
+              activeSection === "extended-regions" ? "text-[color:var(--brand-gold)] translate-x-0" : "text-[color:var(--brand-ink)]/30 group-hover:text-[color:var(--brand-gold)] -translate-x-2"
+            }`}>
+              &darr;
+            </span>
           </a>
-        </div>
+        </nav>
       </aside>
 
       {/* RIGHT: SCROLLABLE CITIES */}
-      <div className="w-full lg:w-[70%] flex flex-col gap-16 lg:gap-24">
+      <div className="w-full lg:w-[72%] flex flex-col gap-20 lg:gap-32">
         {groupedRegions.map((region, idx) => (
           <div key={region.id} id={region.id} className="scroll-mt-32">
             <Reveal>
-              <h2 className="text-3xl font-bold text-brand-ink">{region.name} Home Care Support</h2>
-              <p className="mt-3 text-base leading-relaxed text-muted max-w-2xl">{region.description}</p>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-[color:var(--brand-ink)] tracking-tight">
+                {region.name}
+              </h2>
+              <p className="mt-4 text-lg leading-relaxed text-[color:var(--brand-ink)]/70 max-w-2xl">
+                {region.description}
+              </p>
             </Reveal>
             
-            <div className="mt-8 grid gap-6 sm:grid-cols-2">
+            <div className="mt-10 grid gap-5 sm:grid-cols-2">
               {region.cities.map((area, index) => (
                 <Reveal key={area.slug} delay={index * 0.05}>
                   <Link 
                     href={`/locations/${area.slug}`}
-                    className="group flex h-full flex-col rounded-[2rem] border border-gray-100 bg-white p-6 shadow-sm hover:shadow-lg hover:border-brand-red/20 transition-all duration-300"
+                    className="group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl bg-white p-8 border border-black/5 shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(199,36,57,0.15)] hover:border-[color:var(--brand-red)]/30"
                   >
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-4">
-                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#f4f7f9] group-hover:bg-brand-red/10 transition-colors">
-                          <MapPinIcon />
-                        </div>
-                        <div>
-                          <h3 className="text-lg font-bold text-brand-ink group-hover:text-brand-red transition-colors">
-                            {area.name}, CA
-                          </h3>
-                          <p className="text-[0.65rem] font-bold text-muted/70 mt-0.5 uppercase tracking-wider">
-                            Coverage ZIP: Local Neighborhoods
-                          </p>
-                        </div>
+                    {/* Top Section: Icon & Arrow */}
+                    <div className="flex items-start justify-between mb-8">
+                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[color:var(--brand-cream)] text-[color:var(--brand-gold-dark)] group-hover:bg-[color:var(--brand-red)] group-hover:text-white transition-colors duration-500 shadow-inner">
+                        <MapPinIcon />
                       </div>
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-50 text-slate-400 group-hover:bg-brand-red group-hover:text-white transition-colors">
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                        </svg>
+                      
+                      {/* Premium Diagonal Arrow */}
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black/5 text-[color:var(--brand-ink)]/40 group-hover:bg-[color:var(--brand-gold)] group-hover:text-white transition-all duration-500 group-hover:rotate-45">
+                        <DiagonalArrowIcon />
                       </div>
                     </div>
-                    <p className="mt-5 text-sm leading-relaxed text-muted line-clamp-3">
-                      {area.description}
-                    </p>
+                    
+                    {/* Bottom Section: Text */}
+                    <div>
+                      <h3 className="text-2xl font-bold text-[color:var(--brand-ink)] group-hover:text-[color:var(--brand-red-dark)] transition-colors duration-300">
+                        {area.name}, CA
+                      </h3>
+                      <p className="mt-3 text-sm leading-relaxed text-[color:var(--brand-ink)]/60 line-clamp-2">
+                        {area.description}
+                      </p>
+                    </div>
                   </Link>
                 </Reveal>
               ))}
             </div>
+            
+            {/* Elegant Divider */}
             {idx !== groupedRegions.length - 1 && (
-              <hr className="mt-16 border-gray-200" />
+              <div className="mt-20 h-[1px] w-full bg-gradient-to-r from-transparent via-black/10 to-transparent" />
             )}
           </div>
         ))}
 
         {/* Extended Regions Section */}
-        <hr className="border-gray-200" />
-        <div id="extended-regions" className="scroll-mt-32">
+        <div id="extended-regions" className="scroll-mt-32 pt-10 border-t border-black/10">
           <Reveal>
-            <h2 className="text-3xl font-bold text-brand-ink">Extended California Coverage</h2>
-            <p className="mt-3 text-base leading-relaxed text-muted max-w-2xl">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-[color:var(--brand-ink)] tracking-tight">
+              Extended California Coverage
+            </h2>
+            <p className="mt-4 text-lg leading-relaxed text-[color:var(--brand-ink)]/70 max-w-2xl">
               Glorious Home Care Assistance proudly extends our premium private duty home care and senior companionship across these additional California communities.
             </p>
           </Reveal>
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          
+          {/* Modern Floating Pill Cloud */}
+          <div className="mt-10 flex flex-wrap gap-3">
             {extendedCounties.map((county, idx) => (
-              <Reveal key={county} delay={idx * 0.05}>
-                <div className="flex items-center gap-3 p-4 rounded-2xl bg-white border border-gray-100 shadow-sm hover:border-brand-red/20 transition-colors">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-cream">
-                      <CheckIcon />
-                  </div>
-                  <span className="text-sm font-bold text-brand-ink">{county}</span>
+              <Reveal key={county} delay={idx * 0.03}>
+                <div className="group flex cursor-default items-center gap-2.5 rounded-full border border-[color:var(--brand-gold)]/30 bg-[color:var(--brand-cream)]/50 px-6 py-3 transition-all duration-300 hover:-translate-y-1 hover:bg-[color:var(--brand-red-dark)] hover:border-[color:var(--brand-red-dark)] hover:shadow-md">
+                  <div className="h-2 w-2 rounded-full bg-[color:var(--brand-gold)] group-hover:bg-white transition-colors" />
+                  <span className="text-sm font-bold text-[color:var(--brand-ink)] group-hover:text-white transition-colors">
+                    {county}
+                  </span>
                 </div>
               </Reveal>
             ))}

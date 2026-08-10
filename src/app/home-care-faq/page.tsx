@@ -6,7 +6,7 @@ import SectionHeading from "@/components/SectionHeading";
 import FaqAccordion from "@/components/FaqAccordion";
 import { contactInfo, servicesCta } from "@/data/global";
 import { faqHero, faqIntro, faqCategories } from "@/data/faqs";
-
+import { sharedServiceContent } from "@/data/services";
 export const metadata: Metadata = {
   title: "Frequently Asked Questions | Glorious Home Care Assistance",
   description: "Get answers to common questions about home care services, caregiver screening, costs, and insurance coverage in San Jose and Santa Clara County.",
@@ -75,33 +75,37 @@ export default function FaqPage() {
       </section>
 
       {/* BOTTOM CTA SECTION */}
-      <section className="bg-gradient-to-r from-brand-red to-brand-gold text-white">
-        <Container className="py-16 md:py-20">
-          <Reveal className="flex flex-col items-start gap-8 md:flex-row md:items-center md:justify-between">
-            <div className="max-w-2xl">
-              <p className="text-sm uppercase tracking-[0.2em] text-white/80">
-                {servicesCta.title}
+      <section className="bg-brand-red-dark py-10 text-center text-white md:py-10">
+        <Container className="max-w-3xl">
+          <Reveal className="space-y-4">
+            <h2 className="whitespace-pre-line text-4xl font-bold leading-tight sm:text-5xl">
+              {sharedServiceContent.bottomCta.message}
+            </h2>
+            
+            <div className="flex flex-col items-center gap-4">
+              <p className="text-sm font-bold uppercase tracking-[0.2em] text-brand-gold">
+                {sharedServiceContent.bottomCta.action}
               </p>
-              <h2 className="mt-3 text-3xl font-semibold sm:text-4xl">
-                {servicesCta.body}
-              </h2>
-              <p className="mt-4 text-base text-white/90">
-                Didn't find the answer you were looking for? Reach out to our care coordinators today.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-4 shrink-0">
+              
               <Link
                 href={contactInfo.phoneHref}
-                className="rounded-full bg-white px-8 py-4 text-sm font-bold uppercase tracking-wide text-brand-red shadow-lg transition hover:bg-white/90"
+                className="inline-block transform rounded-full bg-brand-gold px-12 py-5 text-xl font-black text-brand-red-dark shadow-xl transition-all hover:scale-105 hover:bg-white sm:text-2xl"
               >
-                Call {contactInfo.phone}
+                {sharedServiceContent.bottomCta.phone}
               </Link>
-              <Link
-                href="/request-care"
-                className="rounded-full border-2 border-white/70 px-8 py-4 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-white/10"
+              
+              <a 
+                href={`mailto:${sharedServiceContent.bottomCta.email}`} 
+                className="mt-4 font-medium text-white/80 transition hover:text-white"
               >
-                Request Care
-              </Link>
+                {sharedServiceContent.bottomCta.email}
+              </a>
+            </div>
+
+            <div className="mx-auto mt-12 max-w-lg border-t border-white/10 pt-8">
+              <p className="text-sm font-semibold uppercase tracking-widest text-white/60">
+                {sharedServiceContent.bottomCta.tagline}
+              </p>
             </div>
           </Reveal>
         </Container>

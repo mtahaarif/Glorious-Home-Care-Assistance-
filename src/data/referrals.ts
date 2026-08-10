@@ -1,6 +1,7 @@
 export const referralHero = {
   title: "Partner With Us",
   subtitle: "Trusted In-Home Care Solutions for Healthcare Professionals",
+      bannerImage: "/referrals.jpg", // Path to your banner image in public/images/
 };
 
 export const referralIntro = {

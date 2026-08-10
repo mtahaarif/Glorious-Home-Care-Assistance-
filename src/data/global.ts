@@ -56,3 +56,9 @@ export const servicesCta = {
   title: "Free Consultation",
   body: "Contact Us Today for a Free Consultation",
 };
+
+export const socialLinks = [
+  { label: "LinkedIn", href: "https://www.linkedin.com/company/glorious-home-care-assistance-llc/" },
+  { label: "Facebook", href: "hhttps://www.facebook.com/p/Glorious-Home-Care-Assistance-61560284734058/" },
+  { label: "Instagram", href: "https://www.instagram.com/glorious.homecareassistance/" },
+] as const;

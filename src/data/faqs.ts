@@ -1,6 +1,7 @@
 export const faqHero = {
   title: "Frequently Asked Questions",
   subtitle: "Everything You Need to Know About Home Care",
+      bannerImage: "/faqs.jpg", // Path to your banner image in public/images/
 };
 
 export const faqIntro = {

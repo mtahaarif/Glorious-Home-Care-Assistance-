@@ -1,6 +1,8 @@
 export const locationsHero = {
   title: "Areas We Serve",
   subtitle: "Proudly Serving Communities Across the Bay Area and California",
+    bannerImage: "/areas-we-serve.jpg", // Path to your banner image in public/images/
+
 };
 
 export const locationsIntro = {

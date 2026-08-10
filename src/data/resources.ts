@@ -1,6 +1,8 @@
 export const resourcesHero = {
   title: "Resources & Guides",
   subtitle: "Helpful Information for Families Navigating Home Care",
+    bannerImage: "/resources.jpg", // Path to your banner image in public/images/
+
 };
 
 export const resourcesIntro = {
