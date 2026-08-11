@@ -1,101 +1,90 @@
-Glorious Home Care Assistance - Project Documentation
-📖 Overview
+# Glorious Home Care Assistance - Project Documentation
+
+## 📖 Overview
 Glorious Home Care Assistance is a comprehensive, conversion-optimized Next.js web platform built for a premium home care agency serving San Jose and the wider Bay Area.
 
 The application transitioned from a simple multi-page site into a fully scalable 34-page web platform. It is heavily engineered to build local SEO authority, provide in-depth, accessible resources to families, and generate highly qualified leads.
 
 The codebase utilizes a modular "Local Headless CMS" architecture. UI components remain strictly presentational, while all text, service parameters, localized SEO data, and imagery configurations are pulled from centralized TypeScript data files.
 
-🛠 Technology Stack
-Framework: Next.js 16.2.6 (App Router)
+## 🛠 Technology Stack
+* **Framework:** Next.js 16.2.6 (App Router)
+* **Library:** React 19.2.4
+* **Language:** TypeScript 5
+* **Styling:** Tailwind CSS v4 (with `@theme inline` variables)
+* **Animations & Motion:** Framer Motion 12.40.0 & Native CSS Keyframes
+* **Icons:** `react-icons` & Custom SVGs
+* **Linting:** ESLint 9 with `eslint-config-next`
 
-Library: React 19.2.4
-
-Language: TypeScript 5
-
-Styling: Tailwind CSS v4 (with @theme inline variables)
-
-Animations & Motion: Framer Motion 12.40.0 & Native CSS Keyframes
-
-Icons: react-icons & Custom SVGs
-
-Linting: ESLint 9 with eslint-config-next
-
-✨ Key Features & Premium UI Implementations
+## ✨ Key Features & Premium UI Implementations
 During the development lifecycle, the UI was upgraded to meet elite, modern web standards (akin to Apple and premium creative agencies):
 
-Cinematic Hero Carousels & Standardized Banners: * Homepage features a dynamic, cross-fading background image carousel running on a useEffect interval.
+* **Cinematic Hero Carousels & Standardized Banners:** Homepage features a dynamic, cross-fading background image carousel running on a `useEffect` interval. All internal page banners utilize a unified, fixed-height architecture.
+* **Liquid Frosted Glass:** Banners utilize `backdrop-blur-2xl` with refined transparent borders and soft typography overlays, keeping text legible while letting vibrant photography shine through.
+* **Infinite Typographic Marquees:** Service features are displayed using an infinite, seamless scrolling typographic ribbon driven by custom `@keyframes`. It includes a highly interactive pause-on-hover state.
+* **Elegant Solid Asymmetric Grids:** Service details use a highly customized bento-box grid. Cards are styled with rich dark maroon (`--brand-red-dark`) backgrounds, stark white text, crisp gold accents, and subtle elevation drop-shadows. Custom uploaded Next.js `<Image>` icons are injected dynamically using CSS invert filters.
+* **Sticky Editorial Scroll Layouts:** Sections utilize `position: sticky` to pin informative headers to the left column while massive, minimalist typographic elements and custom accent lines scroll beautifully on the right.
+* **Interactive Location Directory:** The "Areas We Serve" page features a sticky, tabbed sidebar that detects scroll positioning via `IntersectionObserver`. It includes smooth scrolling, animated slide-states, high-contrast destination cards, and a floating "Pill Cloud" for extended coverage areas.
+* **Optimized Smart Footer:** A responsive 4-column grid utilizing semantic `<address>` tags, automated dynamic copyright years, and mapped `react-icons` for social media integrations.
 
-All internal page banners utilize a unified, fixed-height architecture.
-
-CSS Masking: Images are rendered using object-cover object-right paired with a sophisticated CSS maskImage linear gradient. This perfectly fades the image into the brand's dark ink background, guaranteeing 100% text readability without abrupt image cropping.
-
-Infinite Typographic Marquees: * Service features are displayed using an infinite, seamless scrolling typographic ribbon driven by custom @keyframes. It includes gradient fade-masks on the edges and a highly interactive pause-on-hover state that magnifies and colors individual words.
-
-Elegant Solid Asymmetric Grids: * Service details use a highly customized bento-box grid. Cards are styled with rich dark maroon (--brand-red-dark) backgrounds, stark white text, crisp gold accents, and subtle elevation drop-shadows. Custom uploaded Next.js <Image> icons are injected dynamically using CSS invert filters.
-
-Interactive Location Directory: * The "Areas We Serve" page features a sticky, tabbed sidebar that detects scroll positioning via IntersectionObserver. It includes smooth scrolling, animated slide-states (translate-x-2), high-contrast destination cards with diagonal outbound arrows, and a floating "Pill Cloud" for extended coverage areas.
-
-Optimized Smart Footer: * A responsive 4-column grid utilizing semantic <address> tags, automated dynamic copyright years, and mapped react-icons for social media integrations.
-
-🗂 Repository Layout
-Plaintext
+## 🗂 Repository Layout
+```text
 public/
-  images/
-    # All dynamic banner images, custom SVG/PNG icons, and logos
+  images/                   # All dynamic banner images, custom SVG/PNG icons, and logos
 src/
   app/
     favicon.ico
-    globals.css                           # Tailwind v4 @theme variables
-    layout.tsx                            # Root Layout (Nav, Footer, Fonts)
-    page.tsx                              # Home (Dynamic Carousel Hero)
-    about/page.tsx                        # About Us
-    home-care-faq/page.tsx                # FAQ
-    referral-partners/page.tsx            # Healthcare Professionals B2B
-    request-care/page.tsx                 # Lead Generation Form
+    globals.css             # Tailwind v4 @theme variables
+    layout.tsx              # Root Layout (Nav, Footer, Fonts)
+    page.tsx                # Home (Dynamic Carousel Hero)
+    about/page.tsx          # About Us
+    home-care-faq/page.tsx  # FAQ
+    referral-partners/page.tsx # Healthcare Professionals B2B
+    request-care/page.tsx   # Lead Generation Form
     
     # Static Hub Pages
-    services/page.tsx                     # Main Services Hub
-    locations/page.tsx                    # Areas We Serve Hub
-    resources/page.tsx                    # Resources & Guides Hub
+    services/page.tsx       # Main Services Hub
+    locations/page.tsx      # Areas We Serve Hub
+    resources/page.tsx      # Resources & Guides Hub
     
     # Dynamic Routes (SSG)
-    services/[service]/page.tsx           # Generates 9 distinct service pages
-    locations/[city]/page.tsx             # Generates 6 localized city pages
-    resources/[article]/page.tsx          # Generates 10 guide/article pages
+    services/[service]/page.tsx   # Generates 9 distinct service pages
+    locations/[city]/page.tsx     # Generates 6 localized city pages
+    resources/[article]/page.tsx  # Generates 10 guide/article pages
     
   components/
-    Container.tsx                         # Max-width layout wrapper
-    DetailCard.tsx                        # Service details
-    FaqAccordion.tsx                      # Framer Motion interactive Q&A
-    Footer.tsx                            # Smart 4-col Footer
-    LocationsDirectory.tsx                # Sticky scroll-spy directory
-    Navbar.tsx                            # Responsive header with mobile drawer
-    Reveal.tsx                            # Framer Motion scroll animations
-    SectionHeading.tsx                    # Standardized typography headers
-    ServiceCard.tsx                       # Reusable hub cards
-    TestimonialCard.tsx                   # Client quote displays
+    Container.tsx           # Max-width layout wrapper
+    DetailCard.tsx          # Service details
+    FaqAccordion.tsx        # Framer Motion interactive Q&A
+    Footer.tsx              # Smart 4-col Footer
+    LocationsDirectory.tsx  # Sticky scroll-spy directory
+    Navbar.tsx              # Responsive header with mobile drawer
+    Reveal.tsx              # Framer Motion scroll animations
+    SectionHeading.tsx      # Standardized typography headers
+    ServiceCard.tsx         # Reusable hub cards
+    TestimonialCard.tsx     # Client quote displays
 
-  data/                                   # Local Headless CMS
-    global.ts                             # Nav, Footer, Contact Info
-    home.ts                               # Hero Carousel arrays, Homepage copy
-    about.ts                              # Brand story, Vision, Mission
-    services.ts                           # Service objects, Bento box data, icons
-    locations.ts                          # Service areas, zip codes, descriptions
-    resources.ts                          # Articles and guide categories
-    faqs.ts                               # Q&A data arrays
-    referrals.ts                          # B2B healthcare partner copy
-    request-care.ts                       # Form dropdown options
-🏗 Application Architecture
+  data/                     # Local Headless CMS
+    global.ts               # Nav, Footer, Contact Info
+    home.ts                 # Hero Carousel arrays, Homepage copy
+    about.ts                # Brand story, Vision, Mission
+    services.ts             # Service objects, Bento box data, icons
+    locations.ts            # Service areas, zip codes, descriptions
+    resources.ts            # Articles and guide categories
+    faqs.ts                 # Q&A data arrays
+    referrals.ts            # B2B healthcare partner copy
+    request-care.ts         # Form dropdown options
+
+Application Architecture
 1. Shared App Shell (src/app/layout.tsx)
 The root layout provides the common frame for every page. It establishes the global typography (Manrope font), configures global SEO metadata, and wraps all child pages between the interactive Navbar and Footer.
 
 2. Static Routes & Hubs (Phase 1)
 The application features 8 highly targeted static entry points:
 
-Home (/): Rich landing page with a 5-second image crossfade carousel, service previews, care process steps, and testimonials.
+Home (/): Rich landing page with a 5-second image crossfade carousel, frosted glass hero, infinite scrolling marquees, sticky scroll sections, and client testimonials.
 
-About (/about): Features the agency's founding story, Vision, Mission, and "The GHCA Difference" with static masked banners.
+About (/about): Features the agency's founding story, Vision, Mission, and caregiver burnout support.
 
 Services Hub (/services): An interactive grid outlining Companion Care, Personal Care Assistance, and specialized care offerings.
 
@@ -110,9 +99,7 @@ Referral Partners (/referral-partners): B2B page for discharge planners and phys
 Request Care (/request-care): The primary conversion lead-generation form.
 
 3. Dynamic Routing & SSG (Phase 2)
-To scale the site to 34 pages efficiently, Next.js Dynamic Routes ([slug]) were implemented.
-
-By utilizing Next.js's generateStaticParams, the application maps through the arrays in the data/ folder at build time to statically generate:
+To scale the site to 34 pages efficiently, Next.js Dynamic Routes ([slug]) were implemented. By utilizing Next.js's generateStaticParams, the application maps through the arrays in the data/ folder at build time to statically generate:
 
 9 Service Detail Pages (e.g., /services/dementia-care)
 
@@ -137,7 +124,7 @@ Brand Palette: Exposed via @theme inline, the site utilizes a warm, professional
 
 --brand-ink: #1b1b1b (Deep dark tone for primary text and hero overlays)
 
-Visual Direction: The design language relies on soft cream backgrounds alternating with stark white surfaces, deep maroon elevated bento-box cards, dynamic typographic marquees, and CSS-masked cinematic hero images.
+Visual Direction: The design language relies on soft cream backgrounds alternating with stark white surfaces, deep maroon elevated bento-box cards, infinite dynamic marquees, minimalistic editorial typography, and CSS-masked cinematic hero images.
 
 🚀 Getting Started
 To run this project locally:

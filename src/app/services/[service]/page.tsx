@@ -6,7 +6,6 @@ import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
 import { contactInfo, homeCallouts } from "@/data/global";
 import { mainServices, servicesHero, sharedServiceContent } from "@/data/services";
-import { homeHero } from "@/data/home";
 const HeartIcon = () => (
   <svg className="mb-4 h-10 w-10 text-brand-red" fill="currentColor" viewBox="0 0 24 24">
     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
@@ -37,19 +36,19 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
   }
 
   // Destructured iconImage instead of Icon
-  const { pageData, iconImage, bannerImage } = currentService; 
+  const { title,description, pageData, iconImage, bannerImage } = currentService; 
 
   return (
     <div className="flex flex-col">
       
-{/* STATIC HERO BANNER WITH WELCOME BADGE & ACTION BUTTONS */}
-      <section className="relative overflow-hidden bg-[color:var(--brand-ink)] text-white min-h-[380px] sm:min-h-[420px] lg:min-h-[450px] py-12 flex items-center">
+      {/* 1. HERO BANNER (Compact Glass & Scaled Typography) */}
+      <section className="relative overflow-hidden bg-brand-cream min-h-[400px] md:min-h-[450px] lg:min-h-[500px] flex items-center py-12 md:py-16">
         
         {/* Background Image Container */}
         <div className="absolute inset-0 bg-[color:var(--brand-ink)] z-0">
           <Image 
-            src={servicesHero.bannerImage} // Replace with page source: servicesHero.bannerImage, heroImage, etc.
-            alt={servicesHero.title}
+            src={bannerImage} // Replace with page source: servicesHero.bannerImage, heroImage, etc.
+            alt={title}
             fill 
             className="object-cover object-right"
             style={{
@@ -62,64 +61,45 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
           {/* Dark Tint Overlay */}
           <div className="absolute inset-0 bg-[color:var(--brand-ink)]/40 pointer-events-none" />
         </div>
-
-        {/* Abstract Blur Orbs */}
-        <div className="absolute -left-20 top-10 h-48 w-48 rounded-full bg-white/10 blur-3xl z-10 pointer-events-none" />
-        <div className="absolute -bottom-16 right-6 h-56 w-56 rounded-full bg-white/5 blur-3xl z-10 pointer-events-none" />
-
+        
         <Container className="relative z-20 w-full">
-          <div className="max-w-3xl space-y-4">
-            
-            {/* Top Welcome Title + Badge */}
-            <Reveal>
-              <div className="flex items-center gap-3">
-                <p className="text-sm uppercase tracking-[0.2em] text-white/80">
-                  {homeHero.welcome}
-                </p>
-                <span className="rounded-full bg-white/20 border border-white/30 px-3 py-1 text-xs font-bold backdrop-blur-sm shadow-sm">
-                  {homeHero.badge}
-                </span>
-              </div>
-            </Reveal>
-
-            {/* Page Heading Title */}
+          {/* Liquid Frosted Glass Content Panel (Tighter Padding) */}
+          <div className="max-w-xl space-y-4 rounded-3xl bg-white/40 sm:bg-white/30 backdrop-blur-2xl border border-white/50 p-6 sm:p-8 lg:p-10 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
             <Reveal delay={0.05}>
-              <h1 className="text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl drop-shadow-md">
-                {servicesHero.title}
+              {/* Scaled Headline from text-6xl to text-3xl/4xl */}
+              <h1 className="text-2xl font-extrabold leading-tight text-brand-ink sm:text-3xl lg:text-4xl drop-shadow-sm">
+                {title}
               </h1>
             </Reveal>
-
-            {/* Subtitle / Description (If available) */}
-            {servicesHero.subtitle && (
-              <Reveal delay={0.1}>
-                <p className="text-base leading-relaxed text-white/90 sm:text-lg max-w-2xl drop-shadow-sm">
-                  {servicesHero.subtitle}
-                </p>
-              </Reveal>
-            )}
-
-            {/* Call to Action Buttons */}
+            
+            <Reveal delay={0.1}>
+              {/* Scaled Subhead from text-xl to text-base */}
+              <p className="text-sm leading-relaxed text-brand-ink/80 sm:text-base font-medium max-w-lg">
+                {description}
+              </p>
+            </Reveal>
+            
             <Reveal delay={0.15}>
-              <div className="flex flex-wrap gap-4 pt-4">
+              <div className="flex flex-col sm:flex-row flex-wrap gap-3 pt-2">
+                {/* Scaled Buttons (Reduced padding and text size) */}
                 <Link
                   href={contactInfo.phoneHref}
-                  className="rounded-full bg-[color:var(--brand-gold)] px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-[color:var(--brand-red-dark)] shadow-xl transition-all hover:scale-105 hover:bg-white"
+                  className="inline-flex w-full sm:w-auto items-center justify-center rounded-full bg-brand-red px-6 py-3 text-sm font-bold tracking-wide text-white shadow-lg transition-all hover:-translate-y-1 hover:bg-brand-red-dark"
                 >
                   {homeCallouts.callToAction}
                 </Link>
                 <Link
-                  href="/services"
-                  className="rounded-full border-2 border-white/60 px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition-all hover:bg-white hover:text-[color:var(--brand-ink)]"
+                  href="/request-care"
+                  className="inline-flex w-full sm:w-auto items-center justify-center rounded-full border-2 border-white bg-white/40 backdrop-blur-md px-6 py-3 text-sm font-bold tracking-wide text-brand-ink transition-all hover:-translate-y-1 hover:bg-white"
                 >
-                  {homeCallouts.optionsPrompt}
+                  Request Care Today!
                 </Link>
               </div>
             </Reveal>
-
+            
           </div>
         </Container>
       </section>
-
       {/* 2. HEADING 1 & DESCRIPTION 1 */}
       <section className="bg-background pt-16 md:pt-24 pb-12">
         <Container className="max-w-4xl text-center">
@@ -237,9 +217,10 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
         </Container>
       </section>
 
-      {/* 4. HEADING 2 */}
-      <section className="bg-white py-16 md:py-24">
-        <Container className="max-w-4xl text-center">
+
+{/* 4. FEATURE BAR (Modern Typographic Ribbon) */}
+      <section className="border-y border-[color:var(--brand-gold)]/20 bg-white py-16 md:py-24 overflow-hidden">
+                <Container className="max-w-4xl text-center">
           <Reveal className="space-y-4">
             <h2 className="text-3xl font-bold uppercase tracking-wide text-brand-red sm:text-4xl">
               {pageData.heading2.line1}
@@ -247,13 +228,10 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
             <p className="mx-auto max-w-3xl text-xl font-semibold leading-relaxed text-brand-red-dark sm:text-2xl">
               {pageData.heading2.line2}
             </p>
+            <br />
+            <br />
           </Reveal>
         </Container>
-      </section>
-
-{/* 5. FEATURE BAR (Modern Typographic Ribbon) */}
-      <section className="border-y border-[color:var(--brand-gold)]/20 bg-white py-16 md:py-24 overflow-hidden">
-        
         {/* CSS for perfect seamless scrolling */}
         <style dangerouslySetInnerHTML={{__html: `
           @keyframes scroll-marquee {

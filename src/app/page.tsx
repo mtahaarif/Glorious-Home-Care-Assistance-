@@ -82,6 +82,8 @@ export default function Home() {
                 <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red-dark">
                   {homeHero.welcome}
                 </p>
+                <span className="h-[2px] w-6 bg-brand-red hidden sm:block"></span>
+
                 {/* Scaled badge from text-xs to text-[10px] */}
                 <span className="rounded-full bg-white/60 border border-white/80 px-2.5 py-1 text-[10px] font-bold text-brand-ink backdrop-blur-md">
                   {homeHero.badge}
@@ -320,200 +322,13 @@ export default function Home() {
         </Container>
       </section>
 
-{/* 4. WHO WE SERVE SECTION (Static Grid) */}
-      <section className="bg-surface py-20 md:py-32">
-        <Container>
-          <Reveal>
-            {/* Centered Heading Layout */}
-            <div className="mx-auto max-w-3xl text-center mb-16">
-              <div className="flex items-center justify-center gap-4 mb-4">
-                <span className="h-[2px] w-12 bg-brand-red"></span>
-                <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-brand-red">
-                  {whoWeServe.title}
-                </h2>
-                <span className="h-[2px] w-12 bg-brand-red"></span>
-              </div>
-              <h3 className="text-3xl font-extrabold text-brand-ink md:text-5xl leading-tight">
-                {whoWeServe.subtitle}
-              </h3>
-            </div>
-          </Reveal>
-
-          {/* Static Grid Layout */}
-          <div className="grid gap-6 md:grid-cols-3">
-            {whoWeServe.groups.map((group, index) => (
-              <Reveal key={group.title} delay={index * 0.1}>
-                <div className="flex h-full flex-col rounded-3xl bg-white border border-brand-cream/50 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-2 group/card cursor-pointer overflow-hidden">
-                  
-                  {/* Image Section */}
-                  <div className="relative h-[220px] w-full overflow-hidden bg-brand-cream">
-                    {group.image && (
-                      <Image 
-                        src={group.image}
-                        alt={group.title}
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover/card:scale-110"
-                      />
-                    )}
-                    <div className="absolute inset-0 bg-brand-ink/10 group-hover/card:bg-transparent transition-colors duration-300"></div>
-                  </div>
-                  
-                  {/* Text Section */}
-                  <div className="p-8 flex flex-col flex-grow">
-                    <h3 className="text-xl font-bold text-brand-ink mb-3 group-hover/card:text-brand-red transition-colors">
-                      {group.title}
-                    </h3>
-                    <p className="text-muted leading-relaxed mb-6 flex-grow">
-                      {group.description}
-                    </p>
-                    <Link href="/services" className="flex items-center gap-2 text-brand-red-dark font-bold text-sm uppercase tracking-wider mt-auto group-hover/card:text-brand-red transition-colors">
-                      Learn More
-                      <svg className="w-5 h-5 transform transition-transform group-hover/card:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                      </svg>
-                    </Link>
-                  </div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </Container>
-      </section>
-
-      {/* 5. HOME CARE OPTIONS (Infinite Ticker) */}
-      <section className="bg-white border-y border-brand-gold/10 py-20 md:py-32 overflow-hidden">
-        
-        {/* Keyframes for the Infinite Ticker */}
-        <style>{`
-          @keyframes infinite-scroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-          }
-          .animate-infinite-scroll {
-            animation: infinite-scroll 45s linear infinite;
-          }
-          .ticker-wrapper:hover .animate-infinite-scroll {
-            animation-play-state: paused;
-          }
-        `}</style>
-
-        <Container>
-          <Reveal>
-            {/* Centered Heading Layout */}
-            <div className="mx-auto max-w-3xl text-center mb-16">
-              <div className="flex items-center justify-center gap-4 mb-4">
-                <span className="h-[2px] w-12 bg-brand-red"></span>
-                <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-brand-red">
-                  {homeServices.title}
-                </h2>
-                <span className="h-[2px] w-12 bg-brand-red"></span>
-              </div>
-              <h3 className="text-3xl font-extrabold text-brand-ink md:text-5xl leading-tight">
-                {homeServices.subtitle}
-              </h3>
-            </div>
-          </Reveal>
-        </Container>
-
-        {/* Infinite Scroll Ticker Container */}
-        <div className="relative mt-8 flex overflow-hidden ticker-wrapper">
-          <div className="flex w-max animate-infinite-scroll gap-6 px-3">
-            {/* Duplicate array to create a seamless loop */}
-            {[...homeServices.services, ...homeServices.services].map((service, index) => (
-              <div 
-                key={index} 
-                className="w-[320px] sm:w-[380px] shrink-0 flex flex-col rounded-3xl bg-white border border-brand-cream/50 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-2 group/card cursor-pointer overflow-hidden"
-              >
-                {/* Image Section */}
-                <div className="relative h-[220px] w-full overflow-hidden bg-brand-cream shrink-0">
-                  {service.image && (
-                    <Image 
-                      src={service.image}
-                      alt={service.title}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover/card:scale-110"
-                    />
-                  )}
-                  <div className="absolute inset-0 bg-brand-ink/10 group-hover/card:bg-transparent transition-colors duration-300"></div>
-                </div>
-                
-                {/* Text Section */}
-                <div className="p-8 flex flex-col flex-grow">
-                  <h3 className="text-xl font-bold text-brand-ink mb-3 group-hover/card:text-brand-red transition-colors">
-                    {service.title}
-                  </h3>
-                  <p className="text-muted leading-relaxed mb-6 flex-grow">
-                    {service.description}
-                  </p>
-                  <Link href="/services" className="flex items-center gap-2 text-brand-red-dark font-bold text-sm uppercase tracking-wider mt-auto group-hover/card:text-brand-red transition-colors">
-                    Learn More
-                    <svg className="w-5 h-5 transform transition-transform group-hover/card:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-        
-      </section>
-
-{/* 6. OUR CARE PROCESS (Structured Card Layout) */}
-      <section className="bg-surface py-20 md:py-32">
-        <Container>
-          <Reveal>
-            {/* Centered Heading Layout matching previous sections */}
-            <div className="mx-auto max-w-3xl text-center mb-16 md:mb-20">
-              <div className="flex items-center justify-center gap-4 mb-4">
-                <span className="h-[2px] w-12 bg-brand-red"></span>
-                <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-brand-red">
-                  How Home Care Works
-                </h2>
-                <span className="h-[2px] w-12 bg-brand-red"></span>
-              </div>
-              <h3 className="text-4xl font-extrabold text-brand-ink md:text-5xl leading-tight">
-                {homeProcess.title}
-              </h3>
-            </div>
-          </Reveal>
-
-          <div className="grid gap-6 md:grid-cols-3 lg:gap-8">
-            {homeProcess.steps.map((step, index) => (
-              <Reveal key={step.step} delay={index * 0.1} className="h-full">
-                <div className="flex h-full flex-col rounded-3xl bg-white border border-brand-cream shadow-sm transition-all duration-300 hover:border-brand-gold/40 hover:shadow-xl hover:-translate-y-2 group cursor-default p-8 md:p-10">
-                  
-                  {/* Big Gold Number */}
-                  <span className="text-5xl md:text-6xl font-black text-brand-gold block tracking-tighter select-none mb-4">
-                    {step.step}
-                  </span>
-                  
-                  {/* Heading Title */}
-                  <h3 className="text-2xl font-bold text-brand-ink mb-6 transition-colors duration-300 group-hover:text-brand-red">
-                    {step.title}
-                  </h3>
-                  
-                  {/* Horizontal Divider Line */}
-                  <div className="h-[2px] w-full bg-brand-cream mb-6 transition-colors duration-300 group-hover:bg-brand-red/20"></div>
-                  
-                  {/* Description below the line */}
-                  <p className="text-lg text-muted leading-relaxed flex-grow">
-                    {step.description}
-                  </p>
-                  
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </Container>
-      </section>
 {/* 7. HOW TO CHOOSE THE BEST HOME CARE (Sticky Scroll Minimalist) */}
       <section className="bg-white py-20 md:py-32 border-y border-brand-gold/10">
         <Container>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start">
             
             {/* LEFT COLUMN: Sticky Header & Description */}
-{/* LEFT COLUMN: Sticky Header & Description */}
+            {/* LEFT COLUMN: Sticky Header & Description */}
             <div className="lg:col-span-5 lg:sticky lg:top-32 flex flex-col justify-start">
               <Reveal className="flex flex-col items-start">
                 
@@ -606,45 +421,48 @@ export default function Home() {
 
 
 
-      {/* 9. BOTTOM CTA SECTION */}
-      <section className="bg-brand-red-dark py-16 text-center text-white md:py-24 border-t-4 border-brand-gold">
+{/* 9. BOTTOM CTA SECTION (Compact Version) */}
+      <section className="bg-brand-red-dark py-12 md:py-16 text-center text-white border-t-4 border-brand-gold">
         <Container className="max-w-3xl">
           <Reveal className="flex flex-col items-center">
             
-            {/* Gold Speech Bubble Icon */}
-            <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-brand-gold text-brand-red-dark shadow-lg">
-               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="h-8 w-8">
+            {/* Scaled-down Gold Speech Bubble Icon */}
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-brand-gold text-brand-red-dark shadow-lg">
+               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="h-6 w-6">
                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z" />
                </svg>
             </div>
 
-            <h2 className="mb-6 text-4xl font-extrabold leading-tight sm:text-5xl">
+            {/* Scaled-down Heading */}
+            <h2 className="mb-4 text-3xl font-extrabold leading-tight sm:text-4xl">
               Let's Talk About<br />Your Loved One's Care Needs
             </h2>
             
-            <p className="mb-10 text-lg leading-relaxed text-white/90 sm:text-xl">
+            {/* Scaled-down Description */}
+            <p className="mb-8 max-w-xl text-base leading-relaxed text-white/90 sm:text-lg">
               A free in-home consultation can help families understand care options, daily support needs, and the best plan for a loved one's comfort and safety at home.
             </p>
             
-            <div className="flex flex-col items-center gap-4">
-              <p className="text-sm font-bold uppercase tracking-[0.2em] text-brand-gold">
+            <div className="flex flex-col items-center gap-3">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-gold">
                 Call Us Today
               </p>
               
+              {/* Scaled-down Button */}
               <Link
                 href={contactInfo.phoneHref}
-                className="inline-block transform rounded-full bg-brand-gold px-12 py-5 text-xl font-black tracking-wide text-brand-ink shadow-xl transition-all hover:scale-105 hover:bg-white sm:text-3xl"
+                className="inline-block transform rounded-full bg-brand-gold px-10 py-4 text-lg font-black tracking-wide text-brand-ink shadow-xl transition-all hover:scale-105 hover:bg-white sm:text-2xl"
               >
                 {contactInfo.phone}
               </Link>
             </div>
 
-            {/* Footer Taglines */}
-            <div className="mx-auto mt-16 w-full max-w-2xl border-t border-white/20 pt-10">
-              <p className="mb-6 text-sm font-bold uppercase tracking-widest text-white/90">
+            {/* Tighter Footer Taglines */}
+            <div className="mx-auto mt-12 w-full max-w-2xl border-t border-white/20 pt-8">
+              <p className="mb-4 text-xs font-bold uppercase tracking-widest text-white/90">
                 Serving Seniors Across San Jose & the Bay Area
               </p>
-              <div className="flex flex-col items-center justify-center gap-2 text-sm font-bold uppercase tracking-widest text-brand-gold sm:flex-row sm:gap-4 md:text-base">
+              <div className="flex flex-col items-center justify-center gap-2 text-xs font-bold uppercase tracking-widest text-brand-gold sm:flex-row sm:gap-4 md:text-sm">
                 <span>Compassionate Care.</span>
                 <span className="hidden opacity-50 sm:inline">•</span>
                 <span>Trusted Support.</span>

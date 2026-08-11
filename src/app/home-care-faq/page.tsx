@@ -4,9 +4,11 @@ import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
 import SectionHeading from "@/components/SectionHeading";
 import FaqAccordion from "@/components/FaqAccordion";
-import { contactInfo, servicesCta } from "@/data/global";
+import { contactInfo, homeCallouts, servicesCta } from "@/data/global";
 import { faqHero, faqIntro, faqCategories } from "@/data/faqs";
 import { sharedServiceContent } from "@/data/services";
+import Image from "next/image"; // Added Import
+import { homeHero } from "@/data/home";
 export const metadata: Metadata = {
   title: "Frequently Asked Questions | Glorious Home Care Assistance",
   description: "Get answers to common questions about home care services, caregiver screening, costs, and insurance coverage in San Jose and Santa Clara County.",
@@ -16,34 +18,61 @@ export default function FaqPage() {
   return (
     <div className="flex flex-col">
       
-      {/* HERO SECTION */}
-      <section className="relative overflow-hidden bg-gradient-to-r from-brand-red via-brand-red-dark to-brand-gold text-white">
-        <div className="absolute -left-16 top-10 h-48 w-48 rounded-full bg-white/15 blur-3xl" />
-        <div className="absolute -bottom-20 right-6 h-60 w-60 rounded-full bg-white/10 blur-3xl" />
-        <Container className="relative py-20 sm:py-24">
-          <Reveal className="max-w-3xl space-y-4">
-            <p className="text-sm uppercase tracking-[0.2em] text-white/80">
-              {faqHero.title}
-            </p>
-            <h1 className="text-4xl font-semibold leading-tight sm:text-5xl lg:text-6xl">
-              {faqHero.subtitle}
-            </h1>
-          </Reveal>
-        </Container>
-      </section>
-
-      {/* INTRO SECTION */}
-      <section className="bg-surface">
-        <Container className="py-16 md:py-24">
-          <div className="max-w-3xl">
-            <Reveal className="space-y-6">
-              <SectionHeading title={faqIntro.title} />
-              {faqIntro.paragraphs.map((paragraph, index) => (
-                <p key={index} className="text-lg leading-relaxed text-muted">
-                  {paragraph}
-                </p>
-              ))}
+{/* STATIC HERO BANNER WITH WELCOME BADGE & ACTION BUTTONS */}
+      <section className="relative overflow-hidden bg-brand-cream min-h-[400px] md:min-h-[450px] lg:min-h-[500px] flex items-center py-12 md:py-16">
+        
+        <div className="absolute inset-0 bg-[color:var(--brand-ink)] z-0">
+          <Image 
+            src={faqHero.bannerImage} // Replace with page source: servicesHero.bannerImage, heroImage, etc.
+            alt={faqHero.title}
+            fill 
+            className="object-cover object-right"
+            style={{
+              maskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.4) 35%, black 70%)',
+              WebkitMaskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.4) 35%, black 70%)',
+            }}
+            priority
+          />
+          
+          {/* Dark Tint Overlay */}
+          <div className="absolute inset-0 bg-[color:var(--brand-ink)]/40 pointer-events-none" />
+        </div>
+        
+        <Container className="relative z-20 w-full">
+          {/* Liquid Frosted Glass Content Panel (Tighter Padding) */}
+          <div className="max-w-xl space-y-4 rounded-3xl bg-white/40 sm:bg-white/30 backdrop-blur-2xl border border-white/50 p-6 sm:p-8 lg:p-10 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
+            <Reveal delay={0.05}>
+              {/* Scaled Headline from text-6xl to text-3xl/4xl */}
+              <h1 className="text-2xl font-extrabold leading-tight text-brand-ink sm:text-3xl lg:text-4xl drop-shadow-sm">
+                {faqHero.title}
+              </h1>
             </Reveal>
+            
+            <Reveal delay={0.1}>
+              {/* Scaled Subhead from text-xl to text-base */}
+              <p className="text-sm leading-relaxed text-brand-ink/80 sm:text-base font-medium max-w-lg">
+                {faqHero.subtitle}
+              </p>
+            </Reveal>
+            
+            <Reveal delay={0.15}>
+              <div className="flex flex-col sm:flex-row flex-wrap gap-3 pt-2">
+                {/* Scaled Buttons (Reduced padding and text size) */}
+                <Link
+                  href={contactInfo.phoneHref}
+                  className="inline-flex w-full sm:w-auto items-center justify-center rounded-full bg-brand-red px-6 py-3 text-sm font-bold tracking-wide text-white shadow-lg transition-all hover:-translate-y-1 hover:bg-brand-red-dark"
+                >
+                  {homeCallouts.callToAction}
+                </Link>
+                <Link
+                  href="/services"
+                  className="inline-flex w-full sm:w-auto items-center justify-center rounded-full border-2 border-white bg-white/40 backdrop-blur-md px-6 py-3 text-sm font-bold tracking-wide text-brand-ink transition-all hover:-translate-y-1 hover:bg-white"
+                >
+                  {homeCallouts.optionsPrompt}
+                </Link>
+              </div>
+            </Reveal>
+            
           </div>
         </Container>
       </section>

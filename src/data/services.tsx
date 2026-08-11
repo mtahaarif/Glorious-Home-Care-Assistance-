@@ -33,7 +33,7 @@ export const mainServices = [
     slug: "companion-care",
     description: "Provides meaningful social interaction and emotional support for individuals who may feel isolated or lonely. Our caregivers engage clients through conversation, activities, hobbies, and companionship.",
     bannerImage: "/companion-care.jpg",
-    iconImage: "/images/icons/companion-care.png",
+    iconImage: "/companion-care.png",
     pageData: {
       seoTitle: "Companion Care Services | Glorious Home Care Assistance",
       heading1: { line1: "No Senior", line2: "Should Feel Alone" },
@@ -62,7 +62,7 @@ export const mainServices = [
     slug: "personal-care",
     description: "We help clients maintain their dignity, comfort, and independence with daily living activities. Support may include assistance with bathing, grooming, dressing, mobility, and personal hygiene.",
     bannerImage: "/personal-care.jpg",
-    iconImage: "/images/icons/personal-care.png",
+    iconImage: "/personal-care.png",
     pageData: {
       seoTitle: "Personal Care Assistance | Glorious Home Care Assistance",
       heading1: { line1: "Assistance with", line2: "Daily Living Activities" },
@@ -90,7 +90,7 @@ export const mainServices = [
     slug: "meal-preparation",
     description: "We assist with meal planning and preparation to help clients enjoy nutritious, balanced meals that align with their preferences and dietary needs.",
     bannerImage: "/meal-prep.jpg",
-    iconImage: "/images/icons/meal-prep.png",
+    iconImage: "/meal-prep.png",
     pageData: {
       seoTitle: "Meal Preparation Services | Glorious Home Care Assistance",
       heading1: { line1: "Meal Preparation", line2: "with Care & Compassion" },
@@ -145,7 +145,7 @@ export const mainServices = [
     slug: "light-housekeeping",
     description: "A clean and organized home contributes to safety, comfort, and overall well-being. Our Light Housekeeping services include assistance with routine household tasks.",
     bannerImage: "/housekeeping.jpg",
-    iconImage: "/images/icons/housekeeping.png",
+    iconImage: "/housekeeping.png",
     pageData: {
       seoTitle: "Light Housekeeping Services | Glorious Home Care Assistance",
       heading1: { line1: "A Clean & Comfortable", line2: "Home Environment" },
@@ -173,7 +173,7 @@ export const mainServices = [
     slug: "transportation",
     description: "We provide safe and reliable transportation to medical appointments, errands, social engagements, and community activities. Our goal is to help clients remain active and engaged.",
     bannerImage: "/transportation.jpg",
-    iconImage: "/images/icons/transportation.png",
+    iconImage: "/transportation.png",
     pageData: {
       seoTitle: "Transportation Assistance | Glorious Home Care Assistance",
       heading1: { line1: "Transportation", line2: "Assistance" },
@@ -201,7 +201,7 @@ export const mainServices = [
     slug: "respite-care",
     description: "Respite Care offers temporary relief for family caregivers who need time to rest, attend to personal responsibilities, or simply recharge. Families can have peace of mind.",
     bannerImage: "/respite-care.jpg",
-    iconImage: "/images/icons/respite-care.png",
+    iconImage: "/respite-care.png",
     pageData: {
       seoTitle: "Respite Care Services | Glorious Home Care Assistance",
       heading1: { line1: "Care for Your Loved One,", line2: "Relief for You." },

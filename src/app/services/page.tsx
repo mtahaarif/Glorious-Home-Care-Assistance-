@@ -14,7 +14,7 @@ import {
   companionCareServices, 
   aideServices 
 } from "@/data/services";
-import { homeHero } from "@/data/home";
+import { homeHero, homeProcess, homeServices, whoWeServe } from "@/data/home";
 
 export const metadata: Metadata = {
   title: "Services | Glorious Home Care",
@@ -26,7 +26,7 @@ export default function ServicesPage() {
     <div className="flex flex-col">
       
       {/* 1. UPDATED HERO SECTION WITH BACKGROUND IMAGE */}
-      <section className="relative overflow-hidden bg-[color:var(--brand-ink)] text-white min-h-[380px] sm:min-h-[420px] lg:min-h-[450px] py-12 flex items-center">
+      <section className="relative overflow-hidden bg-brand-cream min-h-[400px] md:min-h-[450px] lg:min-h-[500px] flex items-center py-12 md:py-16">
         
         {/* Background Image Container */}
         <div className="absolute inset-0 bg-[color:var(--brand-ink)] z-0">
@@ -45,134 +45,236 @@ export default function ServicesPage() {
           {/* Dark Tint Overlay */}
           <div className="absolute inset-0 bg-[color:var(--brand-ink)]/40 pointer-events-none" />
         </div>
-
-        {/* Abstract Blur Orbs */}
-        <div className="absolute -left-20 top-10 h-48 w-48 rounded-full bg-white/10 blur-3xl z-10 pointer-events-none" />
-        <div className="absolute -bottom-16 right-6 h-56 w-56 rounded-full bg-white/5 blur-3xl z-10 pointer-events-none" />
-
+        
         <Container className="relative z-20 w-full">
-          <div className="max-w-3xl space-y-4">
-            
-            {/* Top Welcome Title + Badge */}
-            <Reveal>
-              <div className="flex items-center gap-3">
-                <p className="text-sm uppercase tracking-[0.2em] text-white/80">
-                  {homeHero.welcome}
-                </p>
-                <span className="rounded-full bg-white/20 border border-white/30 px-3 py-1 text-xs font-bold backdrop-blur-sm shadow-sm">
-                  {homeHero.badge}
-                </span>
-              </div>
-            </Reveal>
-
-            {/* Page Heading Title */}
+          {/* Liquid Frosted Glass Content Panel (Tighter Padding) */}
+          <div className="max-w-xl space-y-4 rounded-3xl bg-white/40 sm:bg-white/30 backdrop-blur-2xl border border-white/50 p-6 sm:p-8 lg:p-10 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
             <Reveal delay={0.05}>
-              <h1 className="text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl drop-shadow-md">
+              {/* Scaled Headline from text-6xl to text-3xl/4xl */}
+              <h1 className="text-2xl font-extrabold leading-tight text-brand-ink sm:text-3xl lg:text-4xl drop-shadow-sm">
                 {servicesHero.title}
               </h1>
             </Reveal>
-
-            {/* Subtitle / Description (If available) */}
-            {servicesHero.subtitle && (
-              <Reveal delay={0.1}>
-                <p className="text-base leading-relaxed text-white/90 sm:text-lg max-w-2xl drop-shadow-sm">
-                  {servicesHero.subtitle}
-                </p>
-              </Reveal>
-            )}
-
-            {/* Call to Action Buttons */}
+            
+            <Reveal delay={0.1}>
+              {/* Scaled Subhead from text-xl to text-base */}
+              <p className="text-sm leading-relaxed text-brand-ink/80 sm:text-base font-medium max-w-lg">
+                {servicesHero.subtitle}
+              </p>
+            </Reveal>
+            
             <Reveal delay={0.15}>
-              <div className="flex flex-wrap gap-4 pt-4">
+              <div className="flex flex-col sm:flex-row flex-wrap gap-3 pt-2">
+                {/* Scaled Buttons (Reduced padding and text size) */}
                 <Link
                   href={contactInfo.phoneHref}
-                  className="rounded-full bg-[color:var(--brand-gold)] px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-[color:var(--brand-red-dark)] shadow-xl transition-all hover:scale-105 hover:bg-white"
+                  className="inline-flex w-full sm:w-auto items-center justify-center rounded-full bg-brand-red px-6 py-3 text-sm font-bold tracking-wide text-white shadow-lg transition-all hover:-translate-y-1 hover:bg-brand-red-dark"
                 >
                   {homeCallouts.callToAction}
                 </Link>
                 <Link
-                  href="/services"
-                  className="rounded-full border-2 border-white/60 px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition-all hover:bg-white hover:text-[color:var(--brand-ink)]"
+                  href="/request-care"
+                  className="inline-flex w-full sm:w-auto items-center justify-center rounded-full border-2 border-white bg-white/40 backdrop-blur-md px-6 py-3 text-sm font-bold tracking-wide text-brand-ink transition-all hover:-translate-y-1 hover:bg-white"
                 >
-                  {homeCallouts.optionsPrompt}
+                  Request Care Today!
                 </Link>
               </div>
             </Reveal>
+            
+          </div>
+        </Container>
+      </section>
+      {/* 4. WHO WE SERVE SECTION (Static Grid) */}
+      <section className="bg-surface py-20 md:py-32">
+        <Container>
+          <Reveal>
+            {/* Centered Heading Layout */}
+            <div className="mx-auto max-w-3xl text-center mb-16">
+              <div className="flex items-center justify-center gap-4 mb-4">
+                <span className="h-[2px] w-12 bg-brand-red"></span>
+                <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-brand-red">
+                  {whoWeServe.title}
+                </h2>
+                <span className="h-[2px] w-12 bg-brand-red"></span>
+              </div>
+              <h3 className="text-3xl font-extrabold text-brand-ink md:text-5xl leading-tight">
+                {whoWeServe.subtitle}
+              </h3>
+            </div>
+          </Reveal>
 
+          {/* Static Grid Layout */}
+          <div className="grid gap-6 md:grid-cols-3">
+            {whoWeServe.groups.map((group, index) => (
+              <Reveal key={group.title} delay={index * 0.1}>
+                <div className="flex h-full flex-col rounded-3xl bg-white border border-brand-cream/50 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-2 group/card cursor-pointer overflow-hidden">
+                  
+                  {/* Image Section */}
+                  <div className="relative h-[220px] w-full overflow-hidden bg-brand-cream">
+                    {group.image && (
+                      <Image 
+                        src={group.image}
+                        alt={group.title}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover/card:scale-110"
+                      />
+                    )}
+                    <div className="absolute inset-0 bg-brand-ink/10 group-hover/card:bg-transparent transition-colors duration-300"></div>
+                  </div>
+                  
+                  {/* Text Section */}
+                  <div className="p-8 flex flex-col flex-grow">
+                    <h3 className="text-xl font-bold text-brand-ink mb-3 group-hover/card:text-brand-red transition-colors">
+                      {group.title}
+                    </h3>
+                    <p className="text-muted leading-relaxed mb-6 flex-grow">
+                      {group.description}
+                    </p>
+                    <Link href="/services" className="flex items-center gap-2 text-brand-red-dark font-bold text-sm uppercase tracking-wider mt-auto group-hover/card:text-brand-red transition-colors">
+                      Learn More
+                      <svg className="w-5 h-5 transform transition-transform group-hover/card:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
+                    </Link>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
           </div>
         </Container>
       </section>
 
-      {/* 2. ACCORDION WITH CUSTOM IMAGE ICONS */}
-      <section className="relative overflow-hidden bg-background pb-16 pt-16 md:pb-24">
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[800px] rounded-full bg-brand-red/5 blur-[120px] pointer-events-none" />
+      {/* 5. HOME CARE OPTIONS (Infinite Ticker) */}
+      <section className="bg-white border-y border-brand-gold/10 py-20 md:py-32 overflow-hidden">
+        
+        {/* Keyframes for the Infinite Ticker */}
+        <style>{`
+          @keyframes infinite-scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+          }
+          .animate-infinite-scroll {
+            animation: infinite-scroll 45s linear infinite;
+          }
+          .ticker-wrapper:hover .animate-infinite-scroll {
+            animation-play-state: paused;
+          }
+        `}</style>
 
-        <Container className="max-w-[1400px] relative z-10">
-          <SectionHeading title="Home Care Options" subtitle="Compassionate Care You Trust" />
-          
-          <Reveal className="mt-12">
-            <div className="flex h-[700px] flex-col md:h-[450px] lg:h-[500px] md:flex-row gap-2 md:gap-3">
-              {mainServices.map((service) => (
-                <Link
-                  key={service.slug}
-                  href={`/services/${service.slug}`}
-                  className={`
-                    group relative flex flex-1 min-w-0 min-h-0 cursor-pointer items-center justify-center 
-                    rounded-2xl md:rounded-3xl transition-all duration-700 ease-out overflow-hidden
-                    backdrop-blur-md bg-white/60 border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)]
-                    hover:flex-[4] hover:bg-brand-red/90 hover:border-brand-red/50 hover:shadow-[0_15px_50px_rgb(255,49,49,0.35)]
-                  `}
-                >
-                  
-                  {/* DEFAULT STATE */}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-100 transition-opacity duration-500 group-hover:opacity-0 p-2 md:p-3">
-                    <span className="md:hidden text-sm font-bold tracking-widest text-brand-ink uppercase whitespace-nowrap">
-                      {service.title}
-                    </span>
-                    <span 
-                      className="hidden md:block text-sm lg:text-base font-bold tracking-widest text-brand-ink uppercase whitespace-nowrap transition-colors duration-500"
-                      style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
-                    >
-                      {service.title}
-                    </span>
-                  </div>
-
-                  {/* EXPANDED STATE */}
-                  <div className="absolute inset-0 flex flex-col justify-end opacity-0 transition-opacity duration-700 delay-150 group-hover:opacity-100 p-5 md:p-6 lg:p-8">
-                    
-                    {/* CUSTOM IMAGE ICON INJECTED HERE */}
-                    <div className="mb-auto mt-1 hidden rounded-full bg-white/20 border border-white/30 p-3 backdrop-blur-md shadow-lg transition-transform duration-500 group-hover:scale-110 group-hover:bg-white/30 md:inline-block w-fit">
-                      <div className="relative h-6 w-6 lg:h-8 lg:w-8">
-                        <Image 
-                          src={service.iconImage} 
-                          alt={`${service.title} Icon`}
-                          fill
-                          className="object-contain brightness-0 invert" 
-                        />
-                      </div>
-                    </div>
-                    
-                    <div className="w-full md:min-w-[260px] lg:min-w-[320px]">
-                      <h3 className="mb-2 text-lg font-bold leading-tight text-white md:mb-3 md:text-2xl lg:text-3xl whitespace-nowrap drop-shadow-sm">
-                        {service.title}
-                      </h3>
-                      <p className="mb-4 line-clamp-2 text-xs text-white/90 sm:line-clamp-3 md:line-clamp-3 lg:line-clamp-4 md:text-sm lg:text-base max-w-xl">
-                        {service.description}
-                      </p>
-                      <div className="inline-flex items-center text-xs font-bold uppercase tracking-wide text-brand-gold transition-colors group-hover:text-white lg:text-sm">
-                        Learn more <span className="ml-2 text-base leading-none">&rarr;</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                </Link>
-              ))}
+        <Container>
+          <Reveal>
+            {/* Centered Heading Layout */}
+            <div className="mx-auto max-w-3xl text-center mb-16">
+              <div className="flex items-center justify-center gap-4 mb-4">
+                <span className="h-[2px] w-12 bg-brand-red"></span>
+                <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-brand-red">
+                  {homeServices.title}
+                </h2>
+                <span className="h-[2px] w-12 bg-brand-red"></span>
+              </div>
+              <h3 className="text-3xl font-extrabold text-brand-ink md:text-5xl leading-tight">
+                {homeServices.subtitle}
+              </h3>
             </div>
           </Reveal>
         </Container>
+
+        {/* Infinite Scroll Ticker Container */}
+        <div className="relative mt-8 flex overflow-hidden ticker-wrapper">
+          <div className="flex w-max animate-infinite-scroll gap-6 px-3">
+            {/* Duplicate array to create a seamless loop */}
+            {[...mainServices, ...mainServices].map((service, index) => (
+              <div 
+                key={index} 
+                className="w-[320px] sm:w-[380px] shrink-0 flex flex-col rounded-3xl bg-white border border-brand-cream/50 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-2 group/card cursor-pointer overflow-hidden"
+              >
+                {/* Image Section */}
+                <div className="relative h-[220px] w-full overflow-hidden bg-brand-cream shrink-0">
+                  {/* Changed service.image to service.bannerImage */}
+                  {service.bannerImage && (
+                    <Image 
+                      src={service.bannerImage}
+                      alt={service.title}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover/card:scale-110"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-brand-ink/10 group-hover/card:bg-transparent transition-colors duration-300"></div>
+                </div>
+                
+                {/* Text Section */}
+                <div className="p-8 flex flex-col flex-grow">
+                  <h3 className="text-xl font-bold text-brand-ink mb-3 group-hover/card:text-brand-red transition-colors">
+                    {service.title}
+                  </h3>
+                  <p className="text-muted leading-relaxed mb-6 flex-grow">
+                    {service.description}
+                  </p>
+                  
+                  {/* Correctly pulling the slug from the mapped mainServices item */}
+                  <Link href={`/services/${service.slug}`}
+                   className="flex items-center gap-2 text-brand-red-dark font-bold text-sm uppercase tracking-wider mt-auto group-hover/card:text-brand-red transition-colors">
+                    Learn More
+                    <svg className="w-5 h-5 transform transition-transform group-hover/card:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </Link>
+                </div>
+              </div>
+            ))}   
+          </div>
+        </div>
+        
       </section>
 
+{/* 6. OUR CARE PROCESS (Structured Card Layout) */}
+      <section className="bg-surface py-20 md:py-32">
+        <Container>
+          <Reveal>
+            {/* Centered Heading Layout matching previous sections */}
+            <div className="mx-auto max-w-3xl text-center mb-16 md:mb-20">
+              <div className="flex items-center justify-center gap-4 mb-4">
+                <span className="h-[2px] w-12 bg-brand-red"></span>
+                <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-brand-red">
+                  How Home Care Works
+                </h2>
+                <span className="h-[2px] w-12 bg-brand-red"></span>
+              </div>
+              <h3 className="text-4xl font-extrabold text-brand-ink md:text-5xl leading-tight">
+                {homeProcess.title}
+              </h3>
+            </div>
+          </Reveal>
 
+          <div className="grid gap-6 md:grid-cols-3 lg:gap-8">
+            {homeProcess.steps.map((step, index) => (
+              <Reveal key={step.step} delay={index * 0.1} className="h-full">
+                <div className="flex h-full flex-col rounded-3xl bg-white border border-brand-cream shadow-sm transition-all duration-300 hover:border-brand-gold/40 hover:shadow-xl hover:-translate-y-2 group cursor-default p-8 md:p-10">
+                  
+                  {/* Big Gold Number */}
+                  <span className="text-5xl md:text-6xl font-black text-brand-gold block tracking-tighter select-none mb-4">
+                    {step.step}
+                  </span>
+                  
+                  {/* Heading Title */}
+                  <h3 className="text-2xl font-bold text-brand-ink mb-6 transition-colors duration-300 group-hover:text-brand-red">
+                    {step.title}
+                  </h3>
+                  
+                  {/* Horizontal Divider Line */}
+                  <div className="h-[2px] w-full bg-brand-cream mb-6 transition-colors duration-300 group-hover:bg-brand-red/20"></div>
+                  
+                  {/* Description below the line */}
+                  <p className="text-lg text-muted leading-relaxed flex-grow">
+                    {step.description}
+                  </p>
+                  
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </Container>
+      </section>
 
       {/* 6. BOTTOM CTA SECTION */}
       <section className="bg-brand-red-dark py-10 text-center text-white md:py-10">

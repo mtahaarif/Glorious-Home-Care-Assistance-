@@ -20,8 +20,8 @@ export default function LocationsPage() {
     <div className="flex flex-col">
       
      
-{/* STATIC HERO BANNER WITH WELCOME BADGE & ACTION BUTTONS */}
-      <section className="relative overflow-hidden bg-[color:var(--brand-ink)] text-white min-h-[380px] sm:min-h-[420px] lg:min-h-[450px] py-12 flex items-center">
+{/* 1. DYNAMIC HOMEPAGE HERO BANNER (Compact Glass & Scaled Typography) */}
+      <section className="relative overflow-hidden bg-brand-cream min-h-[400px] md:min-h-[450px] lg:min-h-[500px] flex items-center py-12 md:py-16">
         
         {/* Background Image Container */}
         <div className="absolute inset-0 bg-[color:var(--brand-ink)] z-0">
@@ -40,60 +40,42 @@ export default function LocationsPage() {
           {/* Dark Tint Overlay */}
           <div className="absolute inset-0 bg-[color:var(--brand-ink)]/40 pointer-events-none" />
         </div>
-
-        {/* Abstract Blur Orbs */}
-        <div className="absolute -left-20 top-10 h-48 w-48 rounded-full bg-white/10 blur-3xl z-10 pointer-events-none" />
-        <div className="absolute -bottom-16 right-6 h-56 w-56 rounded-full bg-white/5 blur-3xl z-10 pointer-events-none" />
-
+        
         <Container className="relative z-20 w-full">
-          <div className="max-w-3xl space-y-4">
-            
-            {/* Top Welcome Title + Badge */}
-            <Reveal>
-              <div className="flex items-center gap-3">
-                <p className="text-sm uppercase tracking-[0.2em] text-white/80">
-                  {homeHero.welcome}
-                </p>
-                <span className="rounded-full bg-white/20 border border-white/30 px-3 py-1 text-xs font-bold backdrop-blur-sm shadow-sm">
-                  {homeHero.badge}
-                </span>
-              </div>
-            </Reveal>
-
-            {/* Page Heading Title */}
+          {/* Liquid Frosted Glass Content Panel (Tighter Padding) */}
+          <div className="max-w-xl space-y-4 rounded-3xl bg-white/40 sm:bg-white/30 backdrop-blur-2xl border border-white/50 p-6 sm:p-8 lg:p-10 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
             <Reveal delay={0.05}>
-              <h1 className="text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl drop-shadow-md">
+              {/* Scaled Headline from text-6xl to text-3xl/4xl */}
+              <h1 className="text-2xl font-extrabold leading-tight text-brand-ink sm:text-3xl lg:text-4xl drop-shadow-sm">
                 {locationsHero.title}
               </h1>
             </Reveal>
-
-            {/* Subtitle / Description (If available) */}
-            {locationsHero.subtitle && (
-              <Reveal delay={0.1}>
-                <p className="text-base leading-relaxed text-white/90 sm:text-lg max-w-2xl drop-shadow-sm">
-                  {locationsHero.subtitle}
-                </p>
-              </Reveal>
-            )}
-
-            {/* Call to Action Buttons */}
+            
+            <Reveal delay={0.1}>
+              {/* Scaled Subhead from text-xl to text-base */}
+              <p className="text-sm leading-relaxed text-brand-ink/80 sm:text-base font-medium max-w-lg">
+                {locationsHero.subtitle}
+              </p>
+            </Reveal>
+            
             <Reveal delay={0.15}>
-              <div className="flex flex-wrap gap-4 pt-4">
+              <div className="flex flex-col sm:flex-row flex-wrap gap-3 pt-2">
+                {/* Scaled Buttons (Reduced padding and text size) */}
                 <Link
                   href={contactInfo.phoneHref}
-                  className="rounded-full bg-[color:var(--brand-gold)] px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-[color:var(--brand-red-dark)] shadow-xl transition-all hover:scale-105 hover:bg-white"
+                  className="inline-flex w-full sm:w-auto items-center justify-center rounded-full bg-brand-red px-6 py-3 text-sm font-bold tracking-wide text-white shadow-lg transition-all hover:-translate-y-1 hover:bg-brand-red-dark"
                 >
                   {homeCallouts.callToAction}
                 </Link>
                 <Link
                   href="/services"
-                  className="rounded-full border-2 border-white/60 px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition-all hover:bg-white hover:text-[color:var(--brand-ink)]"
+                  className="inline-flex w-full sm:w-auto items-center justify-center rounded-full border-2 border-white bg-white/40 backdrop-blur-md px-6 py-3 text-sm font-bold tracking-wide text-brand-ink transition-all hover:-translate-y-1 hover:bg-white"
                 >
                   {homeCallouts.optionsPrompt}
                 </Link>
               </div>
             </Reveal>
-
+            
           </div>
         </Container>
       </section>
@@ -110,20 +92,36 @@ export default function LocationsPage() {
               </p>
             ))}
           </Reveal>
-          
-          <Reveal className="h-fit rounded-3xl border border-brand-red/10 bg-brand-cream p-8 shadow-sm" delay={0.1}>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-red">
-              Service Area Inquiries
-            </p>
-            <p className="mt-4 text-base leading-7 text-muted">
-              Not sure if we cover your exact location? Give us a call, and our care coordinators will be happy to assist you.
-            </p>
-            <Link
-              href={contactInfo.phoneHref}
-              className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-brand-red px-6 py-3 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-brand-red-dark"
-            >
-              Call {contactInfo.phone}
-            </Link>
+
+            <Reveal delay={0.1}>
+            <div className="relative overflow-hidden rounded-3xl border border-brand-cream/80 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-brand-gold/40 hover:shadow-xl sm:p-10 lg:p-12">
+              
+              {/* Decorative Blur Background Element */}
+              <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-brand-cream/60 blur-3xl"></div>
+
+              <div className="relative z-10 flex flex-col h-full">
+                <h4 className="mb-6 text-3xl font-extrabold text-brand-ink">
+                 Service Area Inquiries
+                </h4>
+                
+                {/* Horizontal Divider Line */}
+                <div className="mb-6 h-[2px] w-full bg-brand-cream transition-colors duration-300 group-hover:bg-brand-red/20"></div>
+                
+                <p className="mb-10 text-lg leading-relaxed text-muted flex-grow">
+                  Not sure if we cover your exact location? Give us a call, and our care coordinators will be happy to assist you.
+                </p>
+                
+                <Link
+                  href={contactInfo.phoneHref}
+                  className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-[color:var(--brand-gold)] px-8 py-4 text-lg font-black tracking-wide text-brand-ink shadow-md transition-all hover:scale-[1.02] hover:bg-white"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6 text-brand-red-dark">
+                     <path fillRule="evenodd" d="M1.5 4.5a3 3 0 013-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 01-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 006.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 011.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 01-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5z" clipRule="evenodd" />
+                  </svg>
+                  {contactInfo.phone}
+                </Link>
+              </div>
+            </div>
           </Reveal>
         </Container>
       </section>

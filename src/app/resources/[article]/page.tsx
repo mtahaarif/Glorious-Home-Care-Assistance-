@@ -48,13 +48,13 @@ export default function ArticlePage({ params }: { params: { article: string } })
   return (
     <div className="flex flex-col">
       
-      {/* 1. UPDATED HERO SECTION WITH BACKGROUND IMAGE */}
-      <section className="relative overflow-hidden bg-[color:var(--brand-ink)] text-white min-h-[380px] sm:min-h-[420px] lg:min-h-[450px] py-12 flex items-center">
+      {/* 1. HERO BANNER (Compact Glass & Scaled Typography) */}
+      <section className="relative overflow-hidden bg-brand-cream min-h-[400px] md:min-h-[450px] lg:min-h-[500px] flex items-center py-12 md:py-16">
         
         {/* Background Image Container */}
         <div className="absolute inset-0 bg-[color:var(--brand-ink)] z-0">
           <Image 
-            src={resourcesHero.bannerImage} // Replace with page source: resourcesHero.bannerImage, heroImage, etc.
+            src={resourcesHero.bannerImage} // Replace with page source: servicesHero.bannerImage, heroImage, etc.
             alt={resourcesHero.title}
             fill 
             className="object-cover object-right"
@@ -68,63 +68,46 @@ export default function ArticlePage({ params }: { params: { article: string } })
           {/* Dark Tint Overlay */}
           <div className="absolute inset-0 bg-[color:var(--brand-ink)]/40 pointer-events-none" />
         </div>
-
-        {/* Abstract Blur Orbs */}
-        <div className="absolute -left-20 top-10 h-48 w-48 rounded-full bg-white/10 blur-3xl z-10 pointer-events-none" />
-        <div className="absolute -bottom-16 right-6 h-56 w-56 rounded-full bg-white/5 blur-3xl z-10 pointer-events-none" />
-
+        
         <Container className="relative z-20 w-full">
-          <div className="max-w-3xl space-y-4">
-            
-            {/* Top Welcome Title + Badge */}
-            <Reveal>
-              <div className="flex items-center gap-3">
-                <p className="text-sm uppercase tracking-[0.2em] text-white/80">
-                  {homeHero.welcome}
-                </p>
-                <span className="rounded-full bg-white/20 border border-white/30 px-3 py-1 text-xs font-bold backdrop-blur-sm shadow-sm">
-                  {homeHero.badge}
-                </span>
-              </div>
-            </Reveal>
-
-            {/* Page Heading Title */}
+          {/* Liquid Frosted Glass Content Panel (Tighter Padding) */}
+          <div className="max-w-xl space-y-4 rounded-3xl bg-white/40 sm:bg-white/30 backdrop-blur-2xl border border-white/50 p-6 sm:p-8 lg:p-10 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
             <Reveal delay={0.05}>
-              <h1 className="text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl drop-shadow-md">
+              {/* Scaled Headline from text-6xl to text-3xl/4xl */}
+              <h1 className="text-2xl font-extrabold leading-tight text-brand-ink sm:text-3xl lg:text-4xl drop-shadow-sm">
                 {resourcesHero.title}
               </h1>
             </Reveal>
-
-            {/* Subtitle / Description (If available) */}
-            {resourcesHero.subtitle && (
-              <Reveal delay={0.1}>
-                <p className="text-base leading-relaxed text-white/90 sm:text-lg max-w-2xl drop-shadow-sm">
-                  {resourcesHero.subtitle}
-                </p>
-              </Reveal>
-            )}
-
-            {/* Call to Action Buttons */}
+            
+            <Reveal delay={0.1}>
+              {/* Scaled Subhead from text-xl to text-base */}
+              <p className="text-sm leading-relaxed text-brand-ink/80 sm:text-base font-medium max-w-lg">
+                {resourcesHero.subtitle}
+              </p>
+            </Reveal>
+            
             <Reveal delay={0.15}>
-              <div className="flex flex-wrap gap-4 pt-4">
+              <div className="flex flex-col sm:flex-row flex-wrap gap-3 pt-2">
+                {/* Scaled Buttons (Reduced padding and text size) */}
                 <Link
                   href={contactInfo.phoneHref}
-                  className="rounded-full bg-[color:var(--brand-gold)] px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-[color:var(--brand-red-dark)] shadow-xl transition-all hover:scale-105 hover:bg-white"
+                  className="inline-flex w-full sm:w-auto items-center justify-center rounded-full bg-brand-red px-6 py-3 text-sm font-bold tracking-wide text-white shadow-lg transition-all hover:-translate-y-1 hover:bg-brand-red-dark"
                 >
                   {homeCallouts.callToAction}
                 </Link>
                 <Link
                   href="/services"
-                  className="rounded-full border-2 border-white/60 px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition-all hover:bg-white hover:text-[color:var(--brand-ink)]"
+                  className="inline-flex w-full sm:w-auto items-center justify-center rounded-full border-2 border-white bg-white/40 backdrop-blur-md px-6 py-3 text-sm font-bold tracking-wide text-brand-ink transition-all hover:-translate-y-1 hover:bg-white"
                 >
                   {homeCallouts.optionsPrompt}
                 </Link>
               </div>
             </Reveal>
-
+            
           </div>
         </Container>
       </section>
+
 
       {/* ARTICLE CONTENT & SIDEBAR */}
       <section className="bg-surface">
