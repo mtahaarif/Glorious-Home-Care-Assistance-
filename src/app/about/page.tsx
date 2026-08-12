@@ -43,35 +43,33 @@ export default function AboutPage() {
   return (
     <div className="flex flex-col">
 
-      {/* 1. HERO SECTION WITH BACKGROUND IMAGE */}
-      <section className="relative overflow-hidden bg-brand-cream min-h-[400px] md:min-h-[450px] lg:min-h-[500px] flex items-center py-12 md:py-16">
+{/* 1. UPDATED ABOUT US HERO SECTION */}
+      <section className="relative overflow-hidden bg-background min-h-[400px] md:min-h-[450px] lg:min-h-[500px] flex items-center py-12 md:py-16">
         
-        <div className="absolute inset-0 bg-[color:var(--brand-ink)] z-0">
+        {/* Background Image Container */}
+        <div className="absolute inset-0 z-0">
           <Image 
             src={aboutHero.bannerImage}
             alt={aboutHero.title}
             fill 
-            className="object-cover object-right"
-            style={{
-              maskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.4) 35%, black 70%)',
-              WebkitMaskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.4) 35%, black 70%)',
-            }}
+            className="object-cover object-[70%_center]"
             priority
           />
-          {/* Dark Tint Overlay */}
-          <div className="absolute inset-0 bg-[color:var(--brand-ink)]/40 pointer-events-none" />
+          
+          {/* Smooth Left-to-Right White Fade Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/30 to-transparent z-10 pointer-events-none" />
         </div>
         
         <Container className="relative z-20 w-full">
-          <div className="max-w-xl space-y-4 rounded-3xl bg-white/40 sm:bg-white/30 backdrop-blur-2xl border border-white/50 p-6 sm:p-8 lg:p-10 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
+          <div className="max-w-xl space-y-4">
             <Reveal delay={0.05}>
-              <h1 className="text-2xl font-extrabold leading-tight text-brand-ink sm:text-3xl lg:text-4xl drop-shadow-sm">
+              <h1 className="text-3xl font-extrabold leading-tight text-brand-ink sm:text-4xl lg:text-5xl drop-shadow-sm">
                 {aboutHero.title}
               </h1>
             </Reveal>
             
             <Reveal delay={0.1}>
-              <p className="text-sm leading-relaxed text-brand-ink/80 sm:text-base font-medium max-w-lg">
+              <p className="text-base leading-relaxed text-brand-ink/80 sm:text-lg font-medium max-w-lg">
                 {aboutHero.subtitle}
               </p>
             </Reveal>
@@ -86,7 +84,7 @@ export default function AboutPage() {
                 </Link>
                 <Link
                   href="/services"
-                  className="inline-flex w-full sm:w-auto items-center justify-center rounded-full border-2 border-white bg-white/40 backdrop-blur-md px-6 py-3 text-sm font-bold tracking-wide text-brand-ink transition-all hover:-translate-y-1 hover:bg-white"
+                  className="inline-flex w-full sm:w-auto items-center justify-center rounded-full border-2 border-brand-ink/20 bg-white/80 backdrop-blur-sm px-6 py-3 text-sm font-bold tracking-wide text-brand-ink transition-all hover:-translate-y-1 hover:bg-white"
                 >
                   {homeCallouts.optionsPrompt}
                 </Link>

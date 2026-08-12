@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image"; // Added Import
 import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
 import { contactInfo, homeCallouts, servicesCta } from "@/data/global";
 import { resourceCategories, resourcesHero } from "@/data/resources";
 import { sharedServiceContent } from "@/data/services";
 import { homeHero } from "@/data/home";
-import Image from "next/image"; // Added Import
+
 // Helper: Flatten the nested categories array to easily find specific articles
 const allArticles = resourceCategories.flatMap((category) => category.articles);
 
@@ -18,9 +19,14 @@ export function generateStaticParams() {
   }));
 }
 
-// 2. Generate dynamic SEO tags
-export function generateMetadata({ params }: { params: { article: string } }): Metadata {
-  const article = allArticles.find((a) => a.slug === params.article);
+// 2. Generate dynamic SEO tags (Next.js 15 requires async params)
+export async function generateMetadata({ 
+  params 
+}: { 
+  params: Promise<{ article: string }> 
+}): Promise<Metadata> {
+  const resolvedParams = await params;
+  const article = allArticles.find((a) => a.slug === resolvedParams.article);
   
   if (!article) {
     return { title: "Article Not Found" };
@@ -32,9 +38,14 @@ export function generateMetadata({ params }: { params: { article: string } }): M
   };
 }
 
-// 3. The Dynamic Page Component
-export default function ArticlePage({ params }: { params: { article: string } }) {
-  const article = allArticles.find((a) => a.slug === params.article);
+// 3. The Dynamic Page Component (Next.js 15 requires async params)
+export default async function ArticlePage({ 
+  params 
+}: { 
+  params: Promise<{ article: string }> 
+}) {
+  const resolvedParams = await params;
+  const article = allArticles.find((a) => a.slug === resolvedParams.article);
 
   if (!article) {
     notFound();
@@ -42,53 +53,45 @@ export default function ArticlePage({ params }: { params: { article: string } })
 
   // Find which category this article belongs to so we can display it in the breadcrumbs
   const parentCategory = resourceCategories.find(c => 
-    c.articles.some(a => a.slug === params.article)
+    c.articles.some(a => a.slug === resolvedParams.article)
   );
 
   return (
     <div className="flex flex-col">
       
       {/* 1. HERO BANNER (Compact Glass & Scaled Typography) */}
-      <section className="relative overflow-hidden bg-brand-cream min-h-[400px] md:min-h-[450px] lg:min-h-[500px] flex items-center py-12 md:py-16">
+      <section className="relative overflow-hidden bg-background min-h-[400px] md:min-h-[450px] lg:min-h-[500px] flex items-center py-12 md:py-16">
         
         {/* Background Image Container */}
-        <div className="absolute inset-0 bg-[color:var(--brand-ink)] z-0">
+        <div className="absolute inset-0 z-0">
           <Image 
-            src={resourcesHero.bannerImage} // Replace with page source: servicesHero.bannerImage, heroImage, etc.
+            src={resourcesHero.bannerImage}
             alt={resourcesHero.title}
             fill 
-            className="object-cover object-right"
-            style={{
-              maskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.4) 35%, black 70%)',
-              WebkitMaskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.4) 35%, black 70%)',
-            }}
+            className="object-cover object-[70%_center]"
             priority
           />
           
-          {/* Dark Tint Overlay */}
-          <div className="absolute inset-0 bg-[color:var(--brand-ink)]/40 pointer-events-none" />
+          {/* Smooth Left-to-Right White Fade Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/30 to-transparent z-10 pointer-events-none" />
         </div>
         
         <Container className="relative z-20 w-full">
-          {/* Liquid Frosted Glass Content Panel (Tighter Padding) */}
-          <div className="max-w-xl space-y-4 rounded-3xl bg-white/40 sm:bg-white/30 backdrop-blur-2xl border border-white/50 p-6 sm:p-8 lg:p-10 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
+          <div className="max-w-xl space-y-4">
             <Reveal delay={0.05}>
-              {/* Scaled Headline from text-6xl to text-3xl/4xl */}
-              <h1 className="text-2xl font-extrabold leading-tight text-brand-ink sm:text-3xl lg:text-4xl drop-shadow-sm">
+              <h1 className="text-3xl font-extrabold leading-tight text-brand-ink sm:text-4xl lg:text-5xl drop-shadow-sm">
                 {resourcesHero.title}
               </h1>
             </Reveal>
             
             <Reveal delay={0.1}>
-              {/* Scaled Subhead from text-xl to text-base */}
-              <p className="text-sm leading-relaxed text-brand-ink/80 sm:text-base font-medium max-w-lg">
+              <p className="text-base leading-relaxed text-brand-ink/80 sm:text-lg font-medium max-w-lg">
                 {resourcesHero.subtitle}
               </p>
             </Reveal>
             
             <Reveal delay={0.15}>
               <div className="flex flex-col sm:flex-row flex-wrap gap-3 pt-2">
-                {/* Scaled Buttons (Reduced padding and text size) */}
                 <Link
                   href={contactInfo.phoneHref}
                   className="inline-flex w-full sm:w-auto items-center justify-center rounded-full bg-brand-red px-6 py-3 text-sm font-bold tracking-wide text-white shadow-lg transition-all hover:-translate-y-1 hover:bg-brand-red-dark"
@@ -96,20 +99,18 @@ export default function ArticlePage({ params }: { params: { article: string } })
                   {homeCallouts.callToAction}
                 </Link>
                 <Link
-                  href="/services"
-                  className="inline-flex w-full sm:w-auto items-center justify-center rounded-full border-2 border-white bg-white/40 backdrop-blur-md px-6 py-3 text-sm font-bold tracking-wide text-brand-ink transition-all hover:-translate-y-1 hover:bg-white"
+                  href="/request-care"
+                  className="inline-flex w-full sm:w-auto items-center justify-center rounded-full border-2 border-brand-ink/20 bg-white/80 backdrop-blur-sm px-6 py-3 text-sm font-bold tracking-wide text-brand-ink transition-all hover:-translate-y-1 hover:bg-white"
                 >
-                  {homeCallouts.optionsPrompt}
+                  Request Care Today!
                 </Link>
               </div>
             </Reveal>
-            
           </div>
         </Container>
       </section>
 
-
-      {/* ARTICLE CONTENT & SIDEBAR */}
+      {/* 2. ARTICLE CONTENT & SIDEBAR */}
       <section className="bg-surface">
         <Container className="grid gap-12 py-16 lg:grid-cols-[1fr_350px] lg:gap-16 lg:py-24">
           
@@ -171,7 +172,7 @@ export default function ArticlePage({ params }: { params: { article: string } })
                 <h3 className="font-bold text-brand-ink">More in this Category</h3>
                 <ul className="mt-4 space-y-4 border-t border-brand-cream pt-4">
                   {parentCategory?.articles
-                    .filter(a => a.slug !== params.article)
+                    .filter(a => a.slug !== resolvedParams.article)
                     .slice(0, 3)
                     .map((relatedArticle) => (
                       <li key={relatedArticle.slug}>
@@ -192,43 +193,59 @@ export default function ArticlePage({ params }: { params: { article: string } })
         </Container>
       </section>
 
-      {/* BOTTOM CTA SECTION */}
-      <section className="bg-brand-red-dark py-10 text-center text-white md:py-10">
+      {/* 3. BOTTOM CTA SECTION (Compact Version) */}
+      <section className="bg-brand-red-dark py-12 md:py-16 text-center text-white border-t-4 border-brand-gold">
         <Container className="max-w-3xl">
-          <Reveal className="space-y-4">
-            <h2 className="whitespace-pre-line text-4xl font-bold leading-tight sm:text-5xl">
-              {sharedServiceContent.bottomCta.message}
-            </h2>
+          <Reveal className="flex flex-col items-center">
             
-            <div className="flex flex-col items-center gap-4">
-              <p className="text-sm font-bold uppercase tracking-[0.2em] text-brand-gold">
-                {sharedServiceContent.bottomCta.action}
-              </p>
-              
-              <Link
-                href={contactInfo.phoneHref}
-                className="inline-block transform rounded-full bg-brand-gold px-12 py-5 text-xl font-black text-brand-red-dark shadow-xl transition-all hover:scale-105 hover:bg-white sm:text-2xl"
-              >
-                {sharedServiceContent.bottomCta.phone}
-              </Link>
-              
-              <a 
-                href={`mailto:${sharedServiceContent.bottomCta.email}`} 
-                className="mt-4 font-medium text-white/80 transition hover:text-white"
-              >
-                {sharedServiceContent.bottomCta.email}
-              </a>
+            {/* Scaled-down Gold Speech Bubble Icon */}
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-brand-gold text-brand-red-dark shadow-lg">
+               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="h-6 w-6">
+                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z" />
+               </svg>
             </div>
 
-            <div className="mx-auto mt-12 max-w-lg border-t border-white/10 pt-8">
-              <p className="text-sm font-semibold uppercase tracking-widest text-white/60">
-                {sharedServiceContent.bottomCta.tagline}
+            {/* Scaled-down Heading */}
+            <h2 className="mb-4 text-3xl font-extrabold leading-tight sm:text-4xl">
+              Let's Talk About<br />Your Loved One's Care Needs
+            </h2>
+            
+            {/* Scaled-down Description */}
+            <p className="mb-8 max-w-xl text-base leading-relaxed text-white/90 sm:text-lg">
+              A free in-home consultation can help families understand care options, daily support needs, and the best plan for a loved one's comfort and safety at home.
+            </p>
+            
+            <div className="flex flex-col items-center gap-3">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-gold">
+                Call Us Today
               </p>
+              
+              {/* Scaled-down Button */}
+              <Link
+                href={contactInfo.phoneHref}
+                className="inline-block transform rounded-full bg-brand-gold px-10 py-4 text-lg font-black tracking-wide text-brand-ink shadow-xl transition-all hover:scale-105 hover:bg-white sm:text-2xl"
+              >
+                {contactInfo.phone}
+              </Link>
+            </div>
+
+            {/* Tighter Footer Taglines */}
+            <div className="mx-auto mt-12 w-full max-w-2xl border-t border-white/20 pt-8">
+              <p className="mb-4 text-xs font-bold uppercase tracking-widest text-white/90">
+                Serving Seniors Across San Jose & the Bay Area
+              </p>
+              <div className="flex flex-col items-center justify-center gap-2 text-xs font-bold uppercase tracking-widest text-brand-gold sm:flex-row sm:gap-4 md:text-sm">
+                <span>Compassionate Care.</span>
+                <span className="hidden opacity-50 sm:inline">•</span>
+                <span>Trusted Support.</span>
+                <span className="hidden opacity-50 sm:inline">•</span>
+                <span>Peace of Mind.</span>
+              </div>
             </div>
           </Reveal>
         </Container>
       </section>
-
+      
     </div>
   );
 }

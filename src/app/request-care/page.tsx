@@ -1,17 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
-import SectionHeading from "@/components/SectionHeading";
 import { contactInfo, homeCallouts } from "@/data/global";
-import Image from "next/image"; // Added Import
 import { 
   requestCareHero, 
   requestCareIntro, 
   careTypeOptions, 
   locationOptions 
 } from "@/data/request-care";
-import { homeHero } from "@/data/home";
 
 export const metadata: Metadata = {
   title: "Request Care | Glorious Home Care Assistance",
@@ -22,102 +20,103 @@ export default function RequestCarePage() {
   return (
     <div className="flex flex-col">
       
-            {/* 1. HERO BANNER (Compact Glass & Scaled Typography) */}
-      <section className="relative overflow-hidden bg-brand-cream min-h-[400px] md:min-h-[450px] lg:min-h-[500px] flex items-center py-12 md:py-16">
+      {/* 1. HERO BANNER */}
+      <section className="relative overflow-hidden bg-background min-h-[400px] md:min-h-[450px] lg:min-h-[500px] flex items-center py-12 md:py-16">
         
         {/* Background Image Container */}
-        <div className="absolute inset-0 bg-[color:var(--brand-ink)] z-0">
+        <div className="absolute inset-0 z-0">
           <Image 
-            src={requestCareHero.bannerImage} // Replace with page source: servicesHero.bannerImage, heroImage, etc.
+            src={requestCareHero.bannerImage}
             alt={requestCareHero.title}
             fill 
-            className="object-cover object-right"
-            style={{
-              maskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.4) 35%, black 70%)',
-              WebkitMaskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.4) 35%, black 70%)',
-            }}
+            className="object-cover object-center"
             priority
           />
           
-          {/* Dark Tint Overlay */}
-          <div className="absolute inset-0 bg-[color:var(--brand-ink)]/40 pointer-events-none" />
+          {/* Smooth Left-to-Right White Fade Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/30 to-transparent z-10 pointer-events-none" />
         </div>
         
         <Container className="relative z-20 w-full">
-          {/* Liquid Frosted Glass Content Panel (Tighter Padding) */}
-          <div className="max-w-xl space-y-4 rounded-3xl bg-white/40 sm:bg-white/30 backdrop-blur-2xl border border-white/50 p-6 sm:p-8 lg:p-10 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
+          <div className="max-w-xl space-y-4">
             <Reveal delay={0.05}>
-              {/* Scaled Headline from text-6xl to text-3xl/4xl */}
-              <h1 className="text-2xl font-extrabold leading-tight text-brand-ink sm:text-3xl lg:text-4xl drop-shadow-sm">
+              <h1 className="text-3xl font-extrabold leading-tight text-brand-ink sm:text-4xl lg:text-5xl drop-shadow-sm">
                 {requestCareHero.title}
               </h1>
             </Reveal>
             
             <Reveal delay={0.1}>
-              {/* Scaled Subhead from text-xl to text-base */}
-              <p className="text-sm leading-relaxed text-brand-ink/80 sm:text-base font-medium max-w-lg">
+              <p className="text-base leading-relaxed text-brand-ink/80 sm:text-lg font-medium max-w-lg">
                 {requestCareHero.subtitle}
               </p>
             </Reveal>
             
             <Reveal delay={0.15}>
               <div className="flex flex-col sm:flex-row flex-wrap gap-3 pt-2">
-                {/* Scaled Buttons (Reduced padding and text size) */}
                 <Link
                   href={contactInfo.phoneHref}
                   className="inline-flex w-full sm:w-auto items-center justify-center rounded-full bg-brand-red px-6 py-3 text-sm font-bold tracking-wide text-white shadow-lg transition-all hover:-translate-y-1 hover:bg-brand-red-dark"
                 >
                   {homeCallouts.callToAction}
                 </Link>
-                <Link
-                  href="/services"
-                  className="inline-flex w-full sm:w-auto items-center justify-center rounded-full border-2 border-white bg-white/40 backdrop-blur-md px-6 py-3 text-sm font-bold tracking-wide text-brand-ink transition-all hover:-translate-y-1 hover:bg-white"
+                <a
+                  href="#care-form"
+                  className="inline-flex w-full sm:w-auto items-center justify-center rounded-full border-2 border-brand-ink/20 bg-white/80 backdrop-blur-sm px-6 py-3 text-sm font-bold tracking-wide text-brand-ink transition-all hover:-translate-y-1 hover:bg-white"
                 >
-                  {homeCallouts.optionsPrompt}
-                </Link>
+                  Fill Out The Form
+                </a>
               </div>
             </Reveal>
-            
           </div>
         </Container>
       </section>
 
-
-      {/* FORM & CONTACT INFO SECTION */}
-      <section className="bg-surface">
-        <Container className="grid gap-12 py-16 md:grid-cols-[1.2fr_0.8fr] md:py-24 lg:gap-16">
+      {/* 2. FORM & CONTACT INFO SECTION (Editorial Grid Layout) */}
+      <section className="bg-surface" id="care-form">
+        <Container className="grid gap-12 py-16 md:grid-cols-[1.3fr_1fr] md:py-24 lg:gap-20 items-start">
           
-          {/* Left Column: The Form */}
-          <Reveal className="space-y-8">
-            <div>
-              <SectionHeading title={requestCareIntro.title} />
-              <p className="mt-4 text-base leading-relaxed text-muted">
-                {requestCareIntro.description}
-              </p>
+          {/* Left Column: Intro & The Form */}
+          <Reveal className="flex flex-col items-start">
+            
+            {/* Unified Eyebrow Heading */}
+            <div className="mb-6 flex items-center gap-4">
+              <span className="h-[2px] w-8 bg-brand-red"></span>
+              <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-brand-red">
+                Take the First Step
+              </h2>
             </div>
+            
+            <h3 className="mb-6 text-4xl font-extrabold leading-tight text-brand-ink md:text-5xl">
+              {requestCareIntro?.title || "Request a Free Consultation"}
+            </h3>
+            
+            <p className="mb-10 text-lg leading-relaxed text-muted">
+              {requestCareIntro?.description || "Fill out the form below so we can better understand your family's needs. A care coordinator will reach out shortly to guide you through your options."}
+            </p>
 
-            <form className="space-y-6 rounded-3xl border border-brand-cream bg-white p-6 shadow-sm sm:p-8">
+            {/* Upgraded Premium Form */}
+            <form className="w-full space-y-6 rounded-3xl border border-white bg-white p-8 shadow-xl shadow-brand-ink/5 sm:p-10 transition-all hover:shadow-2xl hover:shadow-brand-ink/10">
               
               <div className="grid gap-6 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <label htmlFor="name" className="text-sm font-semibold text-brand-ink">Full Name <span className="text-brand-red">*</span></label>
-                  <input type="text" id="name" name="name" required className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-brand-red focus:outline-none focus:ring-1 focus:ring-brand-red" placeholder="John Doe" />
+                  <label htmlFor="name" className="text-sm font-bold text-brand-ink">Full Name <span className="text-brand-red">*</span></label>
+                  <input type="text" id="name" name="name" required className="w-full rounded-xl border border-gray-200 bg-gray-50 px-5 py-3.5 text-sm transition-all focus:border-brand-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-red/10" placeholder="John Doe" />
                 </div>
                 <div className="space-y-2">
-                  <label htmlFor="phone" className="text-sm font-semibold text-brand-ink">Phone Number <span className="text-brand-red">*</span></label>
-                  <input type="tel" id="phone" name="phone" required className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-brand-red focus:outline-none focus:ring-1 focus:ring-brand-red" placeholder="(408) 555-0123" />
+                  <label htmlFor="phone" className="text-sm font-bold text-brand-ink">Phone Number <span className="text-brand-red">*</span></label>
+                  <input type="tel" id="phone" name="phone" required className="w-full rounded-xl border border-gray-200 bg-gray-50 px-5 py-3.5 text-sm transition-all focus:border-brand-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-red/10" placeholder="(408) 555-0123" />
                 </div>
               </div>
 
               <div className="grid gap-6 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <label htmlFor="email" className="text-sm font-semibold text-brand-ink">Email Address <span className="text-brand-red">*</span></label>
-                  <input type="email" id="email" name="email" required className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-brand-red focus:outline-none focus:ring-1 focus:ring-brand-red" placeholder="john@example.com" />
+                  <label htmlFor="email" className="text-sm font-bold text-brand-ink">Email Address <span className="text-brand-red">*</span></label>
+                  <input type="email" id="email" name="email" required className="w-full rounded-xl border border-gray-200 bg-gray-50 px-5 py-3.5 text-sm transition-all focus:border-brand-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-red/10" placeholder="john@example.com" />
                 </div>
                 <div className="space-y-2">
-                  <label htmlFor="location" className="text-sm font-semibold text-brand-ink">City / Location</label>
-                  <select id="location" name="location" className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-brand-ink focus:border-brand-red focus:outline-none focus:ring-1 focus:ring-brand-red">
-                    <option value="" disabled selected>Select a city</option>
+                  <label htmlFor="location" className="text-sm font-bold text-brand-ink">City / Location</label>
+                  <select id="location" name="location" defaultValue="" className="w-full rounded-xl border border-gray-200 bg-gray-50 px-5 py-3.5 text-sm text-brand-ink transition-all focus:border-brand-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-red/10">
+                    <option value="" disabled>Select a city</option>
                     {locationOptions.map((loc) => (
                       <option key={loc} value={loc}>{loc}</option>
                     ))}
@@ -126,9 +125,9 @@ export default function RequestCarePage() {
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="careType" className="text-sm font-semibold text-brand-ink">Type of Care Needed</label>
-                <select id="careType" name="careType" className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-brand-ink focus:border-brand-red focus:outline-none focus:ring-1 focus:ring-brand-red">
-                  <option value="" disabled selected>Select care type</option>
+                <label htmlFor="careType" className="text-sm font-bold text-brand-ink">Type of Care Needed</label>
+                <select id="careType" name="careType" defaultValue="" className="w-full rounded-xl border border-gray-200 bg-gray-50 px-5 py-3.5 text-sm text-brand-ink transition-all focus:border-brand-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-red/10">
+                  <option value="" disabled>Select care type</option>
                   {careTypeOptions.map((care) => (
                     <option key={care} value={care}>{care}</option>
                   ))}
@@ -136,62 +135,90 @@ export default function RequestCarePage() {
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="message" className="text-sm font-semibold text-brand-ink">Briefly describe your situation</label>
-                <textarea id="message" name="message" rows={4} className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-brand-red focus:outline-none focus:ring-1 focus:ring-brand-red" placeholder="How can we help your loved one?"></textarea>
+                <label htmlFor="message" className="text-sm font-bold text-brand-ink">Briefly describe your situation</label>
+                <textarea id="message" name="message" rows={4} className="w-full rounded-xl border border-gray-200 bg-gray-50 px-5 py-3.5 text-sm transition-all focus:border-brand-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-red/10 resize-none" placeholder="How can we help your loved one?"></textarea>
               </div>
 
-              <button type="button" className="w-full rounded-full bg-brand-red px-8 py-4 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-brand-red-dark hover:shadow-lg sm:w-auto">
-                Submit Request
+              <button type="button" className="group inline-flex w-full items-center justify-center gap-3 rounded-full bg-brand-red px-8 py-4 text-sm font-bold uppercase tracking-wide text-white shadow-[0_8px_30px_rgb(255,49,49,0.2)] transition-all hover:-translate-y-1 hover:bg-brand-red-dark hover:shadow-[0_8px_30px_rgb(199,36,57,0.3)] sm:w-auto">
+                <span>Submit Request</span>
+                <svg className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
               </button>
             </form>
           </Reveal>
           
-          {/* Right Column: Direct Contact & Process */}
-          <Reveal delay={0.1} className="space-y-6">
+          {/* Right Column: Direct Contact Sidebar */}
+          <Reveal delay={0.1} className="space-y-8 lg:sticky lg:top-32">
             
-            {/* Call Us Card */}
-            <div className="rounded-3xl bg-brand-cream p-8 shadow-sm sm:p-10">
-              <h3 className="text-xl font-bold text-brand-ink">Or Call Us Directly</h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted">
-                Need immediate assistance? Our care team is available 24/7 to answer your calls.
-              </p>
-              <div className="mt-6">
-                <p className="text-xs font-semibold uppercase tracking-widest text-brand-red">Phone</p>
-                <a href={contactInfo.phoneHref} className="mt-1 block text-3xl font-bold text-brand-ink hover:text-brand-red transition-colors">
-                  {contactInfo.phone}
-                </a>
-              </div>
-              <div className="mt-6">
-                <p className="text-xs font-semibold uppercase tracking-widest text-brand-red">Email</p>
-                <a href={`mailto:${contactInfo.email}`} className="mt-1 block text-base font-medium text-brand-ink hover:text-brand-red transition-colors">
-                  {contactInfo.email}
-                </a>
+            {/* Call Us Card with Glowing Hover */}
+            <div className="relative overflow-hidden rounded-3xl border border-brand-cream/80 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-brand-gold/40 hover:shadow-xl sm:p-10">
+              <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-brand-cream/60 blur-3xl"></div>
+              
+              <div className="relative z-10">
+                <h3 className="text-2xl font-bold text-brand-ink">Or Call Us Directly</h3>
+                <div className="my-6 h-[2px] w-12 bg-brand-red/20"></div>
+                <p className="mb-8 text-base leading-relaxed text-muted">
+                  Need immediate assistance or have urgent placement needs? Our care team is available 24/7.
+                </p>
+                
+                <div className="space-y-6">
+                  <div className="group">
+                    <p className="text-xs font-bold uppercase tracking-widest text-brand-red">Phone</p>
+                    <a href={contactInfo.phoneHref} className="mt-1 block text-2xl font-black tracking-tight text-brand-ink transition-colors group-hover:text-brand-red lg:text-3xl">
+                      {contactInfo.phone}
+                    </a>
+                  </div>
+                  <div className="group">
+                    <p className="text-xs font-bold uppercase tracking-widest text-brand-red">Email</p>
+                    <a href={`mailto:${contactInfo.email}`} className="mt-1 block text-lg font-medium text-brand-ink transition-colors group-hover:text-brand-red">
+                      {contactInfo.email}
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
-
-            {/* What Happens Next Card */}
-            <div className="rounded-3xl border border-brand-gold/20 bg-white p-8 shadow-sm sm:p-10">
-              <h3 className="text-xl font-bold text-brand-ink">What Happens Next?</h3>
-              <ul className="mt-6 space-y-4">
-                <li className="flex gap-4 text-sm text-muted">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-gold/20 font-bold text-brand-gold-dark">1</span>
-                  We review your care needs and location.
-                </li>
-                <li className="flex gap-4 text-sm text-muted">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-gold/20 font-bold text-brand-gold-dark">2</span>
-                  A care coordinator calls you to answer questions.
-                </li>
-                <li className="flex gap-4 text-sm text-muted">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-gold/20 font-bold text-brand-gold-dark">3</span>
-                  We schedule a free, in-home assessment.
-                </li>
-              </ul>
-            </div>
-
           </Reveal>
-
         </Container>
       </section>
+
+      {/* 3. GOOGLE MAPS EMBED SECTION */}
+      <section className="bg-background py-16 md:py-24 border-t border-brand-gold/20">
+        <Container>
+          <Reveal>
+            <div className="mx-auto max-w-3xl text-center mb-10">
+              <h2 className="text-3xl font-extrabold text-brand-ink md:text-4xl">
+                Our Service Area
+              </h2>
+              <p className="mt-4 text-lg text-muted">
+                Providing compassionate care across San Jose, Santa Clara County, and the surrounding Bay Area.
+              </p>
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.1}>
+            <div className="w-full overflow-hidden rounded-3xl border-4 border-white shadow-lg bg-white h-[400px] md:h-[500px] relative">
+              {/* HOW TO UPDATE THIS MAP:
+                1. Go to Google Maps and search for your business (Glorious Home Care Assistance)
+                2. Click the "Share" button, then click "Embed a map"
+                3. Copy the URL inside the `src="..."` attribute of the iframe they provide
+                4. Paste it right here below to replace this placeholder San Jose map. 
+              */}
+              <iframe
+                src="https://maps.google.com/maps?q=2528%20Qume%20Drive,%20Ste.%204,%20San%20Jose,%20CA%2095131&t=&z=14&ie=UTF8&iwloc=&output=embed"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen={false}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="absolute inset-0"
+              />
+            </div>
+          </Reveal>
+        </Container>
+      </section>
+
     </div>
   );
 }
