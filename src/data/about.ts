@@ -72,3 +72,204 @@ export const communityInvolvement = {
     { title: "Giving Back Together", desc: "Actively involved in events and initiatives that make a difference." }
   ]
 };
+
+export const googleReviews = [
+  {
+    id: 1,
+    author: "Vilma Reduta",
+    rating: 5,
+    date: "a year ago",
+    text: "We recently engaged Glorious Home Care Assistance to support my mother-in-law, who has dementia, and I can’t express enough how grateful we were for their services. From the very beginning, the staff demonstrated compassion and professionalism.",
+    authorUrl:
+      "https://www.google.com/maps/contrib/104098989442499610269/reviews?hl=en-GB",
+  },
+
+  {
+    id: 2,
+    author: "B",
+    rating: 5,
+    date: "2 years ago",
+    text: "Overall I had an excellent experience with Glorious Homecare! I was looking for someone to help me out after an upcoming surgery. Glorious Home Care Assistance made the experience much easier.",
+    authorUrl:
+      "https://www.google.com/maps/contrib/116392286818618939091/reviews?hl=en-GB",
+  },
+
+  {
+    id: 3,
+    author: "Vy Huynh",
+    rating: 5,
+    date: "a year ago",
+    text: "I recently had the pleasure of working with Minilva for an in-home care service evaluation for my grandmother, and I couldn’t be more impressed. From the moment we began, Minilva demonstrated exceptional professionalism and warmth.",
+    authorUrl:
+      "https://www.google.com/maps/contrib/103302449885105711790/reviews?hl=en-GB",
+  },
+
+  {
+    id: 4,
+    author: "shinga chivuswa",
+    rating: 5,
+    date: "3 years ago",
+    text: "They took great care of my grandmother and I wish I could give them 10 stars. They pay attention to detail and their caregivers are very kind and polite. The care coordinator always kept me updated about all the happenings. I would use them again.",
+    authorUrl:
+      "https://www.google.com/maps/contrib/111150594296602623920/reviews?hl=en-GB",
+  },
+
+  {
+    id: 5,
+    author: "Nevebelle fri",
+    rating: 5,
+    date: "3 years ago",
+    text: "Glorious HomeCare is a great organization that offers needed services for their clients. True professionals helping many. San Jose is lucky to have this organization providing home care services and care management. I will definitely recommend this company to everyone.",
+    authorUrl:
+      "https://www.google.com/maps/contrib/108575236647280730828/reviews?hl=en-GB",
+  },
+
+  {
+    id: 6,
+    author: "Van Vannah",
+    rating: 5,
+    date: "3 years ago",
+    text: "It's a home health care service. Glorious goes above and beyond clients and families' expectations. I've recommended them to friends and families because they ease concerns and help reassure families.",
+    authorUrl:
+      "https://www.google.com/maps/contrib/109795409203877190081/reviews?hl=en-GB",
+  },
+
+  {
+    id: 7,
+    author: "Lorraine Coccaro",
+    rating: 5,
+    date: "2 years ago",
+    text: "Minilva has been with us for over 3 years. We are 89 and 90 years old and my husband has dementia. Her help and care is the very best. When she must be away the company, Glorious Home Care Assistance, sends a very capable substitute.",
+    authorUrl:
+      "https://www.google.com/maps/contrib/102925465915678412273/reviews?hl=en-GB",
+  },
+
+  {
+    id: 8,
+    author: "Foncham Foncham",
+    rating: 5,
+    date: "3 years ago",
+    text: "Excellent management, great communication, and my family loves her caregivers. Very positive. Excellent caregivers! They are very attentive, responsible, and caring.",
+    authorUrl:
+      "https://www.google.com/maps/contrib/109632903088917785368/reviews?hl=en-GB",
+  },
+
+  {
+    id: 9,
+    author: "Richard Lockie",
+    rating: 5,
+    date: "2 years ago",
+    text: "Excellent care! Very caring staff. Gives great emotional support to the entire family.",
+    authorUrl:
+      "https://www.google.com/maps/contrib/101648809742842588108/reviews?hl=en-GB",
+  },
+
+  {
+    id: 10,
+    author: "Linda Ngede",
+    rating: 5,
+    date: "3 years ago",
+    text: "Great location. Very clean and organized. The management is very knowledgeable and informative. I can definitely trust them to care for my loved ones.",
+    authorUrl:
+      "https://www.google.com/maps/contrib/105325969427734165493/reviews?hl=en-GB",
+  },
+
+  {
+    id: 11,
+    author: "Thierry Boris Tangie",
+    rating: 5,
+    date: "3 years ago",
+    text: "The staff are very excellent and professional. Glorious Home Care just like the name.",
+    authorUrl:
+      "https://www.google.com/maps/contrib/111155603678073130928/reviews?hl=en-GB",
+  },
+
+  {
+    id: 12,
+    author: "go Osong",
+    rating: 5,
+    date: "3 years ago",
+    text: "Looking at the photos of this vicinity, this tells me it's a place for seniors. I'll be very proud to bring my loved ones simply because they care.",
+    authorUrl:
+      "https://www.google.com/maps/contrib/106911467424949631952/reviews?hl=en-GB",
+  },
+
+  {
+    id: 13,
+    author: "Malum Agnes",
+    rating: 5,
+    date: "3 years ago",
+    text: "Their hospitality is out of this world. Good customer service. I highly recommend this home care.",
+    authorUrl:
+      "https://www.google.com/maps/contrib/111506033383008724569/reviews?hl=en-GB",
+  },
+
+  {
+    id: 14,
+    author: "Sop Allen",
+    rating: 5,
+    date: "3 years ago",
+    text: "Wooow so loving and caring staffs. Thank you all for taking care of my dad. We will always remain indebted to you all.",
+    authorUrl:
+      "https://www.google.com/maps/contrib/112662777251604275371/reviews?hl=en-GB",
+  },
+
+  {
+    id: 15,
+    author: "Petience Tebid",
+    rating: 5,
+    date: "3 years ago",
+    text: "Your love and hospitality is impeccable. May your wonderful good work never end.",
+    authorUrl:
+      "https://www.google.com/maps/contrib/103030219823195734085/reviews?hl=en-GB",
+  },
+
+  {
+    id: 16,
+    author: "Momulouh Moussah",
+    rating: 5,
+    date: "3 years ago",
+    text: "Thanks very much for your help and the service was awesome.",
+    authorUrl:
+      "https://www.google.com/maps/contrib/109736536010183955035/reviews?hl=en-GB",
+  },
+
+  {
+    id: 17,
+    author: "Micky Vibe official",
+    rating: 5,
+    date: "3 years ago",
+    text: "Your services are just wonderful.",
+    authorUrl:
+      "https://www.google.com/maps/contrib/108341450602812878669/reviews?hl=en-GB",
+  },
+
+  {
+    id: 18,
+    author: "Etiendem Jencita",
+    rating: 5,
+    date: "9 months ago",
+    text: "",
+    authorUrl:
+      "https://www.google.com/maps/contrib/107917132087409789879/reviews?hl=en-GB",
+  },
+
+  {
+    id: 19,
+    author: "ornela kizungu",
+    rating: 5,
+    date: "3 years ago",
+    text: "",
+    authorUrl:
+      "https://www.google.com/maps/contrib/103127968083703804822/reviews?hl=en-GB",
+  },
+];
+
+export const googleReviewSummary = {
+  businessName: "Glorious Home Care Assistance",
+  rating: 5.0,
+  reviewCount: 19,
+  address: "2528 Qume Dr Ste 4, San Jose, CA 95131",
+  googleMapsUrl:
+    "https://www.google.com/maps/search/?api=1&query=Glorious+Home+Care+Assistance+2528+Qume+Dr+Ste+4+San+Jose+CA+95131",
+};

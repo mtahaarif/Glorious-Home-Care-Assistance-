@@ -1,18 +1,19 @@
-import type { Metadata } from "next";
+"use client";
+
+import { useRef, useState, useEffect } from "react";
+// import type { Metadata } from "next"; // Moved to layout.tsx
 import Link from "next/link";
 import Image from "next/image";
 import Container from "@/components/Container";
+import GoogleReviewsCarousel from "@/components/GoogleReviewsCarousel";
 import Reveal from "@/components/Reveal";
-import TestimonialCard from "@/components/TestimonialCard";
 import { contactInfo, homeCallouts } from "@/data/global";
-
 import { 
   aboutHero, 
   ourStory, 
   ourInspiration, 
   visionAndMission, 
   ghcaDifference, 
-  aboutReview 
 } from "@/data/about";
 
 // Reusing your Heart Icon for the features list & testimonial
@@ -22,10 +23,12 @@ const HeartIcon = () => (
   </svg>
 );
 
-export const metadata: Metadata = {
-  title: "About Us | Glorious Home Care",
-  description: "Learn about Glorious Homecare Assistance LLC and our care philosophy.",
-};
+/* NOTE: Move this to app/about/layout.tsx!
+  export const metadata: Metadata = {
+    title: "About Us | Glorious Home Care",
+    description: "Learn about Glorious Homecare Assistance LLC and our care philosophy.",
+  };
+*/
 
 const ShieldIcon = () => (
   <svg viewBox="0 0 24 24" aria-hidden className="h-5 w-5 shrink-0 text-brand-red" fill="currentColor">
@@ -40,10 +43,73 @@ const UsersIcon = () => (
 );
 
 export default function AboutPage() {
+  
+  // ==========================================
+  // Hooks for Mobile Vision & Mission Sync
+  // ==========================================
+  const visionSectionRef = useRef<HTMLDivElement>(null);
+  const [visionProgress, setVisionProgress] = useState(0);
+  
+  // Tracks coordinates to convert horizontal swipe into vertical scroll
+  const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!visionSectionRef.current) return;
+      const rect = visionSectionRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      const stickyTop = 72; // Header offset
+      
+      const scrollDistance = rect.height - windowHeight;
+      const scrolledPast = stickyTop - rect.top;
+      
+      // Calculate scroll progress exclusively from 0.0 to 1.0
+      const progress = Math.max(0, Math.min(1, scrolledPast / scrollDistance));
+      setVisionProgress(progress);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // Trigger on mount
+    
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!touchStartX.current || !touchStartY.current) return;
+
+    const touchX = e.touches[0].clientX;
+    const touchY = e.touches[0].clientY;
+    const deltaX = touchStartX.current - touchX;
+    const deltaY = touchStartY.current - touchY;
+
+    // Detect if the user is swiping mostly horizontally
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 3) {
+      // Force window to scroll vertically instead of natively panning left/right
+      // 1.5x multiplier ensures it feels like a fast, responsive swipe
+      window.scrollBy({ top: deltaX * 1.5, left: 0, behavior: 'auto' });
+      
+      // Reset start positions to continuously capture drag motion
+      touchStartX.current = touchX;
+      touchStartY.current = touchY;
+    }
+  };
+
+  const handleTouchEnd = () => {
+    touchStartX.current = 0;
+    touchStartY.current = 0;
+  };
+
+
   return (
     <div className="flex flex-col">
 
-{/* 1. UPDATED ABOUT US HERO SECTION */}
+      {/* 1. UPDATED ABOUT US HERO SECTION */}
       <section className="relative overflow-hidden bg-background min-h-[400px] md:min-h-[450px] lg:min-h-[500px] flex items-center py-12 md:py-16">
         
         {/* Background Image Container */}
@@ -106,7 +172,6 @@ export default function AboutPage() {
                 Our Background
               </h2>
               <span className="h-[2px] w-12 bg-brand-red"></span>
-
             </div>
             <h3 className="text-3xl font-extrabold text-brand-ink md:text-5xl leading-tight">
               {ourStory.title}
@@ -126,18 +191,18 @@ export default function AboutPage() {
               <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-brand-cream/60 blur-3xl"></div>
 
               <div className="relative z-10 flex flex-col h-full">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-red">
-              Care Coordination
-            </p>
-              <h4 className="text-2xl font-bold text-brand-ink">{contactInfo.name}</h4>
-            <p className="mt-4 text-base leading-relaxed text-muted">
-              <div className="mb-6 h-[2px] w-full bg-brand-cream transition-colors duration-300 group-hover:bg-brand-red/20"></div>
-              {contactInfo.addressLine1}
-              <br />
-              {contactInfo.addressLine2}
-              <br />
-              <br />
-            </p>
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-red">
+                  Care Coordination
+                </p>
+                <h4 className="text-2xl font-bold text-brand-ink">{contactInfo.name}</h4>
+                <div className="mt-4 text-base leading-relaxed text-muted">
+                  <div className="mb-6 h-[2px] w-full bg-brand-cream transition-colors duration-300 group-hover:bg-brand-red/20"></div>
+                  {contactInfo.addressLine1}
+                  <br />
+                  {contactInfo.addressLine2}
+                  <br />
+                  <br />
+                </div>
                 <Link
                   href={contactInfo.phoneHref}
                   className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-[color:var(--brand-gold)] px-8 py-4 text-lg font-black tracking-wide text-brand-ink shadow-md transition-all hover:scale-[1.02] hover:bg-white"
@@ -153,113 +218,256 @@ export default function AboutPage() {
         </Container>
       </section>
 
-      {/* 3. VISION & MISSION SECTION (Bento Box Style) */}
-      <section className="border-y border-brand-cream bg-brand-cream/30">
-        <Container className="grid gap-8 py-16 md:grid-cols-2 md:py-24">
-          <Reveal>
-            <div className="group h-full rounded-3xl border border-brand-cream bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl sm:p-10 flex flex-col">
-              <div className="flex items-center gap-4 mb-6">
-                <span className="h-[2px] w-12 bg-brand-gold transition-colors group-hover:bg-brand-red"></span>
-                <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-brand-gold group-hover:text-brand-red transition-colors">Our Vision</h2>
-                <span className="h-[2px] w-12 bg-brand-gold transition-colors group-hover:bg-brand-red"></span>
-              </div>
-              <h3 className="text-3xl font-extrabold text-brand-ink mb-4 group-hover:text-brand-red transition-colors">{visionAndMission.vision.title}</h3>
-              <p className="leading-relaxed text-muted text-lg">{visionAndMission.vision.body}</p>
-            </div>
-          </Reveal>
-          
-          <Reveal delay={0.1}>
-            <div className="group relative h-full rounded-3xl bg-brand-red-dark p-8 text-white shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl sm:p-10 flex flex-col overflow-hidden">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-brand-red rounded-full blur-3xl opacity-50 pointer-events-none group-hover:opacity-70 transition-opacity"></div>
-              <div className="relative z-10">
-                <div className="flex items-center gap-4 mb-6">
+      {/* ========================================= */}
+      {/* 3. VISION & MISSION SECTION               */}
+      {/* ========================================= */}
+
+      {/* DESKTOP VERSION (Hidden on Mobile) */}
+      <div className="hidden md:block">
+        <section className="border-y border-brand-cream bg-white py-16 md:py-32">
+          <Container>
+            
+            {/* Added Title & Subtitle */}
+            <Reveal>
+              <div className="mx-auto max-w-3xl text-center mb-16">
+                <div className="flex items-center justify-center gap-4 mb-4">
                   <span className="h-[2px] w-12 bg-brand-gold"></span>
-                  <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-brand-gold">Our Mission</h2>
+                  <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-brand-gold">
+                    Our Purpose
+                  </h2>
                   <span className="h-[2px] w-12 bg-brand-gold"></span>
                 </div>
-                <h3 className="text-3xl font-extrabold mb-4 group-hover:text-brand-cream transition-colors">{visionAndMission.mission.title}</h3>
-                <p className="leading-relaxed text-white/90 text-lg">{visionAndMission.mission.body}</p>
+                <h3 className="text-3xl font-extrabold text-brand-ink md:text-5xl leading-tight">
+                  Driven by Compassion, Guided by Excellence
+                </h3>
               </div>
-            </div>
-          </Reveal>
-        </Container>
-      </section>
-
-      {/* 4. THE GHCA DIFFERENCE & TESTIMONIAL */}
-      <section className="bg-surface">
-        <Container className="flex flex-col gap-16 py-16 md:py-24">
-          
-          <div className="grid items-center gap-12 md:grid-cols-2 lg:gap-16">
-            <Reveal>
-              <div className="flex items-center gap-4 mb-4">
-                <span className="h-[2px] w-12 bg-brand-red"></span>
-                <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-brand-red">
-                  Why Choose Us
-                </h2>
-                <span className="h-[2px] w-12 bg-brand-red"></span>
-              </div>
-              <h3 className="text-3xl font-extrabold text-brand-ink md:text-4xl leading-tight mb-8">
-                {ghcaDifference.title}
-              </h3>
-              
-              <ul className="space-y-6">
-                {ghcaDifference.features.map((feature, index) => {
-                  // Dynamically pick a different icon for each list item
-                  const FeatureIcons = [HeartIcon, ShieldIcon, UsersIcon];
-                  const Icon = FeatureIcons[index % FeatureIcons.length];
-                  
-                  return (
-                    <li key={index} className="flex items-center gap-4 text-lg font-bold text-brand-ink group">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-cream transition-transform duration-300 group-hover:scale-110 group-hover:bg-brand-red/10">
-                        <Icon />
-                      </div>
-                      <span className="transition-colors duration-300 group-hover:text-brand-red">{feature}</span>
-                    </li>
-                  );
-                })}
-              </ul>
             </Reveal>
+
+            <div className="grid gap-8 md:grid-cols-2">
+              <Reveal>
+                <div className="group h-full rounded-3xl border border-brand-cream bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl sm:p-10 flex flex-col">
+                  <div className="flex items-center gap-4 mb-6">
+                    <span className="h-[2px] w-12 bg-brand-gold transition-colors group-hover:bg-brand-red"></span>
+                    <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-brand-gold group-hover:text-brand-red transition-colors">Our Vision</h2>
+                    <span className="h-[2px] w-12 bg-brand-gold transition-colors group-hover:bg-brand-red"></span>
+                  </div>
+                  <h3 className="text-3xl font-extrabold text-brand-ink mb-4 group-hover:text-brand-red transition-colors">{visionAndMission.vision.title}</h3>
+                  <p className="leading-relaxed text-muted text-lg">{visionAndMission.vision.body}</p>
+                </div>
+              </Reveal>
+              
+              <Reveal delay={0.1}>
+                <div className="group relative h-full rounded-3xl bg-brand-red-dark p-8 text-white shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl sm:p-10 flex flex-col overflow-hidden">
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-brand-red rounded-full blur-3xl opacity-50 pointer-events-none group-hover:opacity-70 transition-opacity"></div>
+                  <div className="relative z-10">
+                    <div className="flex items-center gap-4 mb-6">
+                      <span className="h-[2px] w-12 bg-brand-gold"></span>
+                      <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-brand-gold">Our Mission</h2>
+                      <span className="h-[2px] w-12 bg-brand-gold"></span>
+                    </div>
+                    <h3 className="text-3xl font-extrabold mb-4 group-hover:text-brand-cream transition-colors">{visionAndMission.mission.title}</h3>
+                    <p className="leading-relaxed text-white/90 text-lg">{visionAndMission.mission.body}</p>
+                  </div>
+                </div>
+              </Reveal>
+            </div>
+          </Container>
+        </section>
+      </div>
+
+      {/* MOBILE VERSION (Hidden on Desktop) */}
+      <div className="block md:hidden">
+        <section ref={visionSectionRef} className="bg-surface relative z-10 h-[200vh]">
+          
+          <div className="sticky top-[72px] md:top-[88px] w-full flex flex-col pt-10 h-[calc(100vh-72px)] overflow-hidden">
             
-            {/* Hover Quote Card */}
+            {/* Mobile Title */}
+            <div className="w-full pb-6">
+              <Reveal>
+                <div className="mx-auto max-w-3xl text-center px-4">
+                  <div className="flex items-center justify-center gap-4 mb-2">
+                    <span className="h-[2px] w-12 bg-brand-gold"></span>
+                    <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-brand-gold">
+                      Our Purpose
+                    </h2>
+                    <span className="h-[2px] w-12 bg-brand-gold"></span>
+                  </div>
+                  <h3 className="text-2xl font-extrabold text-brand-ink leading-tight">
+                    Guided by Excellence
+                  </h3>
+                </div>
+              </Reveal>
+            </div>
+
+            {/* TOUCH AREA: Parallax Stacking Cards */}
+            {/* `touch-pan-y` prevents mobile browsers from triggering standard back/forward gestures here */}
+            <div 
+              className="relative w-full flex-grow mt-2 touch-pan-y border-y border-brand-cream bg-brand-cream/30"
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+            >
+              
+              {/* Card 1: Vision (Fixed on the left) */}
+              <div className="absolute left-4 top-4 bottom-12 w-[85vw] rounded-3xl border border-brand-cream bg-white p-8 shadow-xl flex flex-col z-10 overflow-y-auto">
+                <div className="flex items-center gap-4 mb-6">
+                  <span className="h-[2px] w-8 bg-brand-gold"></span>
+                  <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-brand-gold">Our Vision</h2>
+                </div>
+                <h3 className="text-2xl font-extrabold text-brand-ink mb-4">{visionAndMission.vision.title}</h3>
+                <div className="h-[2px] w-12 bg-brand-gold/20 mb-6"></div>
+                <p className="leading-relaxed text-muted text-base">{visionAndMission.vision.body}</p>
+              </div>
+
+              {/* Card 2: Mission (Starts right, enters based on progress lock) */}
+              <div 
+                className="absolute left-8 top-8 bottom-8 w-[85vw] rounded-3xl bg-brand-red-dark p-8 text-white shadow-2xl flex flex-col z-20 overflow-y-auto will-change-transform"
+                style={{
+                  // Perfectly synced: Starts offscreen (100vw), drops to 0vw at max progress.
+                  transform: `translateX(${Math.max(0, 100 - visionProgress * 100)}vw)`,
+                  transition: 'transform 0.1s ease-out'
+                }}
+              >
+                <div className="absolute top-0 right-0 w-48 h-48 bg-brand-red rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center gap-4 mb-6">
+                    <span className="h-[2px] w-8 bg-brand-gold"></span>
+                    <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-brand-gold">Our Mission</h2>
+                  </div>
+                  <h3 className="text-2xl font-extrabold mb-4 text-brand-cream">{visionAndMission.mission.title}</h3>
+                  <div className="h-[2px] w-12 bg-brand-cream/20 mb-6"></div>
+                  <p className="leading-relaxed text-white/90 text-base">{visionAndMission.mission.body}</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+      </div>
+
+      {/* 4. THE GHCA DIFFERENCE & GOOGLE REVIEWS */}
+      <section className="bg-surface">
+        <Container className="flex flex-col gap-20 py-16 md:py-24">
+
+          {/* =========================================================
+              GHCA DIFFERENCE
+              ========================================================= */}
+          <div className="grid items-center gap-12 md:grid-cols-2 lg:gap-20">
+
+            {/* LEFT: WHY CHOOSE US */}
+            <Reveal>
+              <div className="flex flex-col items-start">
+
+                {/* Section Label */}
+                <div className="mb-4 flex items-center gap-4">
+                  <span className="h-[2px] w-12 bg-brand-red"></span>
+
+                  <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-brand-red">
+                    Why Choose Us
+                  </h2>
+
+                  <span className="h-[2px] w-12 bg-brand-red"></span>
+                </div>
+
+                {/* Heading */}
+                <h3 className="mb-8 text-3xl font-extrabold leading-tight text-brand-ink md:text-4xl">
+                  {ghcaDifference.title}
+                </h3>
+
+                {/* Features */}
+                <ul className="space-y-6">
+                  {ghcaDifference.features.map((feature, index) => {
+                    const FeatureIcons = [
+                      HeartIcon,
+                      ShieldIcon,
+                      UsersIcon,
+                    ];
+
+                    const Icon =
+                      FeatureIcons[index % FeatureIcons.length];
+
+                    return (
+                      <li
+                        key={index}
+                        className="group flex items-center gap-4 text-lg font-bold text-brand-ink"
+                      >
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-cream transition-all duration-300 group-hover:scale-110 group-hover:bg-brand-red/10">
+                          <Icon />
+                        </div>
+
+                        <span className="transition-colors duration-300 group-hover:text-brand-red">
+                          {feature}
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
+
+              </div>
+            </Reveal>
+
+
+            {/* RIGHT: OUR INSPIRATION */}
             <Reveal delay={0.1} className="h-full">
-              <div className="group relative h-full rounded-3xl border border-brand-gold/20 bg-brand-cream p-8 sm:p-12 transition-all duration-300 hover:shadow-xl hover:-translate-y-2 overflow-hidden flex flex-col justify-center">
-                {/* Decorative Elements */}
+              <div className="group relative flex h-full min-h-[360px] flex-col justify-center overflow-hidden rounded-3xl border border-brand-gold/20 bg-brand-cream p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-xl sm:p-12">
+
+                {/* Decorative Glow */}
                 <div className="absolute -bottom-10 -right-10 h-40 w-40 rounded-full bg-brand-gold/20 blur-3xl transition-all duration-500 group-hover:bg-brand-red/10"></div>
-                <span className="absolute left-6 top-6 font-serif text-8xl leading-none text-brand-gold/30 transition-transform duration-300 group-hover:-translate-y-2">"</span>
-                
+
+                {/* Large Quote */}
+                <span className="absolute left-6 top-4 font-serif text-8xl leading-none text-brand-gold/30 transition-transform duration-500 group-hover:-translate-y-2">
+                  "
+                </span>
+
+                {/* Quote */}
                 <p className="relative z-10 pt-8 text-xl font-medium italic leading-relaxed text-brand-ink sm:text-2xl">
                   {ourInspiration.quote}
                 </p>
-                
+
+                {/* Author */}
                 <div className="relative z-10 mt-8 flex items-center gap-4">
                   <div className="h-[2px] w-8 bg-brand-red"></div>
+
                   <p className="text-sm font-bold uppercase tracking-widest text-brand-red">
                     {ourInspiration.author}
                   </p>
                 </div>
+
               </div>
             </Reveal>
+
           </div>
 
+
+          {/* =========================================================
+              GOOGLE REVIEWS
+              ========================================================= */}
           <Reveal delay={0.2}>
-            <div className="mx-auto max-w-3xl text-center mt-10">
-              <div className="flex items-center justify-center gap-4 mb-4">
+            <div className="mx-auto w-full max-w-5xl text-center">
+
+              {/* Section Label */}
+              <div className="mb-4 flex items-center justify-center gap-4">
                 <span className="h-[2px] w-12 bg-brand-red"></span>
+              {/* Google Rating Summary */}
+
                 <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-brand-red">
                   Client Reviews
                 </h2>
+
                 <span className="h-[2px] w-12 bg-brand-red"></span>
               </div>
-              <h3 className="text-3xl font-extrabold text-brand-ink mb-10">
+
+              {/* Heading */}
+              <h3 className="mb-3 text-3xl font-extrabold text-brand-ink md:text-4xl">
                 What Families Say
               </h3>
-              <div className="text-left">
-                <TestimonialCard
-                  quote={aboutReview.quote}
-                  author={aboutReview.author}
-                  endIcon={aboutReview.hasHeartIcon ? <HeartIcon /> : undefined}
-                />
+
+
+              {/* Review Carousel */}
+              <div className="w-full">
+                <GoogleReviewsCarousel />
               </div>
+
             </div>
           </Reveal>
 

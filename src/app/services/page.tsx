@@ -1,31 +1,97 @@
-import type { Metadata } from "next";
+"use client";
+
 import Link from "next/link";
-import Image from "next/image"; // Next.js Image component
+import Image from "next/image";
+import { useRef, useEffect, useCallback, useState } from "react";
 import Container from "@/components/Container";
-import DetailCard from "@/components/DetailCard";
 import Reveal from "@/components/Reveal";
-import SectionHeading from "@/components/SectionHeading";
-import { contactInfo, homeCallouts, servicesCta } from "@/data/global";
+import { contactInfo, homeCallouts } from "@/data/global";
 
 import { 
   servicesHero, 
+  servicesIntro,
   mainServices, 
-  sharedServiceContent,
-  companionCareServices, 
-  aideServices 
+  sharedServiceContent
 } from "@/data/services";
-import { homeHero, homeProcess, homeServices, whoWeServe } from "@/data/home";
-
-export const metadata: Metadata = {
-  title: "Services | Glorious Home Care",
-  description: "Supporting Independence at Home. Providing Peace of Mind for Families.",
-};
+import { homeProcess, whoWeServe } from "@/data/home";
 
 export default function ServicesPage() {
-  return (
-    <div className="flex flex-col">
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const animationRef = useRef<number | null>(null);
+  const isPausedRef = useRef(false);
+
+  // Refs and State for the "How Home Care Works" Parallax Scroll
+  const processSectionRef = useRef<HTMLElement>(null);
+  const [processProgress, setProcessProgress] = useState(0);
+
+  const SCROLL_SPEED = 0.6; // px per frame
+  const resumeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Helper functions for the horizontal carousel
+  const nudgeScroll = (amount: number) => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+
+    isPausedRef.current = true;
+    if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+
+    el.scrollBy({ left: amount, behavior: "smooth" });
+
+    resumeTimeoutRef.current = setTimeout(() => {
+      isPausedRef.current = false;
+    }, 600);
+  };
+
+  const scrollLeft = () => nudgeScroll(-400);
+  const scrollRight = () => nudgeScroll(400);
+
+  // Main Animation Loop for Auto-Carousel and Parallax Scroll progress
+  const animate = useCallback(() => {
+    // 1. Horizontal Carousel Auto-Scroll
+    const el = scrollContainerRef.current;
+    if (el && !isPausedRef.current) {
+      el.scrollLeft += SCROLL_SPEED;
+      const oneSetWidth = el.scrollWidth / 3;
+      if (el.scrollLeft >= oneSetWidth * 2) {
+        el.scrollLeft -= oneSetWidth;
+      }
+    }
+
+    // 2. Vertical Parallax Scroll Logic for "How Home Care Works"
+    if (processSectionRef.current) {
+      const rect = processSectionRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
       
-      {/* 1. UPDATED HERO SECTION WITH BACKGROUND IMAGE */}
+      const scrollableDistance = rect.height - windowHeight;
+      if (scrollableDistance > 0) {
+        let p = -rect.top / scrollableDistance;
+        p = Math.max(0, Math.min(1, p)); // Clamp between 0 and 1
+        setProcessProgress(p);
+      }
+    }
+
+    animationRef.current = requestAnimationFrame(animate);
+  }, []);
+
+  useEffect(() => {
+    const el = scrollContainerRef.current;
+    if (el) {
+      el.scrollLeft = el.scrollWidth / 3;
+    }
+    animationRef.current = requestAnimationFrame(animate);
+    return () => {
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
+    };
+  }, [animate]);
+
+  const pauseScroll = () => { isPausedRef.current = true; };
+  const resumeScroll = () => { isPausedRef.current = false; };
+
+  return (
+    // Crucial: Use overflow-x-clip instead of overflow-hidden so mobile sticky positioning works
+    <div className="flex flex-col overflow-x-clip">
+      
+      {/* 1. HERO BANNER */}
       <section className="relative overflow-hidden bg-background min-h-[400px] md:min-h-[450px] lg:min-h-[500px] flex items-center py-12 md:py-16">
         
         {/* Background Image Container */}
@@ -75,230 +141,405 @@ export default function ServicesPage() {
           </div>
         </Container>
       </section>
-      {/* 4. WHO WE SERVE SECTION (Static Grid) */}
-      <section className="bg-surface py-20 md:py-32">
+
+      {/* 2. EDITORIAL INTRO SECTION */}
+      <section className="bg-surface">
+        <Container className="grid gap-12 py-20 md:grid-cols-[1.1fr_1fr] md:items-center md:gap-16 md:py-24">
+          <Reveal className="flex flex-col items-start">
+            <div className="mb-6 flex items-center gap-4">
+              <span className="h-[2px] w-8 bg-brand-red"></span>
+              <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-brand-red">
+                Our Approach
+              </h2>
+              <span className="h-[2px] w-8 bg-brand-red"></span>
+            </div>
+            <h3 className="mb-6 text-4xl font-extrabold leading-tight text-brand-ink md:text-5xl">
+              {servicesIntro.title}
+            </h3>
+            <div className="mb-8 space-y-4 text-lg leading-relaxed text-muted">
+              {servicesIntro.paragraphs.map((paragraph, index) => (
+                <p key={index}>{paragraph}</p>
+              ))}
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.1}>
+            <div className="relative overflow-hidden rounded-3xl border border-brand-cream/80 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-brand-gold/40 hover:shadow-xl sm:p-10 lg:p-12">
+              <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-brand-cream/60 blur-3xl"></div>
+              <div className="relative z-10 flex flex-col h-full">
+                <h4 className="mb-6 text-3xl font-extrabold text-brand-ink">
+                  Free In-Home Assessment
+                </h4>
+                <div className="mb-6 h-[2px] w-full bg-brand-cream transition-colors duration-300 group-hover:bg-brand-red/20"></div>
+                <p className="mb-10 text-lg leading-relaxed text-muted flex-grow">
+                  {homeCallouts.freeConsultation}
+                </p>
+                <Link href={contactInfo.phoneHref} className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-[color:var(--brand-gold)] px-8 py-4 text-lg font-black tracking-wide text-brand-ink shadow-md transition-all hover:scale-[1.02] hover:bg-white">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6 text-brand-red-dark">
+                     <path fillRule="evenodd" d="M1.5 4.5a3 3 0 013-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 01-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 006.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 011.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 01-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5z" clipRule="evenodd" />
+                  </svg>
+                  {contactInfo.phone}
+                </Link>
+              </div>
+            </div>
+          </Reveal>
+        </Container>
+      </section>
+
+      {/* 3. HOME CARE OPTIONS (Interactive Horizontal Carousel) */}
+      <section id="home-care-options" className="bg-white border-y border-white py-20 md:py-32 relative">
         <Container>
           <Reveal>
-            {/* Centered Heading Layout */}
             <div className="mx-auto max-w-3xl text-center mb-16">
               <div className="flex items-center justify-center gap-4 mb-4">
                 <span className="h-[2px] w-12 bg-brand-red"></span>
                 <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-brand-red">
-                  {whoWeServe.title}
+                  Home Care Options
                 </h2>
                 <span className="h-[2px] w-12 bg-brand-red"></span>
               </div>
               <h3 className="text-3xl font-extrabold text-brand-ink md:text-5xl leading-tight">
-                {whoWeServe.subtitle}
+                Explore Our Services
               </h3>
             </div>
           </Reveal>
-
-          {/* Static Grid Layout */}
-          <div className="grid gap-6 md:grid-cols-3">
-            {whoWeServe.groups.map((group, index) => (
-              <Reveal key={group.title} delay={index * 0.1}>
-                <div className="flex h-full flex-col rounded-3xl bg-white border border-brand-cream/50 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-2 group/card cursor-pointer overflow-hidden">
-                  
-                  {/* Image Section */}
-                  <div className="relative h-[220px] w-full overflow-hidden bg-brand-cream">
-                    {group.image && (
-                      <Image 
-                        src={group.image}
-                        alt={group.title}
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover/card:scale-110"
-                      />
-                    )}
-                    <div className="absolute inset-0 bg-brand-ink/10 group-hover/card:bg-transparent transition-colors duration-300"></div>
-                  </div>
-                  
-                  {/* Text Section */}
-                  <div className="p-8 flex flex-col flex-grow">
-                    <h3 className="text-xl font-bold text-brand-ink mb-3 group-hover/card:text-brand-red transition-colors">
-                      {group.title}
-                    </h3>
-                    <p className="text-muted leading-relaxed mb-6 flex-grow">
-                      {group.description}
-                    </p>
-                    <Link href="/services" className="flex items-center gap-2 text-brand-red-dark font-bold text-sm uppercase tracking-wider mt-auto group-hover/card:text-brand-red transition-colors">
-                      Learn More
-                      <svg className="w-5 h-5 transform transition-transform group-hover/card:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                      </svg>
-                    </Link>
-                  </div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
         </Container>
-      </section>
 
-      {/* 5. HOME CARE OPTIONS (Infinite Ticker) */}
-      <section className="bg-white border-y border-brand-gold/10 py-20 md:py-32 overflow-hidden">
-        
-        {/* Keyframes for the Infinite Ticker */}
+        <div className="pointer-events-none absolute inset-y-0 left-0 right-0 z-20 flex items-center justify-between px-4 sm:px-8 xl:px-16 mt-20">
+          <button onClick={scrollLeft} className="pointer-events-auto flex h-14 w-14 items-center justify-center rounded-full bg-white/90 shadow-xl backdrop-blur transition-all hover:scale-110 hover:bg-brand-red hover:text-white text-brand-ink">
+            <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
+          </button>
+          <button onClick={scrollRight} className="pointer-events-auto flex h-14 w-14 items-center justify-center rounded-full bg-white/90 shadow-xl backdrop-blur transition-all hover:scale-110 hover:bg-brand-red hover:text-white text-brand-ink">
+            <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+          </button>
+        </div>
+
         <style>{`
-          @keyframes infinite-scroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-          }
-          .animate-infinite-scroll {
-            animation: infinite-scroll 45s linear infinite;
-          }
-          .ticker-wrapper:hover .animate-infinite-scroll {
-            animation-play-state: paused;
-          }
+          .scrollbar-hide::-webkit-scrollbar { display: none; }
+          .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
         `}</style>
 
-        <Container>
-          <Reveal>
-            {/* Centered Heading Layout */}
-            <div className="mx-auto max-w-3xl text-center mb-16">
-              <div className="flex items-center justify-center gap-4 mb-4">
-                <span className="h-[2px] w-12 bg-brand-red"></span>
-                <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-brand-red">
-                  {homeServices.title}
-                </h2>
-                <span className="h-[2px] w-12 bg-brand-red"></span>
+        <div 
+          ref={scrollContainerRef}
+          onMouseEnter={pauseScroll}
+          onMouseLeave={resumeScroll}
+          onTouchStart={pauseScroll}
+          onTouchEnd={resumeScroll}
+          className="flex overflow-x-auto gap-6 px-4 md:px-12 xl:px-24 scrollbar-hide pb-12 pt-4"
+        >
+          {[...mainServices, ...mainServices, ...mainServices].map((service, index) => (
+            <Link key={index} href={`/services/${service.slug}`} className="w-[320px] sm:w-[380px] shrink-0 flex flex-col rounded-3xl bg-white border border-brand-cream/50 shadow-md transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group/card overflow-hidden">
+              <div className="relative h-[220px] w-full overflow-hidden bg-brand-cream shrink-0">
+                {service.bannerImage && (
+                  <Image src={service.bannerImage} alt={service.title} fill className="object-cover transition-transform duration-700 group-hover/card:scale-110" />
+                )}
+                <div className="absolute inset-0 bg-brand-ink/10 group-hover/card:bg-transparent transition-colors duration-300"></div>
               </div>
-              <h3 className="text-3xl font-extrabold text-brand-ink md:text-5xl leading-tight">
-                {homeServices.subtitle}
-              </h3>
-            </div>
-          </Reveal>
-        </Container>
-
-        {/* Infinite Scroll Ticker Container */}
-        <div className="relative mt-8 flex overflow-hidden ticker-wrapper">
-          <div className="flex w-max animate-infinite-scroll gap-6 px-3">
-            {/* Duplicate array to create a seamless loop */}
-            {[...mainServices, ...mainServices].map((service, index) => (
-              <div 
-                key={index} 
-                className="w-[320px] sm:w-[380px] shrink-0 flex flex-col rounded-3xl bg-white border border-brand-cream/50 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-2 group/card cursor-pointer overflow-hidden"
-              >
-                {/* Image Section */}
-                <div className="relative h-[220px] w-full overflow-hidden bg-brand-cream shrink-0">
-                  {/* Changed service.image to service.bannerImage */}
-                  {service.bannerImage && (
-                    <Image 
-                      src={service.bannerImage}
-                      alt={service.title}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover/card:scale-110"
-                    />
-                  )}
-                  <div className="absolute inset-0 bg-brand-ink/10 group-hover/card:bg-transparent transition-colors duration-300"></div>
-                </div>
-                
-                {/* Text Section */}
-                <div className="p-8 flex flex-col flex-grow">
-                  <h3 className="text-xl font-bold text-brand-ink mb-3 group-hover/card:text-brand-red transition-colors">
-                    {service.title}
-                  </h3>
-                  <p className="text-muted leading-relaxed mb-6 flex-grow">
-                    {service.description}
-                  </p>
-                  
-                  {/* Correctly pulling the slug from the mapped mainServices item */}
-                  <Link href={`/services/${service.slug}`}
-                   className="flex items-center gap-2 text-brand-red-dark font-bold text-sm uppercase tracking-wider mt-auto group-hover/card:text-brand-red transition-colors">
-                    Learn More
-                    <svg className="w-5 h-5 transform transition-transform group-hover/card:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                  </Link>
+              <div className="p-8 flex flex-col flex-grow">
+                <h3 className="text-xl font-bold text-brand-ink mb-3 group-hover/card:text-brand-red transition-colors">{service.title}</h3>
+                <p className="text-muted leading-relaxed mb-6 flex-grow">{service.description}</p>
+                <div className="flex items-center gap-2 text-brand-red-dark font-bold text-sm uppercase tracking-wider mt-auto group-hover/card:text-brand-red transition-colors">
+                  View Service
+                  <svg className="w-5 h-5 transform transition-transform group-hover/card:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
                 </div>
               </div>
-            ))}   
-          </div>
+            </Link>
+          ))}
         </div>
-        
       </section>
 
-{/* 6. OUR CARE PROCESS (Structured Card Layout) */}
-      <section className="bg-surface py-20 md:py-32">
-        <Container>
-          <Reveal>
-            {/* Centered Heading Layout matching previous sections */}
-            <div className="mx-auto max-w-3xl text-center mb-16 md:mb-20">
-              <div className="flex items-center justify-center gap-4 mb-4">
-                <span className="h-[2px] w-12 bg-brand-red"></span>
-                <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-brand-red">
-                  How Home Care Works
-                </h2>
-                <span className="h-[2px] w-12 bg-brand-red"></span>
-              </div>
-              <h3 className="text-4xl font-extrabold text-brand-ink md:text-5xl leading-tight">
-                {homeProcess.title}
-              </h3>
-            </div>
-          </Reveal>
+{/* ========================================= */}
+      {/* 4. WHO WE SERVE SECTION                   */}
+      {/* ========================================= */}
 
-          <div className="grid gap-6 md:grid-cols-3 lg:gap-8">
-            {homeProcess.steps.map((step, index) => (
-              <Reveal key={step.step} delay={index * 0.1} className="h-full">
-                <div className="flex h-full flex-col rounded-3xl bg-white border border-brand-cream shadow-sm transition-all duration-300 hover:border-brand-gold/40 hover:shadow-xl hover:-translate-y-2 group cursor-default p-8 md:p-10">
-                  
-                  {/* Big Gold Number */}
-                  <span className="text-5xl md:text-6xl font-black text-brand-gold block tracking-tighter select-none mb-4">
-                    {step.step}
-                  </span>
-                  
-                  {/* Heading Title */}
-                  <h3 className="text-2xl font-bold text-brand-ink mb-6 transition-colors duration-300 group-hover:text-brand-red">
-                    {step.title}
-                  </h3>
-                  
-                  {/* Horizontal Divider Line */}
-                  <div className="h-[2px] w-full bg-brand-cream mb-6 transition-colors duration-300 group-hover:bg-brand-red/20"></div>
-                  
-                  {/* Description below the line */}
-                  <p className="text-lg text-muted leading-relaxed flex-grow">
-                    {step.description}
-                  </p>
-                  
+      {/* DESKTOP VERSION (Hidden on Mobile) */}
+      <div className="hidden md:block">
+        <section className="bg-surface py-20 md:py-32">
+          <Container>
+            <Reveal>
+              <div className="mx-auto max-w-3xl text-center mb-16">
+                <div className="flex items-center justify-center gap-4 mb-4">
+                  <span className="h-[2px] w-12 bg-brand-red"></span>
+                  <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-brand-red">
+                    {whoWeServe.title}
+                  </h2>
+                  <span className="h-[2px] w-12 bg-brand-red"></span>
                 </div>
-              </Reveal>
-            ))}
+                <h3 className="text-3xl font-extrabold text-brand-ink md:text-5xl leading-tight">
+                  {whoWeServe.subtitle}
+                </h3>
+              </div>
+            </Reveal>
+
+            <div className="grid gap-6 md:grid-cols-3">
+              {whoWeServe.groups.map((group, index) => (
+                <Reveal key={group.title} delay={index * 0.1}>
+                  <div className="flex h-full flex-col rounded-3xl bg-white border border-brand-cream/50 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-2 group/card overflow-hidden">
+                    
+                    <div className="relative h-[220px] w-full overflow-hidden bg-brand-cream">
+                      {group.image && (
+                        <Image 
+                          src={group.image}
+                          alt={group.title}
+                          fill
+                          className="object-cover transition-transform duration-700 group-hover/card:scale-110"
+                        />
+                      )}
+                      <div className="absolute inset-0 bg-brand-ink/10 group-hover/card:bg-transparent transition-colors duration-300"></div>
+                    </div>
+                    
+                    <div className="p-8 flex flex-col flex-grow">
+                      <h3 className="text-xl font-bold text-brand-ink mb-3 transition-colors group-hover/card:text-brand-red">
+                        {group.title}
+                      </h3>
+                      <p className="text-muted leading-relaxed mb-6 flex-grow">
+                        {group.description}
+                      </p>
+                    </div>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </Container>
+        </section>
+      </div>
+
+      {/* MOBILE VERSION (Hidden on Desktop) */}
+      <div className="block md:hidden">
+        <section className="bg-surface relative">
+          
+          {/* Full-width Sticky Header */}
+          <div className="sticky top-[72px] md:top-[88px] z-30 w-full bg-surface/90 backdrop-blur-md py-8 transition-all border-b border-brand-ink/5 shadow-sm">
+            <Reveal>
+              <div className="mx-auto max-w-3xl text-center px-4">
+                <div className="flex items-center justify-center gap-4 mb-3">
+                  <span className="h-[2px] w-12 bg-brand-red"></span>
+                  <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
+                    {whoWeServe.title}
+                  </h2>
+                  <span className="h-[2px] w-12 bg-brand-red"></span>
+                </div>
+                <h3 className="text-2xl font-extrabold text-brand-ink leading-tight">
+                  {whoWeServe.subtitle}
+                </h3>
+              </div>
+            </Reveal>
           </div>
-        </Container>
-      </section>
+
+          {/* CRITICAL FIX: Removed the massive h-[200vh]. 
+              By using gap-[15vh], the cards stagger naturally as you scroll 
+              but the container ends exactly when the last card sticks, eliminating dead space! */}
+          <div className="relative w-full pb-16">
+            <Container>
+              <div className="relative mx-auto max-w-4xl pt-8 flex flex-col gap-[15vh]">
+                {whoWeServe.groups.map((group, index) => (
+                  <div 
+                    key={group.title} 
+                    className="sticky w-full rounded-3xl bg-white border border-brand-cream shadow-2xl overflow-hidden transition-transform duration-500 will-change-transform"
+                    style={{
+                      // Adjusted offset so it sits perfectly under the mobile sticky header
+                      top: `calc(180px + ${index * 24}px)`,
+                    }}
+                  >
+                    <div className="grid md:grid-cols-[1fr_1.2fr]">
+                      <div className="relative h-[220px] w-full overflow-hidden bg-brand-cream border-b border-brand-cream/50">
+                        {group.image && (
+                          <Image src={group.image} alt={group.title} fill className="object-cover" />
+                        )}
+                      </div>
+                      <div className="p-8 flex flex-col justify-center bg-white">
+                        <h3 className="text-2xl font-extrabold text-brand-red-dark mb-4">
+                          {group.title}
+                        </h3>
+                        <div className="h-[2px] w-12 bg-brand-red/20 mb-6"></div>
+                        <p className="text-muted leading-relaxed mb-8 text-base">
+                          {group.description}
+                        </p>
+                        <Link href="#home-care-options" className="group inline-flex items-center gap-2 text-brand-red font-bold text-sm uppercase tracking-wider transition-colors hover:text-brand-red-dark">
+                          Learn More
+                          <svg className="w-5 h-5 transform transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                          </svg>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Container>
+          </div>
+        </section>
+      </div>
+
+{/* ========================================= */}
+      {/* 5. OUR CARE PROCESS                       */}
+      {/* ========================================= */}
+
+      {/* DESKTOP VERSION (Hidden on Mobile) */}
+      <div className="hidden md:block">
+        <section className="bg-white border-t border-brand-gold/20 py-20 md:py-32">
+          <Container>
+            <Reveal>
+              <div className="mx-auto max-w-3xl text-center mb-16 md:mb-20">
+                <div className="flex items-center justify-center gap-4 mb-4">
+                  <span className="h-[2px] w-12 bg-brand-red"></span>
+                  <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-brand-red">
+                    How Home Care Works
+                  </h2>
+                  <span className="h-[2px] w-12 bg-brand-red"></span>
+                </div>
+                <h3 className="text-4xl font-extrabold text-brand-ink md:text-5xl leading-tight">
+                  {homeProcess.title}
+                </h3>
+              </div>
+            </Reveal>
+
+            <div className="grid gap-6 md:grid-cols-3 lg:gap-8">
+              {homeProcess.steps.map((step, index) => (
+                <Reveal key={step.step} delay={index * 0.1} className="h-full">
+                  <div className="relative flex h-full flex-col rounded-3xl border border-white bg-white p-10 shadow-sm transition-all hover:shadow-xl hover:-translate-y-2">
+                    
+                    {/* Huge Minimalist Number */}
+                    <span className="absolute right-6 top-2 select-none text-7xl font-black text-brand-gold/30">
+                      {step.step}
+                    </span>
+                    
+                    <h3 className="relative z-10 mt-8 text-2xl font-bold text-brand-ink transition-colors duration-300 group-hover:text-brand-red">
+                      {step.title}
+                    </h3>
+                    
+                    <div className="my-6 h-[3px] w-16 bg-brand-red transition-all duration-500 group-hover:w-24"></div>
+                    
+                    <p className="relative z-10 text-base leading-relaxed text-muted">
+                      {step.description}
+                    </p>
+                    
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </Container>
+        </section>
+      </div>
+
+      {/* MOBILE VERSION (Hidden on Desktop) */}
+      <div className="block md:hidden">
+        <section ref={processSectionRef} className="bg-white border-t border-brand-gold/20 relative h-[300vh]">
+          {/* Sticky container locks to the viewport for the entire 300vh height */}
+          <div className="sticky top-0 h-screen w-full flex flex-col items-center justify-start overflow-hidden pt-20 md:pt-24">
+            
+            {/* Full-width, borderless Sticky Header */}
+            <div className="z-40 w-full bg-white backdrop-blur-xl py-8 text-center px-4">
+              <Reveal>
+                <div className="flex items-center justify-center gap-4 mb-4">
+                  <span className="h-[2px] w-12 bg-brand-red"></span>
+                  <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-brand-red">
+                    Our Care Process
+                  </h2>
+                  <span className="h-[2px] w-12 bg-brand-red"></span>
+                </div>
+                <h3 className="text-3xl font-extrabold text-brand-ink md:text-5xl leading-tight">
+                  {homeProcess.title}
+                </h3>
+              </Reveal>
+            </div>
+
+            {/* Centered Stacking Area where the cards slide in and out smoothly */}
+            <div className="relative w-full max-w-lg mt-8 md:mt-16 flex-grow">
+              {homeProcess.steps.map((step, index) => {
+                
+                let tx = 0; // Translate X (left/right)
+                let ty = 0; // Translate Y (up/down)
+
+                // Smooth Parallax Logic
+                if (index === 0) {
+                  // Card 1: Starts center, slides LEFT offscreen
+                  const p = Math.min(1, processProgress / 0.33);
+                  tx = -(p * 150); 
+                } else if (index === 1) {
+                  // Card 2: Starts bottom, slides UP to center, then slides RIGHT offscreen
+                  if (processProgress < 0.33) {
+                    const p = processProgress / 0.33;
+                    // Start further down (150vh) so it's fully offscreen
+                    ty = 150 - (p * 150); 
+                  } else {
+                    const p = Math.min(1, (processProgress - 0.33) / 0.33);
+                    ty = 0;
+                    tx = p * 150; 
+                  }
+                } else if (index === 2) {
+                  // Card 3: Starts bottom, slides UP to center, stays there
+                  if (processProgress < 0.33) {
+                    ty = 150;
+                  } else if (processProgress < 0.66) {
+                    const p = (processProgress - 0.33) / 0.33;
+                    ty = 150 - (p * 150);
+                  } else {
+                    ty = 0;
+                  }
+                }
+
+                return (
+                  <div 
+                    key={step.step}
+                    className="absolute inset-x-4 md:inset-x-0 top-0 flex flex-col rounded-3xl border border-white bg-white p-8 md:p-12 shadow-2xl transition-transform ease-out duration-100"
+                    style={{
+                      transform: `translate(${tx}vw, ${ty}vh)`,
+                      willChange: 'transform'
+                    }}
+                  >
+                    <span className="absolute right-6 top-2 select-none text-7xl font-black text-brand-gold/30">
+                      {step.step}
+                    </span>
+                    
+                    <h3 className="relative z-10 mt-8 text-2xl md:text-3xl font-bold text-brand-ink">
+                      {step.title}
+                    </h3>
+                    
+                    <div className="my-6 h-[3px] w-16 bg-brand-red"></div>
+                    
+                    <p className="relative z-10 text-base md:text-lg leading-relaxed text-muted">
+                      {step.description}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      </div>
 
       {/* 6. BOTTOM CTA SECTION */}
-      <section className="bg-brand-red-dark py-10 text-center text-white md:py-10">
+      <section className="bg-brand-red-dark py-12 md:py-16 text-center text-white border-t-4 border-brand-gold relative z-30">
         <Container className="max-w-3xl">
-          <Reveal className="space-y-4">
-            <h2 className="whitespace-pre-line text-4xl font-bold leading-tight sm:text-5xl">
+          <Reveal className="flex flex-col items-center">
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-brand-gold text-brand-red-dark shadow-lg">
+               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="h-6 w-6">
+                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z" />
+               </svg>
+            </div>
+            <h2 className="mb-4 text-3xl font-extrabold leading-tight sm:text-4xl whitespace-pre-line">
               {sharedServiceContent.bottomCta.message}
             </h2>
-            
-            <div className="flex flex-col items-center gap-4">
-              <p className="text-sm font-bold uppercase tracking-[0.2em] text-brand-gold">
+            <div className="flex flex-col items-center gap-3 mt-4">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-gold">
                 {sharedServiceContent.bottomCta.action}
               </p>
-              
-              <Link
-                href={contactInfo.phoneHref}
-                className="inline-block transform rounded-full bg-brand-gold px-12 py-5 text-xl font-black text-brand-red-dark shadow-xl transition-all hover:scale-105 hover:bg-white sm:text-2xl"
-              >
+              <Link href={contactInfo.phoneHref} className="inline-block transform rounded-full bg-brand-gold px-10 py-4 text-lg font-black tracking-wide text-brand-ink shadow-xl transition-all hover:scale-105 hover:bg-white sm:text-2xl">
                 {sharedServiceContent.bottomCta.phone}
               </Link>
-              
-              <a 
-                href={`mailto:${sharedServiceContent.bottomCta.email}`} 
-                className="mt-4 font-medium text-white/80 transition hover:text-white"
-              >
-                {sharedServiceContent.bottomCta.email}
-              </a>
             </div>
-
-            <div className="mx-auto mt-12 max-w-lg border-t border-white/10 pt-8">
-              <p className="text-sm font-semibold uppercase tracking-widest text-white/60">
+            <div className="mx-auto mt-12 w-full max-w-2xl border-t border-white/20 pt-8">
+              <p className="mb-4 text-xs font-bold uppercase tracking-widest text-white/90">
                 {sharedServiceContent.bottomCta.tagline}
               </p>
+              <div className="flex flex-col items-center justify-center gap-2 text-xs font-bold uppercase tracking-widest text-brand-gold sm:flex-row sm:gap-4 md:text-sm">
+                <span>Compassionate Care.</span>
+                <span className="hidden opacity-50 sm:inline">•</span>
+                <span>Trusted Support.</span>
+                <span className="hidden opacity-50 sm:inline">•</span>
+                <span>Peace of Mind.</span>
+              </div>
             </div>
           </Reveal>
         </Container>

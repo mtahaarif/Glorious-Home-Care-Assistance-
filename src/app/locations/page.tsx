@@ -8,8 +8,6 @@ import { contactInfo, homeCallouts, servicesCta } from "@/data/global";
 import { locationsHero, locationsIntro } from "@/data/locations";
 import { sharedServiceContent } from "@/data/services"
 import Image from "next/image"; // Added Import
-import { aboutHero } from "@/data/about";
-import { homeHero } from "@/data/home";
 export const metadata: Metadata = {
   title: "Areas We Serve | Bay Area & Northern California",
   description: "Glorious Home Care Assistance provides compassionate in-home care across Santa Clara, Alameda, San Francisco, San Mateo, and surrounding California counties.",

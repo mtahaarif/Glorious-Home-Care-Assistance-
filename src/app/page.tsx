@@ -1,20 +1,14 @@
 "use client"; // Required for the useEffect image slider
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
-import SectionHeading from "@/components/SectionHeading";
-import TestimonialCard from "@/components/TestimonialCard";
-import { brandTagline, contactInfo, homeCallouts } from "@/data/global";
+import { contactInfo, homeCallouts } from "@/data/global";
 import { 
   homeHero, 
   homeAbout, 
-  homeServices, 
-  homeProcess, 
-  whoWeServe, 
-  clientReviews,
   fiveFactors,
   careComparison,
   privateDutyCare
@@ -33,8 +27,12 @@ const HeartIcon = () => (
 );
 
 export default function Home() {
+  
+  // ==========================================
   // Image Slider State
+  // ==========================================
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [showAllServices, setShowAllServices] = useState(false);
 
   // Automatically cycle through images every 5 seconds
   useEffect(() => {
@@ -49,10 +47,71 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
+  // ==========================================
+  // Hooks for Mobile Comparison Table Sync
+  // ==========================================
+  const comparisonSectionRef = useRef<HTMLDivElement>(null);
+  const [comparisonProgress, setComparisonProgress] = useState(0);
+  
+  // Tracks coordinates to convert horizontal swipe into vertical scroll
+  const compTouchStartX = useRef(0);
+  const compTouchStartY = useRef(0);
+
+  useEffect(() => {
+    const handleCompScroll = () => {
+      if (!comparisonSectionRef.current) return;
+      const rect = comparisonSectionRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      const stickyTop = 72; // Header offset
+      
+      const scrollDistance = rect.height - windowHeight;
+      const scrolledPast = stickyTop - rect.top;
+      
+      // Calculate scroll progress exclusively from 0.0 to 1.0
+      const progress = Math.max(0, Math.min(1, scrolledPast / scrollDistance));
+      setComparisonProgress(progress);
+    };
+
+    window.addEventListener("scroll", handleCompScroll, { passive: true });
+    handleCompScroll(); // Trigger on mount
+    
+    return () => window.removeEventListener("scroll", handleCompScroll);
+  }, []);
+
+  const handleCompTouchStart = (e: React.TouchEvent) => {
+    compTouchStartX.current = e.touches[0].clientX;
+    compTouchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleCompTouchMove = (e: React.TouchEvent) => {
+    if (!compTouchStartX.current || !compTouchStartY.current) return;
+
+    const touchX = e.touches[0].clientX;
+    const touchY = e.touches[0].clientY;
+    const deltaX = compTouchStartX.current - touchX;
+    const deltaY = compTouchStartY.current - touchY;
+
+    // Detect if the user is swiping mostly horizontally
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 3) {
+      // Force window to scroll vertically instead of natively panning left/right
+      // 1.5x multiplier ensures it feels like a fast, responsive swipe
+      window.scrollBy({ top: deltaX * 1.5, left: 0, behavior: 'auto' });
+      
+      // Reset start positions to continuously capture drag motion
+      compTouchStartX.current = touchX;
+      compTouchStartY.current = touchY;
+    }
+  };
+
+  const handleCompTouchEnd = () => {
+    compTouchStartX.current = 0;
+    compTouchStartY.current = 0;
+  };
+
   return (
     <div className="flex flex-col">
       
-{/* 1. DYNAMIC HOMEPAGE HERO BANNER (Left White Fade-In, Borderless) */}
+      {/* 1. DYNAMIC HOMEPAGE HERO BANNER (Left White Fade-In, Borderless) */}
       <section className="relative overflow-hidden bg-background min-h-[400px] md:min-h-[450px] lg:min-h-[500px] flex items-center py-12 md:py-16">
         
         {/* Background Image Carousel Container */}
@@ -121,7 +180,8 @@ export default function Home() {
           </div>
         </Container>
       </section>
-{/* 2. INTRODUCTORY SECTION (Optimized Editorial Layout) */}
+
+      {/* 2. INTRODUCTORY SECTION (Optimized Editorial Layout) */}
       <section className="bg-surface">
         <Container className="grid gap-12 py-20 md:grid-cols-[1.1fr_1fr] md:items-center md:gap-16 md:py-32">
           
@@ -133,7 +193,6 @@ export default function Home() {
                 Glorious Home Care Assistance
               </h2>
               <span className="h-[2px] w-8 bg-brand-red"></span>
-
             </div>
             
             <h3 className="mb-6 text-4xl font-extrabold leading-tight text-brand-ink md:text-5xl">
@@ -227,8 +286,10 @@ export default function Home() {
             </Reveal>
           </div>
 
-          {/* Comparison Table */}
-          <div className="mb-24">
+          {/* ========================================== */}
+          {/* COMPARISON TABLE (Desktop Version)           */}
+          {/* ========================================== */}
+          <div className="hidden md:block mb-24">
             <div className="mb-10 text-center">
               <Reveal>
                 <h3 className="mb-4 text-3xl font-extrabold text-brand-ink">{careComparison.title}</h3>
@@ -281,142 +342,666 @@ export default function Home() {
             </div>
           </div>
 
-          {/* What It Includes */}
-          <div>
-            <Reveal>
-              <h3 className="mb-10 text-center text-2xl font-extrabold text-brand-ink md:text-3xl">
-                {privateDutyCare.includes.title}
-              </h3>
-            </Reveal>
-            <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
-              {privateDutyCare.includes.services.map((service, index) => (
-                <Reveal key={index} delay={index * 0.05}>
-                  <div className="flex flex-col items-center text-center p-6 rounded-2xl bg-white border border-brand-cream hover:border-brand-gold/50 shadow-sm hover:shadow-md transition-all h-full">
-                    <div className="h-12 w-12 rounded-full bg-brand-cream flex items-center justify-center mb-4 text-brand-red">
-                      {service.icon === 'mobility' && <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>}
-                      {service.icon === 'personal' && <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>}
-                      {service.icon === 'meal' && <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h12z" /></svg>}
-                      {service.icon === 'medication' && <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>}
-                      {service.icon === 'routine' && <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
-                      {service.icon === 'safety' && <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>}
-                      {service.icon === 'transit' && <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>}
-                      {service.icon === 'companionship' && <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>}
-                    </div>
-                    <h5 className="font-bold text-brand-ink">{service.title}</h5>
-                    <p className="text-xs text-muted mt-2">{service.desc}</p>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-            <Reveal>
-              <p className="text-center text-sm font-semibold uppercase tracking-widest text-brand-red mt-10">
-                {privateDutyCare.includes.footer}
-              </p>
-            </Reveal>
-          </div>
-        </Container>
-      </section>
-
-{/* 7. HOW TO CHOOSE THE BEST HOME CARE (Sticky Scroll Minimalist) */}
-      <section className="bg-white py-20 md:py-32 border-y border-brand-gold/10">
-        <Container>
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start">
-            
-            {/* LEFT COLUMN: Sticky Header & Description */}
-            {/* LEFT COLUMN: Sticky Header & Description */}
-            <div className="lg:col-span-5 lg:sticky lg:top-32 flex flex-col justify-start">
-              <Reveal className="flex flex-col items-start">
+          {/* ========================================== */}
+          {/* COMPARISON TABLE (Mobile Parallax Version)   */}
+          {/* ========================================== */}
+          <div className="block md:hidden mb-20 -mx-4 sm:mx-0">
+            {/* The h-[300vh] provides the scroll track distance for 3 cards */}
+            <div ref={comparisonSectionRef} className="relative w-full h-[300vh]">
+              <div className="sticky top-[72px] h-[calc(100vh-72px)] w-full flex flex-col pt-8 overflow-hidden bg-white/50 backdrop-blur-sm">
                 
-                {/* Eyebrow */}
-                <div className="flex items-center gap-4 mb-6">
-                  <span className="h-[2px] w-8 bg-brand-red"></span>
-                  <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-brand-red">
-                    {fiveFactors.subtitle}
-                  </h2>
+                <div className="w-full pb-4 px-4 text-center">
+                  <Reveal>
+                    <h3 className="mb-2 text-2xl font-extrabold text-brand-ink">{careComparison.title}</h3>
+                    <p className="text-sm text-muted">{careComparison.subtitle}</p>
+                  </Reveal>
                 </div>
-                
-                {/* Main Title */}
-                <h3 className="text-4xl font-extrabold text-brand-ink md:text-5xl leading-tight mb-6">
-                  {fiveFactors.title}
-                </h3>
-                
-                {/* Upgraded CTA Button */}
-                <div className="hidden lg:block w-full">
-                  <Link 
-                    href={contactInfo.phoneHref} 
-                    className="group inline-flex items-center justify-center gap-3 rounded-full bg-brand-red px-8 py-4 font-bold text-white transition-all hover:bg-brand-red-dark shadow-[0_8px_30px_rgb(255,49,49,0.2)] hover:shadow-[0_8px_30px_rgb(199,36,57,0.3)] hover:-translate-y-1"
+
+                {/* TOUCH AREA: Parallax Stacking Cards */}
+                {/* `touch-pan-y` prevents mobile browsers from triggering standard back/forward gestures here */}
+                <div 
+                  className="relative w-full flex-grow touch-pan-y"
+                  onTouchStart={handleCompTouchStart}
+                  onTouchMove={handleCompTouchMove}
+                  onTouchEnd={handleCompTouchEnd}
+                >
+                  {careComparison.options.map((option, index) => {
+                    const zIndex = (index + 1) * 10;
+                    const offset = 1 + index; // 1rem, 2rem, 3rem
+                    
+                    // Math: Divides the scroll progress into equal segments based on the number of cards
+                    const translateX = index === 0 
+                      ? 0 
+                      : Math.max(0, (index * 100) - (comparisonProgress * (careComparison.options.length - 1) * 100));
+
+                    return (
+                      <div 
+                        key={option.type}
+                        className={`absolute bottom-6 w-[88vw] sm:w-[85vw] rounded-3xl p-6 flex flex-col overflow-y-auto will-change-transform shadow-2xl ${
+                          option.isHighlighted 
+                            ? 'bg-brand-red text-white border border-brand-red-dark' 
+                            : 'bg-white text-brand-ink border border-brand-cream'
+                        }`}
+                        style={{
+                          left: `${offset}rem`,
+                          top: `${offset}rem`,
+                          zIndex,
+                          transform: `translateX(${translateX}vw)`,
+                          transition: 'transform 0.1s ease-out'
+                        }}
+                      >
+                        {option.isHighlighted && (
+                          <span className="mb-4 inline-block self-start rounded-full bg-brand-gold px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-brand-ink shadow-sm">
+                            Glorious Home Care
+                          </span>
+                        )}
+                        <h4 className={`mb-5 text-xl font-bold ${option.isHighlighted ? 'text-white' : 'text-brand-red-dark'}`}>
+                          {option.type}
+                        </h4>
+                        
+                        <div className="space-y-3 flex-grow text-sm pb-2">
+                          <div>
+                            <p className={`text-[10px] font-bold uppercase tracking-wider ${option.isHighlighted ? 'text-white/70' : 'text-muted/70'}`}>Paid By</p>
+                            <p className="font-medium mt-0.5">{option.paidBy}</p>
+                          </div>
+                          <hr className={option.isHighlighted ? 'border-white/20' : 'border-brand-cream'} />
+                          <div>
+                            <p className={`text-[10px] font-bold uppercase tracking-wider ${option.isHighlighted ? 'text-white/70' : 'text-muted/70'}`}>Type of Care</p>
+                            <p className="font-medium mt-0.5">{option.careType}</p>
+                          </div>
+                          <hr className={option.isHighlighted ? 'border-white/20' : 'border-brand-cream'} />
+                          <div>
+                            <p className={`text-[10px] font-bold uppercase tracking-wider ${option.isHighlighted ? 'text-white/70' : 'text-muted/70'}`}>Caregiver Choice</p>
+                            <p className="font-medium mt-0.5">{option.choice}</p>
+                          </div>
+                          <hr className={option.isHighlighted ? 'border-white/20' : 'border-brand-cream'} />
+                          <div>
+                            <p className={`text-[10px] font-bold uppercase tracking-wider ${option.isHighlighted ? 'text-white/70' : 'text-muted/70'}`}>Schedule Flexibility</p>
+                            <p className="font-medium mt-0.5">{option.schedule}</p>
+                          </div>
+                          <hr className={option.isHighlighted ? 'border-white/20' : 'border-brand-cream'} />
+                          <div>
+                            <p className={`text-[10px] font-bold uppercase tracking-wider ${option.isHighlighted ? 'text-white/70' : 'text-muted/70'}`}>Best For</p>
+                            <p className="font-medium mt-0.5">{option.bestFor}</p>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+{/* What It Includes */}
+<div>
+  <Reveal>
+    <h3 className="mb-10 text-center text-2xl font-extrabold text-brand-ink md:text-3xl">
+      {privateDutyCare.includes.title}
+    </h3>
+  </Reveal>
+
+  {/* Service Cards */}
+  <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+    {privateDutyCare.includes.services.map((service, index) => {
+      const isVisible = showAllServices || index < 8;
+
+      if (!isVisible) return null;
+
+      return (
+        <Reveal
+          key={service.title}
+          delay={index * 0.05}
+        >
+          <a
+            href={service.href}
+            className="group block h-full"
+          >
+            <div className="flex h-full flex-col items-center rounded-2xl border border-brand-cream bg-white p-6 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-brand-gold/50 hover:shadow-md">
+
+              {/* Icon */}
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-brand-cream text-brand-red transition-all duration-300 group-hover:scale-110 group-hover:bg-brand-red group-hover:text-white">
+
+                {/* Personal Care */}
+                {service.icon === "personal" && (
+                  <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
                   >
-                    <span>Call For Guidance</span>
-                    <svg 
-                      className="h-5 w-5 transition-transform group-hover:translate-x-1" 
-                      fill="none" 
-                      viewBox="0 0 24 24" 
-                      stroke="currentColor"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                  </Link>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM5 21a7 7 0 0114 0"
+                    />
+                  </svg>
+                )}
+
+                {/* Companion Care */}
+                {service.icon === "companionship" && (
+                  <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                    />
+                  </svg>
+                )}
+
+                {/* Alzheimer's & Dementia Care */}
+                {service.icon === "dementia" && (
+                  <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9.5 3a3.5 3.5 0 00-3.464 4H6a3 3 0 000 6h.036A3.5 3.5 0 0012 15.5a3.5 3.5 0 005.964-2.5H18a3 3 0 000-6h-.036A3.5 3.5 0 0014.5 3a3.48 3.48 0 00-2.5 1.05A3.48 3.48 0 009.5 3z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 9h.01M15 9h.01M9.5 12.5a3.5 3.5 0 005 0"
+                    />
+                  </svg>
+                )}
+
+                {/* Respite Care */}
+                {service.icon === "respite" && (
+                  <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 3v18M5 7h14M5 17h14"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M7 7l2 4-2 6M17 7l-2 4 2 6"
+                    />
+                  </svg>
+                )}
+
+                {/* Post-Hospital Care */}
+                {service.icon === "posthospital" && (
+                  <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 5h14v14H5z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 8v8M8 12h8"
+                    />
+                  </svg>
+                )}
+
+                {/* 24-Hour Care */}
+                {service.icon === "24hour" && (
+                  <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="9"
+                      strokeWidth={2}
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 7v5l3 2"
+                    />
+                  </svg>
+                )}
+
+                {/* Medication Reminders */}
+                {service.icon === "medication" && (
+                  <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8 4h8a2 2 0 012 2v12a2 2 0 01-2 2H8a2 2 0 01-2-2V6a2 2 0 012-2z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 8h6M9 12h6M9 16h3"
+                    />
+                  </svg>
+                )}
+
+                {/* Meal Preparation */}
+                {service.icon === "meal" && (
+                  <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 3v7a3 3 0 003 3h1V3M6 3v7M8 3v7M4 10h4"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 3v18M12 3c4 2 5 5 5 9v9"
+                    />
+                  </svg>
+                )}
+
+                {/* Light Housekeeping */}
+                {service.icon === "housekeeping" && (
+                  <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 19h16M6 19l3-12h6l3 12M9 7l3-4 3 4"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12h6"
+                    />
+                  </svg>
+                )}
+
+                {/* Mobility Assistance */}
+                {service.icon === "mobility" && (
+                  <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <circle
+                      cx="9"
+                      cy="5"
+                      r="2"
+                      strokeWidth={2}
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 8v5l-3 5M9 11l4 3 4-1M6 18h8"
+                    />
+                  </svg>
+                )}
+
+                {/* Transportation & Errands */}
+                {service.icon === "transit" && (
+                  <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 17h14l-1-8H6l-1 8z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M7 17v2M17 17v2M7 9l1-3h8l1 3"
+                    />
+                    <circle cx="8" cy="14" r="1" />
+                    <circle cx="16" cy="14" r="1" />
+                  </svg>
+                )}
+
+                {/* Short-Term Care */}
+                {service.icon === "shortterm" && (
+                  <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="9"
+                      strokeWidth={2}
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 7v5l3 2"
+                    />
+                  </svg>
+                )}
+
+                {/* Long-Term Care */}
+                {service.icon === "longterm" && (
+                  <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 21s-7-4.35-9-9a5 5 0 019-3 5 5 0 019 3c-2 4.65-9 9-9 9z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 9v5M9.5 11.5h5"
+                    />
+                  </svg>
+                )}
+
+                {/* Customized Care Plans */}
+                {service.icon === "customized" && (
+                  <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M7 3h10a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8 8h8M8 12h8M8 16h5"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 16l1.5 1.5L19 15"
+                    />
+                  </svg>
+                )}
+
+              </div>
+
+              {/* Service Name */}
+              <h5 className="font-bold text-brand-ink transition-colors duration-300 group-hover:text-brand-red">
+                {service.title}
+              </h5>
+
+              {/* Description */}
+              <p className="mt-2 text-xs text-muted">
+                {service.desc}
+              </p>
+
+            </div>
+          </a>
+        </Reveal>
+      );
+    })}
+  </div>
+
+  {/* Show More / Show Less */}
+  <div className="mt-10 flex justify-center">
+    <button
+      type="button"
+      onClick={() => setShowAllServices((current) => !current)}
+      className="group inline-flex items-center gap-3 rounded-full border border-brand-red px-7 py-3 text-sm font-bold uppercase tracking-wider text-brand-red transition-all duration-300 hover:bg-brand-red hover:text-white"
+    >
+      <span>
+        {showAllServices ? "Show Less" : "Show More"}
+      </span>
+
+      <svg
+        className={`h-4 w-4 transition-transform duration-300 ${
+          showAllServices ? "rotate-180" : ""
+        }`}
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M19 9l-7 7-7-7"
+        />
+      </svg>
+    </button>
+  </div>
+
+  {/* Footer */}
+  <Reveal>
+    <p className="mt-10 text-center text-sm font-semibold uppercase tracking-widest text-brand-red">
+      {privateDutyCare.includes.footer}
+    </p>
+  </Reveal>
+</div>
+        </Container>
+      </section>
+
+          {/* 7. HOW TO CHOOSE THE BEST HOME CARE */}
+          <section className="bg-white border-y border-brand-gold/10">
+
+            <Container>
+
+              {/* =========================
+                  MOBILE VERSION
+                  ========================= */}
+              <div className="lg:hidden">
+
+                {/* MOBILE STICKY HEADER */}
+                <div className="sticky top-0 z-40 -mx-4 px-4 py-6 pt-[70px] bg-white">
+
+                  {/* Subtitle */}
+                  <div className="flex items-center justify-center gap-4 mb-4">
+                    <span className="h-[2px] w-8 shrink-0 bg-brand-red"></span>
+
+                    <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-brand-red text-center">
+                      {fiveFactors.subtitle}
+                    </h2>
+
+                    <span className="h-[2px] w-8 shrink-0 bg-brand-red"></span>
+                  </div>
+
+                  {/* Title */}
+                  <h3 className="text-center text-3xl md:text-4xl font-extrabold text-brand-ink leading-tight">
+                    {fiveFactors.title}
+                  </h3>
+
                 </div>
 
-              </Reveal>
-            </div>
 
-            {/* RIGHT COLUMN: Minimalist Vertically Scrolling List */}
-            <div className="lg:col-span-7 flex flex-col gap-16 md:gap-24 lg:pt-0 pt-10">
-              {fiveFactors.factors.map((factor, index) => (
-                <Reveal key={factor.num} delay={index * 0.1}>
-                  <div className="flex flex-col group">
-                    
-                    {/* Minimalist Big Number */}
-                    <span className="text-6xl md:text-7xl font-black text-brand-gold/60 block tracking-tighter select-none">
-                      {factor.num}
-                    </span>
-                    
-                    {/* Huge Heading Title */}
-                    <h3 className="mt-2 text-3xl md:text-4xl font-extrabold text-brand-ink">
-                      {factor.title}
+                {/* MOBILE SCROLLING OPTIONS */}
+                <div className="flex flex-col gap-16 py-12">
+
+                  {fiveFactors.factors.map((factor, index) => (
+                    <Reveal key={factor.num} delay={index * 0.1}>
+
+                      <div className="flex flex-col group">
+
+                        {/* Number */}
+                        <span className="text-6xl font-black text-brand-gold/60 block tracking-tighter select-none">
+                          {factor.num}
+                        </span>
+
+                        {/* Title */}
+                        <h3 className="mt-2 text-3xl font-extrabold text-brand-ink">
+                          {factor.title}
+                        </h3>
+
+                        {/* Accent */}
+                        <div className="my-6 h-[3px] w-16 bg-brand-red transition-all duration-500 group-hover:w-24"></div>
+
+                        {/* Description */}
+                        <p className="max-w-xl text-lg text-muted leading-relaxed">
+                          {factor.desc}
+                        </p>
+
+                      </div>
+
+                    </Reveal>
+                  ))}
+
+                </div>
+
+              </div>
+
+
+              {/* =========================
+                  DESKTOP VERSION
+                  ========================= */}
+              <div className="hidden lg:grid lg:grid-cols-12 gap-20 items-start py-32">
+
+                {/* LEFT COLUMN */}
+                <div className="lg:col-span-5 lg:sticky lg:top-32">
+
+                  <Reveal className="flex flex-col items-start">
+
+                    {/* Eyebrow */}
+                    <div className="flex items-center gap-4 mb-6">
+                      <span className="h-[2px] w-8 bg-brand-red"></span>
+
+                      <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-brand-red">
+                        {fiveFactors.subtitle}
+                      </h2>
+                      <span className="h-[2px] w-8 bg-brand-red"></span>
+
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="text-5xl font-extrabold text-brand-ink leading-tight mb-6">
+                      {fiveFactors.title}
                     </h3>
-                    
-                    {/* Red Accent Line */}
-                    <div className="my-6 h-[3px] w-16 bg-brand-red transition-all duration-500 group-hover:w-24"></div>
-                    
-                    {/* Description */}
-                    <p className="max-w-xl text-lg md:text-xl text-muted leading-relaxed">
-                      {factor.desc}
-                    </p>
-                    
-                  </div>
-                </Reveal>
-              ))}
-            </div>
 
-          </div>
-        </Container>
-      </section>
+                    {/* CTA */}
+                    <div className="w-full">
+                      <Link
+                        href={contactInfo.phoneHref}
+                        className="group inline-flex items-center justify-center gap-3 rounded-full bg-brand-red px-8 py-4 font-bold text-white transition-all hover:bg-brand-red-dark shadow-[0_8px_30px_rgb(255,49,49,0.2)] hover:shadow-[0_8px_30px_rgb(199,36,57,0.3)] hover:-translate-y-1"
+                      >
+                        <span>Call For Guidance</span>
 
-      {/* 8. TESTIMONIALS */}
-      <section className="bg-surface">
-        <Container className="py-16 md:py-24">
-          <div className="flex flex-col gap-10">
-            <SectionHeading title="What Families Say" subtitle={brandTagline} />
-            <div className="grid gap-6 md:grid-cols-2">
-              {clientReviews.map((review, index) => (
-                <Reveal key={review.author} delay={index * 0.1}>
-                  <TestimonialCard
-                    quote={review.quote}
-                    author={review.author}
-                    endIcon={review.hasHeartIcon ? <HeartIcon /> : undefined}
-                  />
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </Container>
-      </section>
+                        <svg
+                          className="h-5 w-5 transition-transform group-hover:translate-x-1"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2.5}
+                            d="M14 5l7 7m0 0l-7 7m7-7H3"
+                          />
+                        </svg>
+                      </Link>
+                    </div>
+
+                  </Reveal>
+
+                </div>
 
 
+                {/* RIGHT COLUMN */}
+                <div className="lg:col-span-7 flex flex-col gap-24">
 
-{/* 9. BOTTOM CTA SECTION (Compact Version) */}
+                  {fiveFactors.factors.map((factor, index) => (
+                    <Reveal key={factor.num} delay={index * 0.1}>
+
+                      <div className="flex flex-col group">
+
+                        {/* Number */}
+                        <span className="text-7xl font-black text-brand-gold/60 block tracking-tighter select-none">
+                          {factor.num}
+                        </span>
+
+                        {/* Title */}
+                        <h3 className="mt-2 text-4xl font-extrabold text-brand-ink">
+                          {factor.title}
+                        </h3>
+
+                        {/* Accent */}
+                        <div className="my-6 h-[3px] w-16 bg-brand-red transition-all duration-500 group-hover:w-24"></div>
+
+                        {/* Description */}
+                        <p className="max-w-xl text-xl text-muted leading-relaxed">
+                          {factor.desc}
+                        </p>
+
+                      </div>
+
+                    </Reveal>
+                  ))}
+
+                </div>
+
+              </div>
+
+            </Container>
+
+          </section>
+
+      {/* 9. BOTTOM CTA SECTION (Compact Version) */}
       <section className="bg-brand-red-dark py-12 md:py-16 text-center text-white border-t-4 border-brand-gold">
         <Container className="max-w-3xl">
           <Reveal className="flex flex-col items-center">

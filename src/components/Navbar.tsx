@@ -106,7 +106,7 @@ export default function Navbar() {
                           <Link 
                             key={service.slug} 
                             href={`/services/${service.slug}`} 
-                            className="block rounded-xl px-5 py-3.5 text-sm font-bold text-brand-ink/90 hover:bg-white/90 hover:text-brand-red hover:shadow-sm transition-all"
+                            className="block rounded-lg px-4 py-2 text-xs font-semibold text-brand-ink/90 hover:bg-white/90 hover:text-brand-red hover:shadow-sm transition-all"
                           >
                             {service.title}
                           </Link>

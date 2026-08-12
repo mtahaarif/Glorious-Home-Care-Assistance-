@@ -22,44 +22,74 @@ export const homeServices = {
   subtitle: "Support at home for every area of life",
   services: [
     {
-      title: "Companion Care",
-      description: "Helping seniors remain socially engaged through conversation, activities, and emotional support.",
-      image: "/companion-care.jpg", 
-    },
-    {
-      title: "Personal Care Assistance",
-      description: "Support with daily activities such as grooming, dressing, mobility assistance, and hygiene.",
+      title: "Personal Care",
+      description: "Support with daily activities such as grooming, dressing, bathing, and maintaining personal hygiene with dignity.",
       image: "/personal-care.jpg", 
     },
     {
-      title: "Meal Preparation & Nutrition",
-      description: "Delicious, nutritious meals prepared with care to support your loved one's health and well-being.",
-      image: "/meal-prep.jpg", 
+      title: "Companion Care",
+      description: "Helping seniors remain socially engaged through conversation, activities, and emotional support to prevent isolation.",
+      image: "/companion-care.jpg", 
     },
     {
-      title: "Medication Reminders",
-      description: "Helping seniors manage their medications with timely reminders and proper administration.",
-      image: "/medication.jpg", 
-    },
-      {
-      title: "Light Housekeeping",
-      description: "Maintaining a clean, safe, and comfortable home environment through light cleaning and organization.",
-      image: "/housekeeping.jpg", 
-    },
-    {
-      title: "Transportation Services",
-      description: "Reliable transportation to medical appointments, errands, community activities, and destinations.",
-      image: "/transportation.jpg", 
+      title: "Alzheimer’s & Dementia Care",
+      description: "Specialized, compassionate care focusing on safety, memory stimulation, and maintaining a comforting routine.",
+      image: "/dementia-care.jpg", 
     },
     {
       title: "Respite Care",
-      description: "Short-term relief for family caregivers, ensuring your loved one is safe, comfortable, and well-cared for.",
+      description: "Short-term relief for family caregivers, ensuring your loved one is safe, comfortable, and well-cared for while you recharge.",
       image: "/respite-care.jpg", 
     },
     {
-      title: "Dementia Care",
-      description: "Specialized care for individuals with dementia, focusing on safety, comfort, and maintaining dignity.",
-      image: "/dementia-care.jpg", 
+      title: "Post-Hospital Care",
+      description: "Transitional support after a hospital stay or surgery to ensure a safe recovery and reduce the risk of readmission.",
+      image: "/post-hospital-care.jpg", 
+    },
+    {
+      title: "24-Hour Care",
+      description: "Around-the-clock monitoring and assistance for seniors who require continuous support and supervision for their safety.",
+      image: "/24-hour-care.jpg", 
+    },
+    {
+      title: "Medication Reminders",
+      description: "Helping seniors manage their daily medications safely with timely reminders and proper administration.",
+      image: "/medication.jpg", 
+    },
+    {
+      title: "Meal Preparation",
+      description: "Delicious, nutritious meals prepared with care to accommodate dietary restrictions and support overall well-being.",
+      image: "/meal-prep.jpg", 
+    },
+    {
+      title: "Light Housekeeping",
+      description: "Maintaining a clean, safe, and comfortable home environment through laundry, light cleaning, and organization.",
+      image: "/housekeeping.jpg", 
+    },
+    {
+      title: "Mobility Assistance",
+      description: "Providing steady physical support for walking, safe transfers, and comprehensive fall prevention inside and outside the home.",
+      image: "/mobility-assistance.jpg", 
+    },
+    {
+      title: "Transportation & Errands",
+      description: "Reliable transportation and accompaniment to medical appointments, grocery shopping, and community activities.",
+      image: "/transportation.jpg", 
+    },
+    {
+      title: "Short-Term Care",
+      description: "Flexible, temporary assistance ideal for recovering from an injury, illness, or while family caregivers are out of town.",
+      image: "/short-term-care.jpg", 
+    },
+    {
+      title: "Long-Term Care",
+      description: "Consistent, ongoing support that allows seniors with chronic conditions or mobility decline to age gracefully at home.",
+      image: "/long-term-care.jpg", 
+    },
+    {
+      title: "Customized Care Plans",
+      description: "Highly personalized care solutions tailored exactly to your loved one's specific health needs, schedule, and lifestyle.",
+      image: "/customized-care.jpg", 
     },
   ],
 };
@@ -134,20 +164,6 @@ export const whoWeServe = {
   ],
 };
 
-export const clientReviews = [
-  {
-    quote:
-      "Minilva has been with us for 3 years. We are 89 and 90 years old. And my husband has dementia. Her care and help is the very best. When she must be away – the company, Glorious Homecare Assistance, sends a capable substitute.",
-    author: "Lorraine Coccaro",
-    hasHeartIcon: true,
-  },
-  {
-    quote:
-      "Glorious HomeCare is a great organization that offers needed services for their clients. True professionals helping many. San Jose is lucky to have this organization providing home care services and care management. I will definitely recommend this company to everyone.",
-    author: "Nevebelle Fri",
-    hasHeartIcon: true,
-  },
-];
 
 // --- Added from our previous Content Extraction phase ---
 
@@ -172,13 +188,13 @@ export const fiveFactors = {
 
 export const careComparison = {
   title: "Understanding Your Care Options",
-  subtitle: "Private Pay vs. IHSS vs. Home Health",
+  subtitle: "Private-Duty Home Care vs. IHSS vs. Home Health",
   description: "Private-duty home care is non-medical support you pay for privately. It provides flexible, personalized assistance to help your loved one live safely and comfortably at home.",
   options: [
     {
-      type: "Private Pay (Home Care)",
+      type: "Private-Duty Home Care",
       paidBy: "You or your family",
-      careType: "Non-medical assistance with daily activities",
+      careType: "Non-medical assistance with daily living (ADLs)",
       choice: "You choose your caregiver with our help",
       schedule: "Fully flexible - hours & days you choose",
       bestFor: "Ongoing daily support, companionship, personal care, meals & more",
@@ -187,7 +203,7 @@ export const careComparison = {
     {
       type: "IHSS (In-Home Supportive Services)",
       paidBy: "Medi-Cal program (if qualified)",
-      careType: "Non-medical assistance with daily activities",
+      careType: "Non-medical assistance with daily living (ADLs)",
       choice: "Caregiver is a family member or friend",
       schedule: "Limited to approved hours from the state",
       bestFor: "Basic daily support for those who qualify",
@@ -218,20 +234,97 @@ export const privateDutyCare = {
       "Anyone wanting personalized care & peace of mind"
     ]
   },
-  includes: {
-    title: "Private-Duty Home Care May Include Support With:",
-    footer: "Every family's needs are unique. Care is personalized. Support is consistent.",
-    services: [
-      { title: "Mobility Assistance", desc: "Safe movement and transfers", icon: "mobility" },
-      { title: "Personal Care", desc: "Bathing, Dressing, Grooming", icon: "personal" },
-      { title: "Meal Preparation", desc: "Nutritious and dietary-specific", icon: "meal" },
-      { title: "Medication Reminders", desc: "Keeping schedules on track", icon: "medication" },
-      { title: "Routine & Schedule", desc: "Maintaining daily structure", icon: "routine" },
-      { title: "Home Safety", desc: "& Fall Prevention", icon: "safety" },
-      { title: "Errands & Transit", desc: "Appointments and shopping", icon: "transit" },
-      { title: "Companionship", desc: "& Emotional Support", icon: "companionship" }
-    ]
-  },
+includes: {
+  title: "Private-Duty Home Care May Include Support With:",
+  footer:
+    "Every family's needs are unique. Care is personalized. Support is consistent.",
+  services: [
+    {
+      title: "Personal Care",
+      desc: "Support with bathing, dressing, and grooming",
+      icon: "personal",
+      href: "/services/personal-care",
+    },
+    {
+      title: "Companion Care",
+      desc: "Meaningful companionship and emotional support",
+      icon: "companionship",
+      href: "/services/companion-care",
+    },
+    {
+      title: "Alzheimer’s & Dementia Care",
+      desc: "Compassionate support for memory-related conditions",
+      icon: "dementia",
+      href: "/services/alzheimers-dementia-care",
+    },
+    {
+      title: "Respite Care",
+      desc: "Short-term relief and support for family caregivers",
+      icon: "respite",
+      href: "/services/respite-care",
+    },
+    {
+      title: "Post-Hospital Care",
+      desc: "Support during recovery and transition back home",
+      icon: "posthospital",
+      href: "/services/post-hospital-care",
+    },
+    {
+      title: "24-Hour Care",
+      desc: "Around-the-clock support and supervision",
+      icon: "24hour",
+      href: "/services/24-hour-care",
+    },
+    {
+      title: "Medication Reminders",
+      desc: "Keeping medication schedules on track",
+      icon: "medication",
+      href: "/services/medication-reminders",
+    },
+    {
+      title: "Meal Preparation",
+      desc: "Nutritious meals tailored to individual needs",
+      icon: "meal",
+      href: "/services/meal-preparation",
+    },
+    {
+      title: "Light Housekeeping",
+      desc: "Maintaining a clean and comfortable home",
+      icon: "housekeeping",
+      href: "/services/light-housekeeping",
+    },
+    {
+      title: "Mobility Assistance",
+      desc: "Safe movement, transfers, and daily mobility",
+      icon: "mobility",
+      href: "/services/mobility-assistance",
+    },
+    {
+      title: "Transportation & Errands",
+      desc: "Appointments, shopping, and essential errands",
+      icon: "transit",
+      href: "/services/transportation",
+    },
+    {
+      title: "Short-Term Care",
+      desc: "Flexible support for temporary care needs",
+      icon: "shortterm",
+      href: "/services/short-term-care",
+    },
+    {
+      title: "Long-Term Care",
+      desc: "Reliable ongoing support at home",
+      icon: "longterm",
+      href: "/services/long-term-care",
+    },
+    {
+      title: "Customized Care Plans",
+      desc: "Personalized care based on individual needs",
+      icon: "customized",
+      href: "/services/customized-care-plans",
+    },
+  ],
+},
   conclusion: {
     title: "We Can Help You Understand Your Options",
     description: "Choosing care can feel overwhelming. We're here to answer your questions and help you make the best choice for your loved one.",
