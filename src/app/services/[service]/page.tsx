@@ -50,7 +50,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
             src={bannerImage}
             alt={title}
             fill 
-            className="object-cover object-right"
+            className="object-cover object-center"
             priority
           />
           
