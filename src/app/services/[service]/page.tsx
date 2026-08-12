@@ -976,57 +976,51 @@ export default async function ServiceDetailPage({
       {/* ------------------------------------------------------------------ */}
       {/* 1. HERO                                                           */}
       {/* ------------------------------------------------------------------ */}
-
-      <section className="relative flex min-h-[420px] items-center overflow-hidden bg-background py-12 md:min-h-[480px] md:py-16 lg:min-h-[540px]">
+      
+      {/* 1. HERO BANNER */}
+      <section className="relative overflow-hidden bg-background min-h-[400px] md:min-h-[450px] lg:min-h-[500px] flex items-center py-12 md:py-16">
+        
+        {/* Background Image Container */}
         <div className="absolute inset-0 z-0">
-          <Image
+          <Image 
             src={bannerImage}
             alt={title}
-            fill
+            fill 
+            className="object-cover object-right"
             priority
-            sizes="100vw"
-            className="object-cover object-center"
           />
-
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background via-background/75 to-background/10" />
-
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/30 via-transparent to-transparent" />
+          
+          {/* Smooth Left-to-Right White Fade Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/30 to-transparent z-10 pointer-events-none" />
         </div>
-
+        
         <Container className="relative z-20 w-full">
-          <div className="max-w-2xl space-y-5">
+          <div className="max-w-xl space-y-4">
             <Reveal delay={0.05}>
-              <div className="mb-2 inline-flex rounded-full border border-brand-red/20 bg-white/70 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-brand-red-dark shadow-sm backdrop-blur-md">
-                Glorious Home Care
-              </div>
-            </Reveal>
-
-            <Reveal delay={0.1}>
-              <h1 className="text-4xl font-extrabold leading-[1.05] tracking-tight text-brand-ink drop-shadow-sm sm:text-5xl lg:text-6xl">
+              <h1 className="text-3xl font-extrabold leading-tight text-brand-ink sm:text-4xl lg:text-5xl drop-shadow-sm">
                 {title}
               </h1>
             </Reveal>
-
-            <Reveal delay={0.15}>
-              <p className="max-w-xl text-base font-medium leading-relaxed text-brand-ink/80 sm:text-lg lg:text-xl">
+            
+            <Reveal delay={0.1}>
+              <p className="text-base leading-relaxed text-brand-ink/80 sm:text-lg font-medium max-w-lg">
                 {description}
               </p>
             </Reveal>
-
-            <Reveal delay={0.2}>
-              <div className="flex flex-col gap-3 pt-3 sm:flex-row sm:flex-wrap">
+            
+            <Reveal delay={0.15}>
+              <div className="flex flex-col sm:flex-row flex-wrap gap-3 pt-2">
                 <Link
                   href={contactInfo.phoneHref}
-                  className="inline-flex w-full items-center justify-center rounded-full bg-brand-red px-7 py-3.5 text-sm font-bold tracking-wide text-white shadow-lg transition-all hover:-translate-y-1 hover:bg-brand-red-dark hover:shadow-xl sm:w-auto"
+                  className="inline-flex w-full sm:w-auto items-center justify-center rounded-full bg-brand-red px-6 py-3 text-sm font-bold tracking-wide text-white shadow-lg transition-all hover:-translate-y-1 hover:bg-brand-red-dark"
                 >
                   {homeCallouts.callToAction}
                 </Link>
-
                 <Link
                   href="/request-care"
-                  className="inline-flex w-full items-center justify-center rounded-full border-2 border-brand-ink/20 bg-white/85 px-7 py-3.5 text-sm font-bold tracking-wide text-brand-ink shadow-sm backdrop-blur-md transition-all hover:-translate-y-1 hover:bg-white hover:shadow-lg sm:w-auto"
+                  className="inline-flex w-full sm:w-auto items-center justify-center rounded-full border-2 border-brand-ink/20 bg-white/80 backdrop-blur-sm px-6 py-3 text-sm font-bold tracking-wide text-brand-ink transition-all hover:-translate-y-1 hover:bg-white"
                 >
-                  Request Care Today
+                  Request Care Today!
                 </Link>
               </div>
             </Reveal>
