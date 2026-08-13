@@ -39,7 +39,7 @@ const HeartIcon = ({ className = "h-10 w-10" }: IconProps) => (
 
 /* -------------------------------------------------------------------------- */
 /* BENTO ITEM ICONS                                                           */
-/*                                                                            */
+/* */
 /* Every icon below corresponds to the UNIQUE icon identifier used in         */
 /* src/data/services.ts.                                                      */
 /* -------------------------------------------------------------------------- */
@@ -891,7 +891,7 @@ const ServiceItemIcon = ({
       );
 
     /* ---------------------------------------------------------------------- */
-    /* FALLBACK                                                                */
+    /* FALLBACK                                                              */
     /* ---------------------------------------------------------------------- */
 
     default:
@@ -905,7 +905,7 @@ const ServiceItemIcon = ({
 };
 
 /* -------------------------------------------------------------------------- */
-/* STATIC PARAMS                                                             */
+/* STATIC PARAMS                                                              */
 /* -------------------------------------------------------------------------- */
 
 export function generateStaticParams() {
@@ -915,7 +915,7 @@ export function generateStaticParams() {
 }
 
 /* -------------------------------------------------------------------------- */
-/* METADATA                                                                  */
+/* METADATA                                                                   */
 /* -------------------------------------------------------------------------- */
 
 export async function generateMetadata({
@@ -936,11 +936,13 @@ export async function generateMetadata({
     };
   }
 
+  // Optimize title to remain under ~60 characters (580 pixels) for better SEO score
+  const dynamicTitle = currentService.pageData?.seoTitle || `${currentService.title} in San Jose & Bay Area | Glorious Home Care`;
+  const optimizedTitle = dynamicTitle.length > 60 ? dynamicTitle.substring(0, 57) + "..." : dynamicTitle;
+
   return {
-    title:
-      currentService.pageData?.seoTitle ||
-      `${currentService.title} in San Jose, CA | Glorious Home Care`,
-    description: currentService.description.slice(0, 157).trimEnd() + "...",
+    title: optimizedTitle,
+    description: `Looking for ${currentService.title.toLowerCase()}? Glorious Home Care provides compassionate at home senior care in San Jose and the Bay Area. ` + currentService.description.slice(0, 80).trimEnd() + "...",
   };
 }
 
@@ -974,19 +976,19 @@ export default async function ServiceDetailPage({
   return (
     <div className="flex flex-col overflow-hidden">
       {/* ------------------------------------------------------------------ */}
-      {/* 1. HERO                                                           */}
+      {/* 1. HERO                                                            */}
       {/* ------------------------------------------------------------------ */}
       
-      {/* 1. HERO BANNER */}
       <section className="relative overflow-hidden bg-background min-h-[400px] md:min-h-[450px] lg:min-h-[500px] flex items-center py-12 md:py-16">
         
         {/* Background Image Container */}
         <div className="absolute inset-0 z-0">
           <Image 
             src={bannerImage}
-            alt={title}
+            alt={`${title} Services in San Jose & The Bay Area`}
             fill 
             className="object-cover object-right"
+            sizes="100vw"
             priority
           />
           
@@ -997,8 +999,9 @@ export default async function ServiceDetailPage({
         <Container className="relative z-20 w-full">
           <div className="max-w-xl space-y-4">
             <Reveal delay={0.05}>
+              {/* SEO Fix: Longer, keyword-rich H1 that includes location (over 20 chars) */}
               <h1 className="text-3xl font-extrabold leading-tight text-brand-ink sm:text-4xl lg:text-5xl drop-shadow-sm">
-                {title}
+                Trusted {title} in San Jose & The Bay Area
               </h1>
             </Reveal>
             
@@ -1012,15 +1015,17 @@ export default async function ServiceDetailPage({
               <div className="flex flex-col sm:flex-row flex-wrap gap-3 pt-2">
                 <Link
                   href={contactInfo.phoneHref}
+                  aria-label={`Call us to discuss ${title}`}
                   className="inline-flex w-full sm:w-auto items-center justify-center rounded-full bg-brand-red px-6 py-3 text-sm font-bold tracking-wide text-white shadow-lg transition-all hover:-translate-y-1 hover:bg-brand-red-dark"
                 >
                   {homeCallouts.callToAction}
                 </Link>
                 <Link
                   href="/request-care"
+                  aria-label={`Request ${title} Services`}
                   className="inline-flex w-full sm:w-auto items-center justify-center rounded-full border-2 border-brand-ink/20 bg-white/80 backdrop-blur-sm px-6 py-3 text-sm font-bold tracking-wide text-brand-ink transition-all hover:-translate-y-1 hover:bg-white"
                 >
-                  Request Care Today!
+                  Request Care Today
                 </Link>
               </div>
             </Reveal>
@@ -1172,7 +1177,7 @@ export default async function ServiceDetailPage({
                       </div>
 
                       {/* Item title */}
-                      <span
+                      <h3
                         className={`
                           relative z-10 max-w-3xl font-bold leading-snug
                           drop-shadow-sm transition-colors duration-300
@@ -1184,7 +1189,7 @@ export default async function ServiceDetailPage({
                         `}
                       >
                         {item.title}
-                      </span>
+                      </h3>
                     </div>
                   );
                 },
@@ -1220,9 +1225,10 @@ export default async function ServiceDetailPage({
         {/* Marquee heading */}
         <Container>
           <Reveal className="mb-12 mt-16 text-center md:mb-20 md:mt-20">
-            <h3 className="text-xl font-bold uppercase tracking-[0.15em] text-brand-ink/50 sm:text-2xl md:text-3xl">
+            {/* SEO Fix: Used a div instead of an h3 to avoid duplicated/diluted heading structure */}
+            <div className="text-xl font-bold uppercase tracking-[0.15em] text-brand-ink/50 sm:text-2xl md:text-3xl">
               {sharedServiceContent.areaHeading.replace(/\n/g, " ")}
-            </h3>
+            </div>
           </Reveal>
         </Container>
 
@@ -1298,16 +1304,73 @@ export default async function ServiceDetailPage({
         />
       </section>
 
+      {/* 5. SEO & AREAS WE SERVE SECTION */}
+      <section className="bg-surface py-20 border-t border-brand-gold/10">
+        <Container>
+          <Reveal>
+            <div className="text-center mb-12">
+              <span className="block text-sm font-bold uppercase tracking-widest text-brand-red mb-3">
+                Local Care You Can Trust
+              </span>
+              <h2 className="text-3xl md:text-4xl font-extrabold text-brand-ink mb-6">
+                Premier Home Care in the Bay Area
+              </h2>
+              <p className="max-w-4xl mx-auto text-lg text-muted leading-relaxed">
+                Finding the right support for a loved one is crucial. If you're searching for <strong>home care near me</strong>, Glorious Home Care Assistance is dedicated to providing compassionate, top-tier <strong>senior care at home</strong>. Our trained caregivers specialize in comprehensive <strong>personal care San Jose</strong> families can rely on, ensuring safety, dignity, and peace of mind. We are proud to be a leading provider of <strong>in-home care San Jose</strong> residents trust, offering tailored plans for <strong>at home senior care</strong>.
+              </p>
+            </div>
+          </Reveal>
+
+          <div className="mb-12">
+            <Reveal delay={0.1}>
+              <h3 className="text-2xl font-extrabold text-brand-ink text-center mb-8">
+                Communities We Proudly Serve
+              </h3>
+            </Reveal>
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 text-center">
+              {[
+                { city: "San Jose", term: "home care in San Jose", slug: "san-jose" },
+                { city: "San Mateo", term: "home care in San Mateo", slug: "san-mateo" },
+                { city: "Palo Alto", term: "home care in Palo Alto", slug: "palo-alto" },
+                { city: "San Francisco", term: "home care in San Francisco", slug: "san-francisco" },
+                { city: "Milpitas", term: "home care in Milpitas", slug: "milpitas" },
+                { city: "Los Gatos", term: "home care in Los Gatos", slug: "los-gatos" },
+                { city: "Santa Rosa", term: "home care in Santa Rosa", slug: "santa-rosa" },
+                { city: "Santa Clara", term: "home care in Santa Clara", slug: "santa-clara" },
+                { city: "Pleasanton", term: "home care in Pleasanton", slug: "pleasanton" },
+                { city: "Mountain View", term: "home care in Mountain View", slug: "mountain-view" }
+              ].map((loc, idx) => (
+                <Reveal key={loc.city} delay={idx * 0.05}>
+                  <Link href={`/locations/${loc.slug}`} className="block rounded-2xl border border-brand-cream bg-white p-4 shadow-sm transition-all hover:-translate-y-1 hover:border-brand-gold hover:shadow-md">
+                    <span className="font-bold text-brand-ink block text-sm mb-1">{loc.city}</span>
+                    <span className="text-[10px] uppercase tracking-wider text-muted block">{loc.term}</span>
+                  </Link>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+
+          <Reveal delay={0.2}>
+            <div className="rounded-3xl bg-white p-8 border border-brand-cream shadow-sm text-center max-w-4xl mx-auto">
+              <p className="text-muted leading-relaxed">
+                Our mission is to elevate the standard of <strong>Home care in Bay area</strong> communities. Whether your family requires temporary respite care, daily assistance with activities of daily living, or specialized 24/7 care, our team is equipped to deliver. Experience the difference of premium <strong>at home senior care</strong> designed to keep your loved ones thriving in the comfort of their own home.
+              </p>
+            </div>
+          </Reveal>
+        </Container>
+      </section>
+
       {/* ------------------------------------------------------------------ */}
-      {/* 5. BOTTOM CTA                                                      */}
+      {/* 6. BOTTOM CTA                                                      */}
       {/* ------------------------------------------------------------------ */}
 
       <section className="bg-brand-red-dark py-14 text-center text-white md:py-20">
         <Container className="max-w-3xl">
           <Reveal className="space-y-6">
-            <h2 className="whitespace-pre-line text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
+            {/* SEO Fix: Changed h2 to div here since we added a semantic h2 in the section above */}
+            <div className="whitespace-pre-line text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
               {sharedServiceContent.bottomCta.message}
-            </h2>
+            </div>
 
             <div className="flex flex-col items-center gap-4 pt-2">
               <p className="whitespace-pre-line text-sm font-bold uppercase tracking-[0.2em] text-brand-gold">
@@ -1316,6 +1379,7 @@ export default async function ServiceDetailPage({
 
               <Link
                 href={contactInfo.phoneHref}
+                aria-label={`Contact us for ${title}`}
                 className="inline-block rounded-full bg-brand-gold px-10 py-4 text-xl font-black text-brand-red-dark shadow-xl transition-all hover:scale-105 hover:bg-white sm:px-12 sm:py-5 sm:text-2xl"
               >
                 {sharedServiceContent.bottomCta.phone}

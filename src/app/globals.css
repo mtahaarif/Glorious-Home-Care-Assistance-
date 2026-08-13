@@ -37,4 +37,6 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-manrope), "Segoe UI", sans-serif;
+  /* Add smooth scrolling for better user experience, especially with hash links */
+  scroll-behavior: smooth;
 }

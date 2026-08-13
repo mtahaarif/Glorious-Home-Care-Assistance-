@@ -12,8 +12,10 @@ import {
 } from "@/data/request-care";
 
 export const metadata: Metadata = {
-  title: "Request Care | Glorious Home Care Assistance",
-  description: "Schedule a free in-home care consultation with Glorious Home Care Assistance in San Jose and Santa Clara County.",
+  // SEO Fix: Shortened the title and packed it with target keywords (under 60 chars)
+  title: "Request In-Home Care in San Jose | Glorious Home Care",
+  // SEO Fix: Expanded description with local keywords
+  description: "Schedule a free consultation for in-home care, personal care, and senior care at home in San Jose and the Bay Area with Glorious Home Care Assistance.",
 };
 
 export default function RequestCarePage() {
@@ -27,9 +29,10 @@ export default function RequestCarePage() {
         <div className="absolute inset-0 z-0">
           <Image 
             src={requestCareHero.bannerImage}
-            alt={requestCareHero.title}
+            alt="Request In-Home Care Services"
             fill 
             className="object-cover object-center"
+            sizes="100vw"
             priority
           />
           
@@ -40,8 +43,9 @@ export default function RequestCarePage() {
         <Container className="relative z-20 w-full">
           <div className="max-w-xl space-y-4">
             <Reveal delay={0.05}>
+              {/* SEO Fix: Hardcoded H1 to be keyword-rich and resolve "H1 too short" / "Words not in text" errors */}
               <h1 className="text-3xl font-extrabold leading-tight text-brand-ink sm:text-4xl lg:text-5xl drop-shadow-sm">
-                {requestCareHero.title}
+                Request In-Home Care in San Jose & The Bay Area
               </h1>
             </Reveal>
             
@@ -55,12 +59,14 @@ export default function RequestCarePage() {
               <div className="flex flex-col sm:flex-row flex-wrap gap-3 pt-2">
                 <Link
                   href={contactInfo.phoneHref}
+                  aria-label={`Call us at ${contactInfo.phone}`}
                   className="inline-flex w-full sm:w-auto items-center justify-center rounded-full bg-brand-red px-6 py-3 text-sm font-bold tracking-wide text-white shadow-lg transition-all hover:-translate-y-1 hover:bg-brand-red-dark"
                 >
                   {homeCallouts.callToAction}
                 </Link>
                 <a
                   href="#care-form"
+                  aria-label="Skip to care request form"
                   className="inline-flex w-full sm:w-auto items-center justify-center rounded-full border-2 border-brand-ink/20 bg-white/80 backdrop-blur-sm px-6 py-3 text-sm font-bold tracking-wide text-brand-ink transition-all hover:-translate-y-1 hover:bg-white"
                 >
                   Fill Out The Form
@@ -81,17 +87,18 @@ export default function RequestCarePage() {
             {/* Unified Eyebrow Heading */}
             <div className="mb-6 flex items-center gap-4">
               <span className="h-[2px] w-8 bg-brand-red"></span>
-              <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-brand-red">
+              {/* SEO Fix: Changed h2 to div to fix heading hierarchy */}
+              <div className="text-sm font-bold uppercase tracking-[0.2em] text-brand-red">
                 Take the First Step
-              </h2>
+              </div>
             </div>
             
-            <h3 className="mb-6 text-4xl font-extrabold leading-tight text-brand-ink md:text-5xl">
-              {requestCareIntro?.title || "Request a Free Consultation"}
-            </h3>
+            <h2 className="mb-6 text-4xl font-extrabold leading-tight text-brand-ink md:text-5xl">
+              {requestCareIntro?.title || "Request a Free Care Consultation"}
+            </h2>
             
             <p className="mb-10 text-lg leading-relaxed text-muted">
-              {requestCareIntro?.description || "Fill out the form below so we can better understand your family's needs. A care coordinator will reach out shortly to guide you through your options."}
+              {requestCareIntro?.description || "Fill out the form below to request in-home care in San Jose and the Bay Area. A care coordinator will reach out shortly to guide you through your options."}
             </p>
 
             {/* Upgraded Premium Form */}
@@ -182,13 +189,69 @@ export default function RequestCarePage() {
         </Container>
       </section>
 
-      {/* 3. GOOGLE MAPS EMBED SECTION */}
+      {/* 3. SEO & AREAS WE SERVE SECTION */}
+      <section className="bg-surface py-20 border-t border-brand-gold/10">
+        <Container>
+          <Reveal>
+            <div className="text-center mb-12">
+              <span className="block text-sm font-bold uppercase tracking-widest text-brand-red mb-3">
+                Local Care You Can Trust
+              </span>
+              <h2 className="text-3xl md:text-4xl font-extrabold text-brand-ink mb-6">
+                Premier Home Care in the Bay Area
+              </h2>
+              <p className="max-w-4xl mx-auto text-lg text-muted leading-relaxed">
+                Finding the right support for a loved one is crucial. If you're searching for <strong>home care near me</strong>, Glorious Home Care Assistance is dedicated to providing compassionate, top-tier <strong>senior care at home</strong>. Our trained caregivers specialize in comprehensive <strong>personal care San Jose</strong> families can rely on, ensuring safety, dignity, and peace of mind. We are proud to be a leading provider of <strong>in-home care San Jose</strong> residents trust, offering tailored plans for <strong>at home senior care</strong>.
+              </p>
+            </div>
+          </Reveal>
+
+          <div className="mb-12">
+            <Reveal delay={0.1}>
+              <h3 className="text-2xl font-extrabold text-brand-ink text-center mb-8">
+                Communities We Proudly Serve
+              </h3>
+            </Reveal>
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 text-center">
+              {[
+                { city: "San Jose", term: "home care in San Jose", slug: "san-jose" },
+                { city: "San Mateo", term: "home care in San Mateo", slug: "san-mateo" },
+                { city: "Palo Alto", term: "home care in Palo Alto", slug: "palo-alto" },
+                { city: "San Francisco", term: "home care in San Francisco", slug: "san-francisco" },
+                { city: "Milpitas", term: "home care in Milpitas", slug: "milpitas" },
+                { city: "Los Gatos", term: "home care in Los Gatos", slug: "los-gatos" },
+                { city: "Santa Rosa", term: "home care in Santa Rosa", slug: "santa-rosa" },
+                { city: "Santa Clara", term: "home care in Santa Clara", slug: "santa-clara" },
+                { city: "Pleasanton", term: "home care in Pleasanton", slug: "pleasanton" },
+                { city: "Mountain View", term: "home care in Mountain View", slug: "mountain-view" }
+              ].map((loc, idx) => (
+                <Reveal key={loc.city} delay={idx * 0.05}>
+                  <Link href={`/locations/${loc.slug}`} className="block rounded-2xl border border-brand-cream bg-white p-4 shadow-sm transition-all hover:-translate-y-1 hover:border-brand-gold hover:shadow-md">
+                    <span className="font-bold text-brand-ink block text-sm mb-1">{loc.city}</span>
+                    <span className="text-[10px] uppercase tracking-wider text-muted block">{loc.term}</span>
+                  </Link>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+
+          <Reveal delay={0.2}>
+            <div className="rounded-3xl bg-white p-8 border border-brand-cream shadow-sm text-center max-w-4xl mx-auto">
+              <p className="text-muted leading-relaxed">
+                Our mission is to elevate the standard of <strong>Home care in Bay area</strong> communities. Whether your family requires temporary respite care, daily assistance with activities of daily living, or specialized 24/7 care, our team is equipped to deliver. Experience the difference of premium <strong>at home senior care</strong> designed to keep your loved ones thriving in the comfort of their own home.
+              </p>
+            </div>
+          </Reveal>
+        </Container>
+      </section>
+
+      {/* 4. GOOGLE MAPS EMBED SECTION */}
       <section className="bg-background py-16 md:py-24 border-t border-brand-gold/20">
         <Container>
           <Reveal>
             <div className="mx-auto max-w-3xl text-center mb-10">
               <h2 className="text-3xl font-extrabold text-brand-ink md:text-4xl">
-                Our Service Area
+                Interactive Service Map
               </h2>
               <p className="mt-4 text-lg text-muted">
                 Providing compassionate care across San Jose, Santa Clara County, and the surrounding Bay Area.
@@ -198,12 +261,6 @@ export default function RequestCarePage() {
 
           <Reveal delay={0.1}>
             <div className="w-full overflow-hidden rounded-3xl border-4 border-white shadow-lg bg-white h-[400px] md:h-[500px] relative">
-              {/* HOW TO UPDATE THIS MAP:
-                1. Go to Google Maps and search for your business (Glorious Home Care Assistance)
-                2. Click the "Share" button, then click "Embed a map"
-                3. Copy the URL inside the `src="..."` attribute of the iframe they provide
-                4. Paste it right here below to replace this placeholder San Jose map. 
-              */}
               <iframe
                 src="https://maps.google.com/maps?q=2528%20Qume%20Drive,%20Ste.%204,%20San%20Jose,%20CA%2095131&t=&z=14&ie=UTF8&iwloc=&output=embed"
                 width="100%"
@@ -213,6 +270,7 @@ export default function RequestCarePage() {
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 className="absolute inset-0"
+                title="Glorious Home Care Service Area Map"
               />
             </div>
           </Reveal>

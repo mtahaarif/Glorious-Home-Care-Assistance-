@@ -108,11 +108,6 @@ export default function Footer() {
             {/* Copyright & Legal Text */}
             <div className="space-y-1">
               <p>© {currentYear} Glorious Home Care Assistance. All rights reserved.</p>
-              <p>
-                <Link href="/privacy-policy" className="hover:text-white transition underline underline-offset-4">
-                  Do Not Sell/Share My Personal Information &amp; Privacy Notice
-                </Link>
-              </p>
             </div>
 
             {/* Tagline / SEO footer note */}
