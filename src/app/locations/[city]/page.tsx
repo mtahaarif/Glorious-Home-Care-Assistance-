@@ -262,7 +262,7 @@ export default async function CityLocationPage({ params }: { params: Promise<{ c
                       {service.image && (
                         <Image 
                           src={service.image}
-                          alt=""
+                          alt={`${service.title} in ${area.name}`}
                           fill
                           sizes="(max-width: 768px) 320px, 380px"
                           className="object-cover"

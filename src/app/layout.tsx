@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     canonical: "/",
   },
 
-  // Open Graph for Facebook/LinkedIn shares
+  // ✅ FIXED: Added 'images' array to complete the Open Graph requirements
   openGraph: {
     title: "Home Care in San Jose & Bay Area | Glorious Home Care",
     description: "Providing compassionate in-home care, personal care, and senior care at home across San Jose and the wider Bay Area.",
@@ -67,13 +67,22 @@ export const metadata: Metadata = {
     siteName: "Glorious Home Care Assistance",
     locale: "en_US",
     type: "website",
+    images: [
+      {
+        url: "/services.jpg", // Make sure this image is in your public/ folder!
+        width: 1200,
+        height: 630,
+        alt: "Glorious Home Care Assistance Preview",
+      },
+    ],
   },
 
-  // Twitter card metadata
+  // ✅ FIXED: Added 'images' to complete the Twitter Card requirements
   twitter: {
     card: "summary_large_image",
     title: "Home Care in San Jose & Bay Area | Glorious Home Care",
     description: "Compassionate at-home senior care and personal care services in San Jose and the Bay Area.",
+    images: ["/services.jpg"], // Ensure this matches the OG image
   },
 };
 
@@ -84,7 +93,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${manrope.variable} h-full antialiased`}>
-      {/* ✅ FIXED: Removed the manual <head> and <meta name="viewport"> to prevent duplicate tag errors */}
+      {/* Viewport & head tags are automatically handled by Next.js */}
       <body className="min-h-full bg-background text-foreground">
         <div className="flex min-h-screen flex-col">
           <Navbar />
