@@ -1,24 +1,52 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { motion } from "framer-motion";
+import React, { useEffect, useRef, useState } from "react";
 
 type RevealProps = {
-  children: ReactNode;
+  children: React.ReactNode;
   className?: string;
-  delay?: number;
+  delay?: number; // 1. Added delay to the TypeScript interface
 };
 
 export default function Reveal({ children, className = "", delay = 0 }: RevealProps) {
+  const elementRef = useRef<HTMLDivElement>(null);
+  const [isIntersecting, setIsIntersecting] = useState(false);
+
+  useEffect(() => {
+    const currentElement = elementRef.current;
+    
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsIntersecting(entry.isIntersecting);
+      },
+      {
+        root: null,
+        threshold: 0.05, // Slightly higher threshold so it fades in naturally as you scroll
+        rootMargin: "-20px 0px -40px 0px", 
+      }
+    );
+
+    if (currentElement) {
+      observer.observe(currentElement);
+    }
+
+    return () => {
+      if (currentElement) {
+        observer.unobserve(currentElement);
+      }
+    };
+  }, []);
+
   return (
-    <motion.div
-      className={className}
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.6, delay }}
+    <div
+      ref={elementRef}
+      // 2. Applied the delay adjuster dynamically via inline styles
+      style={{ transitionDelay: `${delay}s` }} 
+      className={`transition-opacity duration-[1500ms] ease-in-out will-change-[opacity] ${
+        isIntersecting ? "opacity-100" : "opacity-0"
+      } ${className}`}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }

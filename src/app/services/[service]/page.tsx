@@ -987,7 +987,7 @@ export default async function ServiceDetailPage({
             src={bannerImage}
             alt={`${title} Services in San Jose & The Bay Area`}
             fill 
-            className="object-cover object-right"
+            className="object-cover object-center"
             sizes="100vw"
             priority
           />
