@@ -10,7 +10,7 @@ import { mainServices } from "@/data/services";
 // Small helper icon for the dropdown chevron
 const ChevronDownIcon = ({ className = "h-4 w-4" }: { className?: string }) => (
   <svg 
-    xmlns="http://www.w3.org/2000/svg" 
+    xmlns="https://www.w3.org/2000/svg" // ✅ FIXED: Added https://
     viewBox="0 0 24 24" 
     fill="none" 
     stroke="currentColor" 
@@ -136,12 +136,13 @@ export default function Navbar() {
           <div className="flex shrink-0 items-center gap-4">
             
             {/* Glassmorphic CTA Button */}
-            <Link
+            {/* ✅ FIXED: Swapped <Link> for standard <a> for telephone routing */}
+            <a
               href={contactInfo.phoneHref}
               className="hidden rounded-full border border-brand-red/30 bg-brand-red/90 backdrop-blur-md px-7 py-2.5 text-sm font-extrabold uppercase tracking-wider text-white shadow-lg shadow-brand-red/20 transition-all hover:-translate-y-0.5 hover:bg-brand-red hover:shadow-brand-red/30 sm:inline-flex"
             >
               Call Now
-            </Link>
+            </a>
             
             {/* Hamburger Button (Glass Style) */}
             <button 

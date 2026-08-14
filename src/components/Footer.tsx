@@ -82,7 +82,8 @@ export default function Footer() {
                 const icon = iconMap[item.label];
 
                 return (
-                  <Link
+                  // Swapped <Link> for a standard <a> tag for external routing
+                  <a
                     key={item.href}
                     href={item.href}
                     target="_blank"
@@ -91,7 +92,7 @@ export default function Footer() {
                     className="flex h-10 w-10 items-center justify-center rounded-full border border-white/30 text-white transition-all duration-300 hover:bg-white hover:text-[color:var(--brand-red-dark)] hover:scale-110"
                   >
                     {icon}
-                  </Link>
+                  </a>
                 );
               })}
             </div>

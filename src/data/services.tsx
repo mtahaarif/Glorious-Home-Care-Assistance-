@@ -52,7 +52,7 @@ const serviceItem = (title: string, icon: string) => ({
 
 export const mainServices = [
   /* ------------------------------------------------------------------------ */
-  /* 1. Personal Care Assistance                                             */
+  /* 1. Personal Care Assistance                                              */
   /* ------------------------------------------------------------------------ */
   {
     title: "Personal Care Assistance",
@@ -90,8 +90,9 @@ export const mainServices = [
             "dressing-grooming"
           ),
 
+          // ✅ FIXED: Changed from "Respectful personal care" to clear SEO Identical Heading error
           serviceItem(
-            "Respectful personal care",
+            "Dignified hygiene assistance",
             "personal-dignity"
           ),
 

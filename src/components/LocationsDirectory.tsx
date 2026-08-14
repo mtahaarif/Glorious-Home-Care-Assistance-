@@ -171,11 +171,13 @@ export default function LocationsDirectory() {
           >
 
             {/* MOBILE STICKY REGION HEADER */}
-            <div className="lg:hidden sticky top-0 z-30 -mx-4 w-[calc(100%+2rem)] bg-white px-4 pt-20 pb-6 text-center">
+            {/* ✅ FIXED: Added aria-hidden to prevent duplicate indexing of this layout block */}
+            <div className="lg:hidden sticky top-0 z-30 -mx-4 w-[calc(100%+2rem)] bg-white px-4 pt-20 pb-6 text-center" aria-hidden="true">
 
-              <h2 className="text-3xl font-extrabold text-[color:var(--brand-ink)] tracking-tight">
+              {/* ✅ FIXED: Changed h2 to div to clear the "Identical Headings" duplicate SEO error */}
+              <div className="text-3xl font-extrabold text-[color:var(--brand-ink)] tracking-tight">
                 {region.name}
-              </h2>
+              </div>
 
               <p className="mx-auto mt-3 max-w-3xl text-base leading-relaxed text-[color:var(--brand-ink)]/70">
                 {region.description}

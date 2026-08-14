@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Manrope } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -8,6 +8,13 @@ const manrope = Manrope({
   variable: "--font-manrope",
   subsets: ["latin"],
 });
+
+// ✅ FIXED: Next.js 14+ expects viewport to be exported separately from metadata
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#ffffff",
+};
 
 export const metadata: Metadata = {
   // Sets the base URL so canonical links generate properly
@@ -77,10 +84,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${manrope.variable} h-full antialiased`}>
-      <head>
-        {/* Viewport meta tag is automatically handled by Next.js, but explicitly declaring it here satisfies some strict SEO scanners */}
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-      </head>
+      {/* ✅ FIXED: Removed the manual <head> and <meta name="viewport"> to prevent duplicate tag errors */}
       <body className="min-h-full bg-background text-foreground">
         <div className="flex min-h-screen flex-col">
           <Navbar />

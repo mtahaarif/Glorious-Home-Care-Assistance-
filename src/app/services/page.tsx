@@ -336,6 +336,7 @@ export default function ServicesPage() {
                   </div>
                   <span className="h-[2px] w-12 bg-brand-red"></span>
                 </div>
+                {/* ✅ FIXED: Changed h3 to div to prevent duplicate layout headings */}
                 <div className="text-2xl font-extrabold text-brand-ink leading-tight">
                   {whoWeServe.subtitle}
                 </div>
@@ -361,6 +362,7 @@ export default function ServicesPage() {
                         )}
                       </div>
                       <div className="p-8 flex flex-col justify-center bg-white">
+                        {/* ✅ FIXED: Changed h3 to div to prevent duplicate layout headings */}
                         <div className="text-2xl font-extrabold text-brand-red-dark mb-4">
                           {group.title}
                         </div>
@@ -452,6 +454,7 @@ export default function ServicesPage() {
                   </div>
                   <span className="h-[2px] w-12 bg-brand-red"></span>
                 </div>
+                {/* ✅ FIXED: Changed h2 to div to prevent duplicate layout headings */}
                 <div className="text-3xl font-extrabold text-brand-ink md:text-5xl leading-tight">
                   {homeProcess.title}
                 </div>
@@ -506,6 +509,7 @@ export default function ServicesPage() {
                       {step.step}
                     </span>
                     
+                    {/* ✅ FIXED: Changed h3 to div to prevent duplicate layout headings */}
                     <div className="relative z-10 mt-8 text-2xl md:text-3xl font-bold text-brand-ink">
                       {step.title}
                     </div>

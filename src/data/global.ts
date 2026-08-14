@@ -40,7 +40,8 @@ export const contactInfo: ContactInfo = {
   text: "858-321-5077",
   textHref: "sms:+18583215077",
   email: "admin@glorioushomecareca.com",
-  website: "glorioushomecareassistance.com",
+  // ✅ FIXED: Added https:// to prevent malformed link errors
+  website: "https://www.glorioushomecareassistance.com",
   licenseNumber: "014700173",
 };
 
@@ -59,6 +60,7 @@ export const servicesCta = {
 
 export const socialLinks = [
   { label: "LinkedIn", href: "https://www.linkedin.com/company/glorious-home-care-assistance-llc/" },
-  { label: "Facebook", href: "hhttps://www.facebook.com/p/Glorious-Home-Care-Assistance-61560284734058/" },
+  // ✅ FIXED: Removed the accidental 'h' typo (hhttps -> https)
+  { label: "Facebook", href: "https://www.facebook.com/p/Glorious-Home-Care-Assistance-61560284734058/" },
   { label: "Instagram", href: "https://www.instagram.com/glorious.homecareassistance/" },
 ] as const;
