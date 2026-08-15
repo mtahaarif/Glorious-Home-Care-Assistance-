@@ -10,8 +10,10 @@ import { mainServices } from "@/data/services";
 // Small helper icon for the dropdown chevron
 const ChevronDownIcon = ({ className = "h-4 w-4" }: { className?: string }) => (
   <svg 
-    xmlns="https://www.w3.org/2000/svg" // ✅ FIXED: Added https://
+    xmlns="http://www.w3.org/2000/svg" 
     viewBox="0 0 24 24" 
+    width={16} 
+    height={16} 
     fill="none" 
     stroke="currentColor" 
     strokeWidth={2.5} 
@@ -55,10 +57,11 @@ export default function Navbar() {
             : "bg-transparent py-5"
         }`}
       >
-        <div className="mx-auto flex w-full max-w-[1400px] items-center justify-between px-4 sm:px-8 lg:px-12">
+        {/* ✅ FIXED: Expanded max-width to 1600px and reduced side padding to push logo to the extreme left */}
+        <div className="mx-auto flex w-full max-w-[1600px] items-center justify-between px-4 lg:px-6 xl:px-10">
           
           {/* Logo Section - Left Aligned */}
-          <Link href="/" className="flex shrink-0 items-center gap-3 group">
+          <Link href="/" className="flex shrink-0 items-center gap-2 xl:gap-3 group">
             <div className="relative flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
               <div className="absolute inset-0 rounded-full bg-white/20 blur-md"></div>
               <Image
@@ -66,37 +69,38 @@ export default function Navbar() {
                 alt="Glorious Home Care Assistance logo"
                 width={50}
                 height={50}
-                className="relative z-10 h-11 w-auto"
+                className="relative z-10 h-10 w-auto xl:h-11" // Slightly smaller logo on standard laptops to save space
                 priority
               />
             </div>
             <div className="hidden flex-col sm:flex">
-              <span className="text-sm font-extrabold tracking-tight text-brand-ink drop-shadow-sm">
+              <span className="text-[13px] xl:text-sm font-extrabold tracking-tight text-brand-ink drop-shadow-sm whitespace-nowrap">
                 Glorious Home Care
               </span>
-              <span className="text-[10px] font-bold text-brand-red uppercase tracking-widest mt-0.5">
+              <span className="text-[9px] xl:text-[10px] font-bold text-brand-red uppercase tracking-widest mt-0.5 whitespace-nowrap">
                 Assistance LLC
               </span>
             </div>
           </Link>
 
-          {/* Desktop Nav - Centered with smaller font and wider gaps */}
-          <nav className="hidden flex-1 items-center justify-center gap-8 text-sm font-bold text-brand-ink lg:flex xl:gap-10 mx-8">
+          {/* Desktop Nav - Centered */}
+          {/* ✅ FIXED: Dynamic scaling! Tighter gaps (gap-3) and smaller font (12px) on laptops, expands comfortably on big screens (xl:gap-6) */}
+          <nav className="hidden flex-1 items-center justify-center gap-3 text-[12px] font-bold text-brand-ink lg:flex xl:gap-5 2xl:gap-7 xl:text-[13px] 2xl:text-sm px-2 xl:px-4">
             {navLinks.map((link) => {
               
               // 1. Render Dropdown for "Services"
-              if (link.label === "Services") {
+              if (link.label === "Care Services" || link.label === "Services") { 
                 const isActive = pathname.startsWith(link.href);
                 return (
                   <div key={link.href} className="group relative py-2">
                     <Link
                       href={link.href}
-                      className={`flex items-center gap-1.5 whitespace-nowrap transition-colors hover:text-brand-red ${
+                      className={`flex items-center gap-1 xl:gap-1.5 whitespace-nowrap transition-colors hover:text-brand-red ${
                         isActive ? "text-brand-red" : "text-brand-ink"
                       }`}
                     >
                       {link.label}
-                      <ChevronDownIcon className="h-3.5 w-3.5 transition-transform duration-300 group-hover:rotate-180" />
+                      <ChevronDownIcon className="h-3 w-3 xl:h-3.5 xl:w-3.5 transition-transform duration-300 group-hover:rotate-180" />
                     </Link>
                     
                     {/* Glassmorphism Dropdown Panel */}
@@ -133,13 +137,13 @@ export default function Navbar() {
           </nav>
 
           {/* Call to Action & Mobile Toggle - Right Aligned */}
-          <div className="flex shrink-0 items-center gap-4">
+          {/* ✅ FIXED: Locked this container with 'shrink-0' so it refuses to be crushed off-screen */}
+          <div className="flex shrink-0 items-center gap-3 xl:gap-4">
             
             {/* Glassmorphic CTA Button */}
-            {/* ✅ FIXED: Swapped <Link> for standard <a> for telephone routing */}
             <a
               href={contactInfo.phoneHref}
-              className="hidden rounded-full border border-brand-red/30 bg-brand-red/90 backdrop-blur-md px-7 py-2.5 text-sm font-extrabold uppercase tracking-wider text-white shadow-lg shadow-brand-red/20 transition-all hover:-translate-y-0.5 hover:bg-brand-red hover:shadow-brand-red/30 sm:inline-flex"
+              className="hidden rounded-full border border-brand-red/30 bg-brand-red/90 backdrop-blur-md px-5 py-2 xl:px-7 xl:py-2.5 text-xs xl:text-sm font-extrabold uppercase tracking-wider text-white shadow-lg shadow-brand-red/20 transition-all hover:-translate-y-0.5 hover:bg-brand-red hover:shadow-brand-red/30 sm:inline-flex whitespace-nowrap"
             >
               Call Now
             </a>
@@ -150,7 +154,7 @@ export default function Navbar() {
               aria-label="Open Menu"
               onClick={() => setIsMobileMenuOpen(true)}
             >
-              <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+              <svg width={20} height={20} className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
@@ -184,7 +188,7 @@ export default function Navbar() {
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 <span className="sr-only">Close menu</span>
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" aria-hidden="true">
+                <svg width={20} height={20} className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -196,7 +200,7 @@ export default function Navbar() {
                 {navLinks.map((link) => {
                   
                   // Mobile Services Dropdown Toggle
-                  if (link.label === "Services") {
+                  if (link.label === "Care Services" || link.label === "Services") {
                     const isActive = pathname.startsWith(link.href);
                     return (
                       <div key={link.href} className="flex flex-col">
@@ -213,6 +217,7 @@ export default function Navbar() {
                           <button 
                             onClick={() => setIsMobileServicesOpen(!isMobileServicesOpen)} 
                             className="p-4 text-brand-ink transition hover:text-brand-red"
+                            aria-label="Toggle Services Dropdown"
                           >
                             <ChevronDownIcon className={`h-5 w-5 transition-transform duration-300 ${isMobileServicesOpen ? "rotate-180" : ""}`} />
                           </button>

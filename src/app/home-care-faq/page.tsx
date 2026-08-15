@@ -4,6 +4,8 @@ import Image from "next/image";
 import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
 import FaqAccordion from "@/components/FaqAccordion";
+import { ExpandableLocations } from "@/components/ExpandableLists";
+import { serviceAreas } from "@/data/locations";
 import { contactInfo, homeCallouts } from "@/data/global";
 import { faqHero, faqIntro, faqCategories } from "@/data/faqs";
 
@@ -23,13 +25,15 @@ export default function FaqPage() {
         
         {/* Background Image Container */}
         <div className="absolute inset-0 z-0">
+          {/* SEO Fix: Removed fill, added explicit dimensions, priority, and w-full h-full */}
           <Image 
             src={faqHero.bannerImage}
             alt="Frequently Asked Questions About Home Care"
-            fill 
-            className="object-cover object-right"
-            sizes="100vw"
+            width={1677}
+            height={938}
             priority
+            className="absolute inset-0 w-full h-full object-cover object-right"
+            sizes="100vw"
           />
           
           {/* Smooth Left-to-Right White Fade Overlay */}
@@ -135,7 +139,7 @@ export default function FaqPage() {
                   aria-label={`Call us at ${contactInfo.phone}`}
                   className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-[color:var(--brand-gold)] px-8 py-4 text-lg font-black tracking-wide text-brand-ink shadow-md transition-all hover:scale-[1.02] hover:bg-white"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6 text-brand-red-dark" aria-hidden="true">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={24} height={24} fill="currentColor" className="h-6 w-6 text-brand-red-dark" aria-hidden="true">
                      <path fillRule="evenodd" d="M1.5 4.5a3 3 0 013-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 01-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 006.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 011.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 01-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5z" clipRule="evenodd" />
                   </svg>
                   {contactInfo.phone}
@@ -158,26 +162,29 @@ export default function FaqPage() {
             </Reveal>
           </div>
 
-          <div className="mx-auto max-w-4xl space-y-12">
+          <ul className="mx-auto max-w-4xl space-y-12">
             {faqCategories.map((category, index) => (
-              <Reveal key={category.categoryTitle} delay={index * 0.1}>
-                <div className="rounded-3xl border border-brand-cream/50 bg-white p-6 shadow-sm sm:p-10 transition-shadow hover:shadow-md">
-                  <h3 className="mb-6 text-2xl font-bold text-brand-red">
-                    {category.categoryTitle}
-                  </h3>
-                  <div className="flex flex-col">
-                    {category.questions.map((faq) => (
-                      <FaqAccordion 
-                        key={faq.question} 
-                        question={faq.question} 
-                        answer={faq.answer} 
-                      />
-                    ))}
+              <li key={category.categoryTitle}>
+                <Reveal delay={index * 0.1}>
+                  <div className="rounded-3xl border border-brand-cream/50 bg-white p-6 shadow-sm sm:p-10 transition-shadow hover:shadow-md">
+                    <h3 className="mb-6 text-2xl font-bold text-brand-red">
+                      {category.categoryTitle}
+                    </h3>
+                    <ul className="flex flex-col">
+                      {category.questions.map((faq) => (
+                        <li key={faq.question}>
+                          <FaqAccordion 
+                            question={faq.question} 
+                            answer={faq.answer} 
+                          />
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                </div>
-              </Reveal>
+                </Reveal>
+              </li>
             ))}
-          </div>
+          </ul>
         </Container>
       </section>
 
@@ -198,36 +205,19 @@ export default function FaqPage() {
             </div>
           </Reveal>
 
-          <div className="mb-12">
+          {/* DYNAMIC EXPANDABLE LOCATIONS GRID */}
+          <div className="mb-16 border-t border-brand-cream pt-12">
             <Reveal delay={0.1}>
               <h3 className="text-2xl font-extrabold text-brand-ink text-center mb-8">
                 Communities We Proudly Serve
               </h3>
             </Reveal>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 text-center">
-              {[
-                { city: "San Jose", term: "home care in San Jose", slug: "san-jose" },
-                { city: "San Mateo", term: "home care in San Mateo", slug: "san-mateo" },
-                { city: "Palo Alto", term: "home care in Palo Alto", slug: "palo-alto" },
-                { city: "San Francisco", term: "home care in San Francisco", slug: "san-francisco" },
-                { city: "Milpitas", term: "home care in Milpitas", slug: "milpitas" },
-                { city: "Los Gatos", term: "home care in Los Gatos", slug: "los-gatos" },
-                { city: "Santa Rosa", term: "home care in Santa Rosa", slug: "santa-rosa" },
-                { city: "Santa Clara", term: "home care in Santa Clara", slug: "santa-clara" },
-                { city: "Pleasanton", term: "home care in Pleasanton", slug: "pleasanton" },
-                { city: "Mountain View", term: "home care in Mountain View", slug: "mountain-view" }
-              ].map((loc, idx) => (
-                <Reveal key={loc.city} delay={idx * 0.05}>
-                  <Link href={`/locations/${loc.slug}`} className="block rounded-2xl border border-brand-cream bg-white p-4 shadow-sm transition-all hover:-translate-y-1 hover:border-brand-gold hover:shadow-md">
-                    <span className="font-bold text-brand-ink block text-sm mb-1">{loc.city}</span>
-                    <span className="text-[10px] uppercase tracking-wider text-muted block">{loc.term}</span>
-                  </Link>
-                </Reveal>
-              ))}
-            </div>
+            
+            {/* Passes ALL service areas (30+ items) into the DOM for maximum SEO internal backlinks */}
+            <ExpandableLocations locations={serviceAreas} />
           </div>
 
-          <Reveal delay={0.2}>
+          <Reveal delay={0.3}>
             <div className="rounded-3xl bg-white p-8 border border-brand-cream shadow-sm text-center max-w-4xl mx-auto">
               <p className="text-muted leading-relaxed">
                 Our mission is to elevate the standard of <strong>Home care in Bay area</strong> communities. Whether your family requires temporary respite care, daily assistance with activities of daily living, or specialized 24/7 care, our team is equipped to deliver. Experience the difference of premium <strong>at home senior care</strong> designed to keep your loved ones thriving in the comfort of their own home.
@@ -244,7 +234,7 @@ export default function FaqPage() {
             
             {/* Scaled-down Gold Speech Bubble Icon */}
             <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-brand-gold text-brand-red-dark shadow-lg">
-               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="h-6 w-6" aria-hidden="true">
+               <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="h-6 w-6" aria-hidden="true">
                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z" />
                </svg>
             </div>
@@ -276,13 +266,13 @@ export default function FaqPage() {
               <p className="mb-4 text-xs font-bold uppercase tracking-widest text-white/90">
                 Serving Seniors Across San Jose & the Bay Area
               </p>
-              <div className="flex flex-col items-center justify-center gap-2 text-xs font-bold uppercase tracking-widest text-brand-gold sm:flex-row sm:gap-4 md:text-sm">
-                <span>Compassionate Care.</span>
-                <span className="hidden opacity-50 sm:inline">•</span>
-                <span>Trusted Support.</span>
-                <span className="hidden opacity-50 sm:inline">•</span>
-                <span>Peace of Mind.</span>
-              </div>
+              <ul className="flex flex-col items-center justify-center gap-2 text-xs font-bold uppercase tracking-widest text-brand-gold sm:flex-row sm:gap-4 md:text-sm">
+                <li>Compassionate Care.</li>
+                <li className="hidden opacity-50 sm:inline" aria-hidden="true">•</li>
+                <li>Trusted Support.</li>
+                <li className="hidden opacity-50 sm:inline" aria-hidden="true">•</li>
+                <li>Peace of Mind.</li>
+              </ul>
             </div>
           </Reveal>
         </Container>

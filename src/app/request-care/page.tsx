@@ -4,6 +4,8 @@ import Image from "next/image";
 import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
 import { contactInfo, homeCallouts } from "@/data/global";
+import { ExpandableLocations } from "@/components/ExpandableLists";
+import { serviceAreas } from "@/data/locations";
 import { 
   requestCareHero, 
   requestCareIntro, 
@@ -27,13 +29,15 @@ export default function RequestCarePage() {
         
         {/* Background Image Container */}
         <div className="absolute inset-0 z-0">
+          {/* SEO Fix: Removed fill, added explicit dimensions & priority */}
           <Image 
             src={requestCareHero.bannerImage}
             alt="Request In-Home Care Services"
-            fill 
-            className="object-cover object-center"
-            sizes="100vw"
+            width={1926}
+            height={816}
             priority
+            className="absolute inset-0 w-full h-full object-cover object-center"
+            sizes="100vw"
           />
           
           {/* Smooth Left-to-Right White Fade Overlay */}
@@ -148,7 +152,8 @@ export default function RequestCarePage() {
 
               <button type="button" className="group inline-flex w-full items-center justify-center gap-3 rounded-full bg-brand-red px-8 py-4 text-sm font-bold uppercase tracking-wide text-white shadow-[0_8px_30px_rgb(255,49,49,0.2)] transition-all hover:-translate-y-1 hover:bg-brand-red-dark hover:shadow-[0_8px_30px_rgb(199,36,57,0.3)] sm:w-auto">
                 <span>Submit Request</span>
-                <svg className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                {/* SEO Fix: Added explicit SVG dimensions */}
+                <svg width={20} height={20} className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
               </button>
@@ -169,20 +174,20 @@ export default function RequestCarePage() {
                   Need immediate assistance or have urgent placement needs? Our care team is available 24/7.
                 </p>
                 
-                <div className="space-y-6">
-                  <div className="group">
+                <ul className="space-y-6">
+                  <li className="group">
                     <p className="text-xs font-bold uppercase tracking-widest text-brand-red">Phone</p>
                     <a href={contactInfo.phoneHref} className="mt-1 block text-2xl font-black tracking-tight text-brand-ink transition-colors group-hover:text-brand-red lg:text-3xl">
                       {contactInfo.phone}
                     </a>
-                  </div>
-                  <div className="group">
+                  </li>
+                  <li className="group">
                     <p className="text-xs font-bold uppercase tracking-widest text-brand-red">Email</p>
                     <a href={`mailto:${contactInfo.email}`} className="mt-1 block text-lg font-medium text-brand-ink transition-colors group-hover:text-brand-red">
                       {contactInfo.email}
                     </a>
-                  </div>
-                </div>
+                  </li>
+                </ul>
               </div>
             </div>
           </Reveal>
@@ -206,36 +211,19 @@ export default function RequestCarePage() {
             </div>
           </Reveal>
 
-          <div className="mb-12">
+          {/* DYNAMIC EXPANDABLE LOCATIONS GRID */}
+          <div className="mb-16 border-t border-brand-cream pt-12">
             <Reveal delay={0.1}>
               <h3 className="text-2xl font-extrabold text-brand-ink text-center mb-8">
                 Communities We Proudly Serve
               </h3>
             </Reveal>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 text-center">
-              {[
-                { city: "San Jose", term: "home care in San Jose", slug: "san-jose" },
-                { city: "San Mateo", term: "home care in San Mateo", slug: "san-mateo" },
-                { city: "Palo Alto", term: "home care in Palo Alto", slug: "palo-alto" },
-                { city: "San Francisco", term: "home care in San Francisco", slug: "san-francisco" },
-                { city: "Milpitas", term: "home care in Milpitas", slug: "milpitas" },
-                { city: "Los Gatos", term: "home care in Los Gatos", slug: "los-gatos" },
-                { city: "Santa Rosa", term: "home care in Santa Rosa", slug: "santa-rosa" },
-                { city: "Santa Clara", term: "home care in Santa Clara", slug: "santa-clara" },
-                { city: "Pleasanton", term: "home care in Pleasanton", slug: "pleasanton" },
-                { city: "Mountain View", term: "home care in Mountain View", slug: "mountain-view" }
-              ].map((loc, idx) => (
-                <Reveal key={loc.city} delay={idx * 0.05}>
-                  <Link href={`/locations/${loc.slug}`} className="block rounded-2xl border border-brand-cream bg-white p-4 shadow-sm transition-all hover:-translate-y-1 hover:border-brand-gold hover:shadow-md">
-                    <span className="font-bold text-brand-ink block text-sm mb-1">{loc.city}</span>
-                    <span className="text-[10px] uppercase tracking-wider text-muted block">{loc.term}</span>
-                  </Link>
-                </Reveal>
-              ))}
-            </div>
+            
+            {/* Passes ALL service areas (30+ items) into the DOM for maximum SEO internal backlinks */}
+            <ExpandableLocations locations={serviceAreas} />
           </div>
 
-          <Reveal delay={0.2}>
+          <Reveal delay={0.3}>
             <div className="rounded-3xl bg-white p-8 border border-brand-cream shadow-sm text-center max-w-4xl mx-auto">
               <p className="text-muted leading-relaxed">
                 Our mission is to elevate the standard of <strong>Home care in Bay area</strong> communities. Whether your family requires temporary respite care, daily assistance with activities of daily living, or specialized 24/7 care, our team is equipped to deliver. Experience the difference of premium <strong>at home senior care</strong> designed to keep your loved ones thriving in the comfort of their own home.

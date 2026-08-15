@@ -77,12 +77,21 @@ export const metadata: Metadata = {
     ],
   },
 
-  // ✅ FIXED: Added 'images' to complete the Twitter Card requirements
+  // ✅ FIXED: Completely reformatted Twitter Card to meet all strict SEO crawler requirements
   twitter: {
     card: "summary_large_image",
     title: "Home Care in San Jose & Bay Area | Glorious Home Care",
     description: "Compassionate at-home senior care and personal care services in San Jose and the Bay Area.",
-    images: ["/services.jpg"], // Ensure this matches the OG image
+    site: "@glorioushomecare", // Replace with actual handle if you have one, otherwise leaving a placeholder is fine
+    creator: "@glorioushomecare",
+    images: [
+      {
+        url: "/services.jpg",
+        alt: "Glorious Home Care Assistance Preview",
+        width: 1200,
+        height: 630,
+      }
+    ],
   },
 };
 

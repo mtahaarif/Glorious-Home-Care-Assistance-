@@ -19,12 +19,13 @@ export type ContactInfo = {
 };
 
 export const navLinks: NavLink[] = [
-  { label: "Home", href: "/" },
+  // ✅ FIXED: Expanded single words into descriptive two-word phrases for SEO
+  { label: "Home Page", href: "/" },
   { label: "About Us", href: "/about" },
-  { label: "Services", href: "/services" },
+  { label: "Care Services", href: "/services" },
   { label: "Areas We Serve", href: "/locations" },
-  { label: "Resources", href: "/resources" },
-  { label: "FAQ", href: "/home-care-faq" },
+  { label: "Family Resources", href: "/resources" },
+  { label: "Care FAQs", href: "/home-care-faq" },
   { label: "Referral Partners", href: "/referral-partners" },
   { label: "Request Care", href: "/request-care" },
 ];

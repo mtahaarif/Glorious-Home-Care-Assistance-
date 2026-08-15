@@ -6,6 +6,8 @@ import Image from "next/image";
 import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
 import { contactInfo, homeCallouts } from "@/data/global";
+import {ExpandableLocations} from "@/components/ExpandableLists";
+import { serviceAreas } from "@/data/locations";
 import { 
   homeHero, 
   homeAbout, 
@@ -13,18 +15,6 @@ import {
   careComparison,
   privateDutyCare
 } from "@/data/home";
-import { sharedServiceContent } from "@/data/services";
-
-const HeartIcon = () => (
-  <svg
-    viewBox="0 0 24 24"
-    aria-hidden
-    className="h-4 w-4 text-brand-red"
-    fill="currentColor"
-  >
-    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 6 4 4 6.5 4c1.74 0 3.41.81 4.5 2.09C12.09 4.81 13.76 4 15.5 4 18 4 20 6 20 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-  </svg>
-);
 
 export default function Home() {
   
@@ -121,16 +111,17 @@ export default function Home() {
               key={src}
               src={src}
               alt={`Glorious Home Care Banner ${index + 1}`}
-              fill
+              width={1584}   
+              height={672}   
               priority={index === 0}
-              className={`object-cover object-center md:object-right transition-opacity duration-[2000ms] ease-in-out ${
+              className={`absolute inset-0 w-full h-full object-cover object-center md:object-right transition-opacity duration-[2000ms] ease-in-out ${
                 index === currentImageIndex ? "opacity-100" : "opacity-0"
               }`}
             />
           ))}
 
-          {/* Smooth Left-to-Right White Fade Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/30 to-transparent z-10 pointer-events-none" />
+          {/* ✅ FIXED: Added a slight white fade overlay from left to right */}
+          <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-r from-white/30 via-white/20 to-transparent" />
         </div>
         
         <Container className="relative z-20 w-full">
@@ -211,7 +202,7 @@ export default function Home() {
               className="group inline-flex items-center gap-3 text-sm font-bold uppercase tracking-widest text-brand-red-dark transition-colors hover:text-brand-red"
             >
               Know more about us
-              <svg className="h-5 w-5 transform transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg width={20} height={20} className="h-5 w-5 transform transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </Link>
@@ -239,7 +230,7 @@ export default function Home() {
                   href={contactInfo.phoneHref}
                   className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-[color:var(--brand-gold)] px-8 py-4 text-lg font-black tracking-wide text-brand-ink shadow-md transition-all hover:scale-[1.02] hover:bg-white"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6 text-brand-red-dark">
+                  <svg width={24} height={24} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6 text-brand-red-dark">
                      <path fillRule="evenodd" d="M1.5 4.5a3 3 0 013-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 01-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 006.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 011.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 01-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5z" clipRule="evenodd" />
                   </svg>
                   {contactInfo.phone}
@@ -278,7 +269,7 @@ export default function Home() {
                 <ul className="grid gap-4 sm:grid-cols-2">
                   {privateDutyCare.idealFor.items.map((item, i) => (
                     <li key={i} className="flex items-start gap-3 text-brand-ink font-medium">
-                      <svg className="h-6 w-6 shrink-0 text-brand-red mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg width={24} height={24} className="h-6 w-6 shrink-0 text-brand-red mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                       </svg>
                       {item}
@@ -456,65 +447,65 @@ export default function Home() {
                         <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-brand-cream text-brand-red transition-all duration-300 group-hover:scale-110 group-hover:bg-brand-red group-hover:text-white">
                           
                           {service.icon === "personal" && (
-                            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg width={24} height={24} className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM5 21a7 7 0 0114 0" />
                             </svg>
                           )}
                           {service.icon === "companionship" && (
-                            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg width={24} height={24} className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                             </svg>
                           )}
                           {service.icon === "dementia" && (
-                            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg width={24} height={24} className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.5 3a3.5 3.5 0 00-3.464 4H6a3 3 0 000 6h.036A3.5 3.5 0 0012 15.5a3.5 3.5 0 005.964-2.5H18a3 3 0 000-6h-.036A3.5 3.5 0 0014.5 3a3.48 3.48 0 00-2.5 1.05A3.48 3.48 0 009.5 3z" />
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 9h.01M15 9h.01M9.5 12.5a3.5 3.5 0 005 0" />
                             </svg>
                           )}
                           {service.icon === "respite" && (
-                            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg width={24} height={24} className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v18M5 7h14M5 17h14" />
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7l2 4-2 6M17 7l-2 4 2 6" />
                             </svg>
                           )}
                           {service.icon === "posthospital" && (
-                            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg width={24} height={24} className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5h14v14H5z" />
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v8M8 12h8" />
                             </svg>
                           )}
                           {service.icon === "24hour" && (
-                            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg width={24} height={24} className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <circle cx="12" cy="12" r="9" strokeWidth={2} />
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 7v5l3 2" />
                             </svg>
                           )}
                           {service.icon === "medication" && (
-                            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg width={24} height={24} className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 4h8a2 2 0 012 2v12a2 2 0 01-2 2H8a2 2 0 01-2-2V6a2 2 0 012-2z" />
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 8h6M9 12h6M9 16h3" />
                             </svg>
                           )}
                           {service.icon === "meal" && (
-                            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg width={24} height={24} className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 3v7a3 3 0 003 3h1V3M6 3v7M8 3v7M4 10h4" />
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v18M12 3c4 2 5 5 5 9v9" />
                             </svg>
                           )}
                           {service.icon === "housekeeping" && (
-                            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg width={24} height={24} className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 19h16M6 19l3-12h6l3 12M9 7l3-4 3 4" />
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6" />
                             </svg>
                           )}
                           {service.icon === "mobility" && (
-                            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg width={24} height={24} className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <circle cx="9" cy="5" r="2" strokeWidth={2} />
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 8v5l-3 5M9 11l4 3 4-1M6 18h8" />
                             </svg>
                           )}
                           {service.icon === "transit" && (
-                            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg width={24} height={24} className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 17h14l-1-8H6l-1 8z" />
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17v2M17 17v2M7 9l1-3h8l1 3" />
                               <circle cx="8" cy="14" r="1" />
@@ -522,19 +513,19 @@ export default function Home() {
                             </svg>
                           )}
                           {service.icon === "shortterm" && (
-                            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg width={24} height={24} className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <circle cx="12" cy="12" r="9" strokeWidth={2} />
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 7v5l3 2" />
                             </svg>
                           )}
                           {service.icon === "longterm" && (
-                            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg width={24} height={24} className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 21s-7-4.35-9-9a5 5 0 019-3 5 5 0 019 3c-2 4.65-9 9-9 9z" />
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v5M9.5 11.5h5" />
                             </svg>
                           )}
                           {service.icon === "customized" && (
-                            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg width={24} height={24} className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 3h10a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z" />
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 8h8M8 12h8M8 16h5" />
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 16l1.5 1.5L19 15" />
@@ -567,6 +558,7 @@ export default function Home() {
                   {showAllServices ? "Show Less Services" : "Show More Services"}
                 </span>
                 <svg
+                  width={16} height={16}
                   className={`h-4 w-4 transition-transform duration-300 ${
                     showAllServices ? "rotate-180" : ""
                   }`}
@@ -657,6 +649,7 @@ export default function Home() {
                   >
                     <span>Call For Guidance</span>
                     <svg
+                      width={20} height={20}
                       className="h-5 w-5 transition-transform group-hover:translate-x-1"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -708,36 +701,19 @@ export default function Home() {
             </div>
           </Reveal>
 
-          <div className="mb-12">
+          {/* DYNAMIC EXPANDABLE LOCATIONS GRID */}
+          <div className="mb-16 border-t border-brand-cream pt-12">
             <Reveal delay={0.1}>
               <h3 className="text-2xl font-extrabold text-brand-ink text-center mb-8">
                 Communities We Proudly Serve
               </h3>
             </Reveal>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 text-center">
-              {[
-                { city: "San Jose", term: "home care in San Jose", slug: "san-jose" },
-                { city: "San Mateo", term: "home care in San Mateo", slug: "san-mateo" },
-                { city: "Palo Alto", term: "home care in Palo Alto", slug: "palo-alto" },
-                { city: "San Francisco", term: "home care in San Francisco", slug: "san-francisco" },
-                { city: "Milpitas", term: "home care in Milpitas", slug: "milpitas" },
-                { city: "Los Gatos", term: "home care in Los Gatos", slug: "los-gatos" },
-                { city: "Santa Rosa", term: "home care in Santa Rosa", slug: "santa-rosa" },
-                { city: "Santa Clara", term: "home care in Santa Clara", slug: "santa-clara" },
-                { city: "Pleasanton", term: "home care in Pleasanton", slug: "pleasanton" },
-                { city: "Mountain View", term: "home care in Mountain View", slug: "mountain-view" }
-              ].map((loc, idx) => (
-                <Reveal key={loc.city} delay={idx * 0.05}>
-                  <Link href={`/locations/${loc.slug}`} className="block rounded-2xl border border-brand-cream bg-white p-4 shadow-sm transition-all hover:-translate-y-1 hover:border-brand-gold hover:shadow-md">
-                    <span className="font-bold text-brand-ink block text-sm mb-1">{loc.city}</span>
-                    <span className="text-[10px] uppercase tracking-wider text-muted block">{loc.term}</span>
-                  </Link>
-                </Reveal>
-              ))}
-            </div>
+            
+            {/* Passes ALL service areas (30+ items) into the DOM for maximum SEO internal backlinks */}
+            <ExpandableLocations locations={serviceAreas} />
           </div>
 
-          <Reveal delay={0.2}>
+          <Reveal delay={0.3}>
             <div className="rounded-3xl bg-white p-8 border border-brand-cream shadow-sm text-center max-w-4xl mx-auto">
               <p className="text-muted leading-relaxed">
                 Our mission is to elevate the standard of <strong>Home care in Bay area</strong> communities. Whether your family requires temporary respite care, daily assistance with activities of daily living, or specialized 24/7 care, our team is equipped to deliver. Experience the difference of premium <strong>at home senior care</strong> designed to keep your loved ones thriving in the comfort of their own home.
@@ -753,13 +729,14 @@ export default function Home() {
           <Reveal className="flex flex-col items-center">
             
             <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-brand-gold text-brand-red-dark shadow-lg">
-               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="h-6 w-6">
+               <svg width={24} height={24} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="h-6 w-6">
                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z" />
                </svg>
             </div>
 
-            <h2 className="mb-4 text-3xl font-extrabold leading-tight sm:text-4xl">
-              Let's Talk About<br />Your Loved One's Care Needs
+            {/* ✅ FIXED: Replaced <br /> with whitespace-pre-line and string interpolation to fix "H2 has other tags inside" error */}
+            <h2 className="mb-4 whitespace-pre-line text-3xl font-extrabold leading-tight sm:text-4xl">
+              {`Let's Talk About\nYour Loved One's Care Needs`}
             </h2>
             
             <p className="mb-8 max-w-xl text-base leading-relaxed text-white/90 sm:text-lg">

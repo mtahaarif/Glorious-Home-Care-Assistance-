@@ -8,6 +8,8 @@ import { locationsHero, serviceAreas } from "@/data/locations";
 import { sharedServiceContent } from "@/data/services"; 
 import { homeServices } from "@/data/home"; 
 import Image from "next/image"; 
+// Newly imported dynamic components
+import { ExpandableLocations, ExpandableResources } from "@/components/ExpandableLists";
 
 // 1. Generate static paths for all cities in our locations.ts data
 export function generateStaticParams() {
@@ -27,25 +29,35 @@ export async function generateMetadata({ params }: { params: Promise<{ city: str
     };
   }
 
-  // SEO Fix: Optimized Title length to be concise, compelling, and under ~60 chars.
   const dynamicTitle = `Home Care in ${area.name} | Senior Care At Home`;
   const optimizedTitle = dynamicTitle.length > 60 ? dynamicTitle.substring(0, 57) + "..." : dynamicTitle;
 
   return {
     title: optimizedTitle,
-    // SEO Fix: Pack the description with relevant local SEO keywords while keeping it within limits.
     description: `Trusted caregivers providing at home senior care, personal care, and daily living assistance in ${area.name}, San Jose, and the Bay Area.`,
   };
 }
+
+// Define the comprehensive resource list locally for injection
+const resourceArticles = [
+  { title: "Signs A Parent Needs Care", slug: "signs-parent-needs-home-care" },
+  { title: "Home Care Costs in San Jose", slug: "home-care-cost-san-jose" },
+  { title: "Choosing a Care Agency", slug: "how-to-choose-home-care-agency" },
+  { title: "Home Care vs. Home Health", slug: "home-care-vs-home-health" },
+  { title: "Respite Care Guide", slug: "respite-care-guide" },
+  { title: "After Hospital Discharge", slug: "after-hospital-discharge" },
+  { title: "Recovery at Home", slug: "recovery-at-home" },
+  { title: "Hospital to Home Checklist", slug: "hospital-to-home-checklist" },
+  { title: "Helping a Parent Live Safely", slug: "helping-parent-live-safely" },
+  { title: "Family Caregiver Burnout", slug: "family-caregiver-burnout" }
+];
 
 // 3. The Dynamic Page Component
 export default async function CityLocationPage({ params }: { params: Promise<{ city: string }> }) {
   const resolvedParams = await params;
   
-  // Find the current city data based on the URL slug
   const area = serviceAreas.find((a) => a.slug === resolvedParams.city);
 
-  // If someone types a random city URL that isn't in our array, show a 404
   if (!area) {
     notFound();
   }
@@ -60,10 +72,11 @@ export default async function CityLocationPage({ params }: { params: Promise<{ c
           <Image 
             src={locationsHero.bannerImage}
             alt={`${area.name} Home Care Services`}
-            fill 
-            className="object-cover object-right"
-            sizes="100vw"
+            width={1584}
+            height={672}
             priority
+            className="absolute inset-0 w-full h-full object-cover object-right"
+            sizes="100vw"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/30 to-transparent z-10 pointer-events-none" />
         </div>
@@ -71,7 +84,6 @@ export default async function CityLocationPage({ params }: { params: Promise<{ c
         <Container className="relative z-20 w-full">
           <div className="max-w-xl space-y-4">
             <Reveal delay={0.05}>
-              {/* SEO Fix: Keep one prominent, keyword-rich H1 per page */}
               <h1 className="text-3xl font-extrabold leading-tight text-brand-ink sm:text-4xl lg:text-5xl drop-shadow-sm">
                 In-Home Care Services in {area.name}, CA
               </h1>
@@ -110,7 +122,6 @@ export default async function CityLocationPage({ params }: { params: Promise<{ c
         <Container className="grid gap-12 py-16 md:grid-cols-[1fr_0.8fr] md:py-24">
           <Reveal className="space-y-6">
             
-            {/* SEO Fix: Explicitly structured H2 to avoid hidden/duplicate headings from sub-components */}
             <div>
               <div className="flex items-center gap-4 mb-2">
                 <span className="h-[2px] w-8 bg-brand-red"></span>
@@ -123,16 +134,12 @@ export default async function CityLocationPage({ params }: { params: Promise<{ c
               </h2>
             </div>
             
-            {/* Dynamically maps through the unique paragraphs defined in locations.ts */}
             {area.aboutBody?.map((paragraph, index) => {
-              // Automatically finds the city name in the paragraph and applies visual emphasis
               const parts = paragraph.split(new RegExp(`(${area.name})`, 'gi'));
-              
               return (
                 <p key={index} className="text-base leading-relaxed text-muted">
                   {parts.map((part, i) => 
                     part.toLowerCase() === area.name.toLowerCase() ? (
-                      // SEO Fix: Replaced strong tag with span classes to prevent over-optimization / duplicate tag warnings
                       <span key={i} className="font-semibold text-brand-ink">{part}</span>
                     ) : (
                       part
@@ -156,7 +163,6 @@ export default async function CityLocationPage({ params }: { params: Promise<{ c
               <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-brand-cream/60 blur-3xl"></div>
 
               <div className="relative z-10 flex flex-col h-full">
-                {/* SEO Fix: Changed h2/h4 styling elements to simple divs so we don't spam search engines with generic headings */}
                 <div className="text-sm font-bold uppercase tracking-[0.2em] text-brand-red">
                   Local Care Coordination
                 </div>
@@ -172,10 +178,10 @@ export default async function CityLocationPage({ params }: { params: Promise<{ c
                 
                 <Link
                   href={contactInfo.phoneHref}
-                  aria-label={`Call us at ${contactInfo.phone}`}
+                  aria-label={`Call our service coordinators at ${contactInfo.phone}`}
                   className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-[color:var(--brand-gold)] px-8 py-4 text-lg font-black tracking-wide text-brand-ink shadow-md transition-all hover:scale-[1.02] hover:bg-white"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6 text-brand-red-dark" aria-hidden="true">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={24} height={24} fill="currentColor" className="h-6 w-6 text-brand-red-dark" aria-hidden="true">
                      <path fillRule="evenodd" d="M1.5 4.5a3 3 0 013-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 01-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 006.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 011.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 01-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5z" clipRule="evenodd" />
                   </svg>
                   {contactInfo.phone}
@@ -211,83 +217,83 @@ export default async function CityLocationPage({ params }: { params: Promise<{ c
           <div className="relative mt-8 flex overflow-hidden ticker-wrapper">
             <div className="flex w-max animate-infinite-scroll gap-6 px-3">
               
-              {/* Primary Original Track */}
-              <div className="flex gap-6 pr-6">
+              <ul className="flex gap-6 pr-6">
                 {homeServices.services.map((service, index) => (
-                  <Link 
-                    href="/services"
-                    key={`original-${index}`} 
-                    aria-label={`View ${service.title} services`}
-                    className="w-[320px] sm:w-[380px] shrink-0 flex flex-col rounded-3xl bg-white border border-brand-cream/50 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-2 group/card overflow-hidden"
-                  >
-                    <div className="relative h-[220px] w-full overflow-hidden bg-brand-cream shrink-0">
-                      {service.image && (
-                        <Image 
-                          src={service.image}
-                          alt={`${service.title} in ${area.name}`}
-                          fill
-                          sizes="(max-width: 768px) 320px, 380px"
-                          className="object-cover transition-transform duration-700 group-hover/card:scale-110"
-                        />
-                      )}
-                      <div className="absolute inset-0 bg-brand-ink/10 group-hover/card:bg-transparent transition-colors duration-300"></div>
-                    </div>
-                    
-                    <div className="p-8 flex flex-col flex-grow">
-                      <h3 className="text-xl font-bold text-brand-ink mb-3 group-hover/card:text-brand-red transition-colors">
-                        {service.title}
-                      </h3>
-                      <p className="text-muted leading-relaxed mb-6 flex-grow">
-                        {service.description}
-                      </p>
-                      <div className="flex items-center gap-2 text-brand-red-dark font-bold text-sm uppercase tracking-wider mt-auto group-hover/card:text-brand-red transition-colors">
-                        Learn More
-                        <svg className="w-5 h-5 transform transition-transform group-hover/card:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                        </svg>
+                  <li key={`original-${index}`} className="shrink-0 flex">
+                    <Link 
+                      href="/services"
+                      aria-label={`View ${service.title} services`}
+                      className="w-[320px] sm:w-[380px] flex flex-col rounded-3xl bg-white border border-brand-cream/50 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-2 group/card overflow-hidden"
+                    >
+                      <div className="relative h-[220px] w-full overflow-hidden bg-brand-cream shrink-0">
+                        {service.image && (
+                          <Image 
+                            src={service.image}
+                            alt={`${service.title} in ${area.name}`}
+                            width={380}
+                            height={220}
+                            sizes="(max-width: 768px) 320px, 380px"
+                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover/card:scale-110"
+                          />
+                        )}
+                        <div className="absolute inset-0 bg-brand-ink/10 group-hover/card:bg-transparent transition-colors duration-300"></div>
                       </div>
-                    </div>
-                  </Link>
+                      
+                      <div className="p-8 flex flex-col flex-grow">
+                        <h3 className="text-xl font-bold text-brand-ink mb-3 group-hover/card:text-brand-red transition-colors">
+                          {service.title}
+                        </h3>
+                        <p className="text-muted leading-relaxed mb-6 flex-grow">
+                          {service.description}
+                        </p>
+                        <div className="flex items-center gap-2 text-brand-red-dark font-bold text-sm uppercase tracking-wider mt-auto group-hover/card:text-brand-red transition-colors">
+                          Learn More
+                          <svg className="w-5 h-5 transform transition-transform group-hover/card:translate-x-1" width={20} height={20} fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                          </svg>
+                        </div>
+                      </div>
+                    </Link>
+                  </li>
                 ))}
-              </div>
+              </ul>
 
-              {/* SEO Fix: Clone Track for Animation, hidden from screen-readers and avoids link duplicate penalties */}
-              <div className="flex gap-6 pr-6" aria-hidden="true">
+              <ul className="flex gap-6 pr-6" aria-hidden="true">
                 {homeServices.services.map((service, index) => (
-                  <div 
-                    key={`clone-${index}`} 
-                    className="w-[320px] sm:w-[380px] shrink-0 flex flex-col rounded-3xl bg-white border border-brand-cream/50 shadow-sm overflow-hidden"
-                  >
-                    <div className="relative h-[220px] w-full overflow-hidden bg-brand-cream shrink-0">
-                      {service.image && (
-                        <Image 
-                          src={service.image}
-                          alt={`${service.title} in ${area.name}`}
-                          fill
-                          sizes="(max-width: 768px) 320px, 380px"
-                          className="object-cover"
-                        />
-                      )}
-                      <div className="absolute inset-0 bg-brand-ink/10"></div>
-                    </div>
-                    
-                    <div className="p-8 flex flex-col flex-grow">
-                      <div className="text-xl font-bold text-brand-ink mb-3">
-                        {service.title}
+                  <li key={`clone-${index}`} className="shrink-0 flex">
+                    <div className="w-[320px] sm:w-[380px] flex flex-col rounded-3xl bg-white border border-brand-cream/50 shadow-sm overflow-hidden">
+                      <div className="relative h-[220px] w-full overflow-hidden bg-brand-cream shrink-0">
+                        {service.image && (
+                          <Image 
+                            src={service.image}
+                            alt={`${service.title} care options in ${area.name}`}
+                            width={380}
+                            height={220}
+                            sizes="(max-width: 768px) 320px, 380px"
+                            className="absolute inset-0 w-full h-full object-cover"
+                          />
+                        )}
+                        <div className="absolute inset-0 bg-brand-ink/10"></div>
                       </div>
-                      <p className="text-muted leading-relaxed mb-6 flex-grow">
-                        {service.description}
-                      </p>
-                      <div className="flex items-center gap-2 text-brand-red-dark font-bold text-sm uppercase tracking-wider mt-auto">
-                        Learn More
-                        <svg className="w-5 h-5 transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                        </svg>
+                      
+                      <div className="p-8 flex flex-col flex-grow">
+                        <div className="text-xl font-bold text-brand-ink mb-3">
+                          {service.title}
+                        </div>
+                        <p className="text-muted leading-relaxed mb-6 flex-grow">
+                          {service.description}
+                        </p>
+                        <div className="flex items-center gap-2 text-brand-red-dark font-bold text-sm uppercase tracking-wider mt-auto">
+                          Learn More
+                          <svg className="w-5 h-5 transform" width={20} height={20} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                          </svg>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </li>
                 ))}
-              </div>
+              </ul>
 
             </div>
           </div>       
@@ -322,36 +328,31 @@ export default async function CityLocationPage({ params }: { params: Promise<{ c
             </div>
           </Reveal>
 
-          <div className="mb-12">
+          {/* DYNAMIC EXPANDABLE LOCATIONS GRID */}
+          <div className="mb-16 border-t border-brand-cream pt-12">
             <Reveal delay={0.1}>
               <h3 className="text-2xl font-extrabold text-brand-ink text-center mb-8">
                 Communities We Proudly Serve
               </h3>
             </Reveal>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 text-center">
-              {[
-                { city: "San Jose", term: "home care in San Jose", slug: "san-jose" },
-                { city: "San Mateo", term: "home care in San Mateo", slug: "san-mateo" },
-                { city: "Palo Alto", term: "home care in Palo Alto", slug: "palo-alto" },
-                { city: "San Francisco", term: "home care in San Francisco", slug: "san-francisco" },
-                { city: "Milpitas", term: "home care in Milpitas", slug: "milpitas" },
-                { city: "Los Gatos", term: "home care in Los Gatos", slug: "los-gatos" },
-                { city: "Santa Rosa", term: "home care in Santa Rosa", slug: "santa-rosa" },
-                { city: "Santa Clara", term: "home care in Santa Clara", slug: "santa-clara" },
-                { city: "Pleasanton", term: "home care in Pleasanton", slug: "pleasanton" },
-                { city: "Mountain View", term: "home care in Mountain View", slug: "mountain-view" }
-              ].map((loc, idx) => (
-                <Reveal key={loc.city} delay={idx * 0.05}>
-                  <Link href={`/locations/${loc.slug}`} className="block rounded-2xl border border-brand-cream bg-white p-4 shadow-sm transition-all hover:-translate-y-1 hover:border-brand-gold hover:shadow-md">
-                    <span className="font-bold text-brand-ink block text-sm mb-1">{loc.city}</span>
-                    <span className="text-[10px] uppercase tracking-wider text-muted block">{loc.term}</span>
-                  </Link>
-                </Reveal>
-              ))}
-            </div>
+            
+            {/* Passes ALL service areas (30+ items) into the DOM for maximum SEO internal backlinks */}
+            <ExpandableLocations locations={serviceAreas} />
           </div>
 
-          <Reveal delay={0.2}>
+          {/* DYNAMIC EXPANDABLE RESOURCES PILLS */}
+          <div className="mb-16 border-t border-brand-cream pt-12">
+            <Reveal delay={0.2}>
+              <h3 className="text-2xl font-extrabold text-brand-ink text-center mb-8">
+                Helpful Home Care Resources
+              </h3>
+            </Reveal>
+            
+            {/* Passes ALL resources into the DOM for maximum SEO internal backlinks */}
+            <ExpandableResources resources={resourceArticles} />
+          </div>
+
+          <Reveal delay={0.3}>
             <div className="rounded-3xl bg-white p-8 border border-brand-cream shadow-sm text-center max-w-4xl mx-auto">
               <p className="text-muted leading-relaxed">
                 Our mission is to elevate the standard of <strong>Home care in Bay area</strong> communities. Whether your family requires temporary respite care, daily assistance with activities of daily living, or specialized 24/7 care, our team is equipped to deliver. Experience the difference of premium <strong>at home senior care</strong> designed to keep your loved ones thriving in the comfort of their own home.
@@ -365,7 +366,6 @@ export default async function CityLocationPage({ params }: { params: Promise<{ c
       <section className="bg-brand-red-dark py-10 text-center text-white md:py-10">
         <Container className="max-w-3xl">
           <Reveal className="space-y-4">
-            {/* SEO Fix: Converted to a styled div to prevent generic/duplicate headings across pages */}
             <div className="whitespace-pre-line text-4xl font-bold leading-tight sm:text-5xl">
               {sharedServiceContent.bottomCta.message}
             </div>

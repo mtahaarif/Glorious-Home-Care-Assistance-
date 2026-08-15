@@ -99,64 +99,70 @@ export default function LocationsDirectory() {
         <h3 className="text-[0.65rem] font-black uppercase tracking-[0.2em] text-[color:var(--brand-ink)]/50 mb-6 pl-4">
           Service Districts
         </h3>
-        <nav className="flex flex-col gap-2 relative border-l-2 border-black/5 pl-4">
-          {groupedRegions.map((region) => {
-            const isActive = activeSection === region.id;
-            return (
+        
+        <nav>
+          <ul className="flex flex-col gap-2 relative border-l-2 border-black/5 pl-4">
+            {groupedRegions.map((region) => {
+              const isActive = activeSection === region.id;
+              return (
+                <li key={region.id}>
+                  <a 
+                    href={`#${region.id}`}
+                    onClick={(e) => scrollToSection(e, region.id)}
+                    className={`group relative flex items-center justify-between py-4 pr-4 pl-6 rounded-r-2xl transition-all duration-500 ease-out overflow-hidden ${
+                      isActive 
+                        ? "bg-[color:var(--brand-red-dark)] text-white shadow-lg translate-x-2" 
+                        : "bg-transparent text-[color:var(--brand-ink)]/70 hover:bg-white hover:shadow-sm"
+                    }`}
+                  >
+                    {/* Active Indicator Line */}
+                    {isActive && (
+                      <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-[color:var(--brand-gold)]" />
+                    )}
+                    
+                    <span className={`font-bold transition-colors duration-300 text-sm sm:text-base ${
+                      isActive ? "text-white" : "group-hover:text-[color:var(--brand-red-dark)]"
+                    }`}>
+                      {region.name}
+                    </span>
+                    
+                    <span className={`text-xs font-bold transition-all duration-300 ${
+                      isActive ? "opacity-100 text-[color:var(--brand-gold)]" : "opacity-0 -translate-x-4"
+                    }`}>
+                      {region.cities.length} Areas
+                    </span>
+                  </a>
+                </li>
+              );
+            })}
+            
+            {/* Extended Counties Tab */}
+            <li className="mt-4">
               <a 
-                key={region.id} 
-                href={`#${region.id}`}
-                onClick={(e) => scrollToSection(e, region.id)}
+                href="#extended-regions"
+                onClick={(e) => scrollToSection(e, "extended-regions")}
                 className={`group relative flex items-center justify-between py-4 pr-4 pl-6 rounded-r-2xl transition-all duration-500 ease-out overflow-hidden ${
-                  isActive 
+                  activeSection === "extended-regions" 
                     ? "bg-[color:var(--brand-red-dark)] text-white shadow-lg translate-x-2" 
                     : "bg-transparent text-[color:var(--brand-ink)]/70 hover:bg-white hover:shadow-sm"
                 }`}
               >
-                {/* Active Indicator Line */}
-                {isActive && (
+                {activeSection === "extended-regions" && (
                   <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-[color:var(--brand-gold)]" />
                 )}
-                
                 <span className={`font-bold transition-colors duration-300 text-sm sm:text-base ${
-                  isActive ? "text-white" : "group-hover:text-[color:var(--brand-red-dark)]"
+                  activeSection === "extended-regions" ? "text-white" : "group-hover:text-[color:var(--brand-red-dark)]"
                 }`}>
-                  {region.name}
+                  Extended Coverage
                 </span>
-                
-                <span className={`text-xs font-bold transition-all duration-300 ${
-                  isActive ? "opacity-100 text-[color:var(--brand-gold)]" : "opacity-0 -translate-x-4"
+                <span className={`transition-transform duration-300 ${
+                  activeSection === "extended-regions" ? "text-[color:var(--brand-gold)] translate-x-0" : "text-[color:var(--brand-ink)]/30 group-hover:text-[color:var(--brand-gold)] -translate-x-2"
                 }`}>
-                  {region.cities.length} Areas
+                  &darr;
                 </span>
               </a>
-            );
-          })}
-          
-          {/* Extended Counties Tab */}
-          <a 
-            href="#extended-regions"
-            onClick={(e) => scrollToSection(e, "extended-regions")}
-            className={`group relative flex items-center justify-between py-4 pr-4 pl-6 rounded-r-2xl transition-all duration-500 ease-out overflow-hidden mt-4 ${
-              activeSection === "extended-regions" 
-                ? "bg-[color:var(--brand-red-dark)] text-white shadow-lg translate-x-2" 
-                : "bg-transparent text-[color:var(--brand-ink)]/70 hover:bg-white hover:shadow-sm"
-            }`}
-          >
-            {activeSection === "extended-regions" && (
-              <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-[color:var(--brand-gold)]" />
-            )}
-            <span className={`font-bold transition-colors duration-300 text-sm sm:text-base ${
-              activeSection === "extended-regions" ? "text-white" : "group-hover:text-[color:var(--brand-red-dark)]"
-            }`}>
-              Extended Coverage
-            </span>
-            <span className={`transition-transform duration-300 ${
-              activeSection === "extended-regions" ? "text-[color:var(--brand-gold)] translate-x-0" : "text-[color:var(--brand-ink)]/30 group-hover:text-[color:var(--brand-gold)] -translate-x-2"
-            }`}>
-              &darr;
-            </span>
-          </a>
+            </li>
+          </ul>
         </nav>
       </aside>
 
@@ -205,48 +211,50 @@ export default function LocationsDirectory() {
             {/* =========================
                 CITY CARDS
                 ========================= */}
-            <div className="mt-10 grid gap-5 sm:grid-cols-2">
+            <ul className="mt-10 grid gap-5 sm:grid-cols-2">
 
               {region.cities.map((area, index) => (
-                <Reveal key={area.slug} delay={index * 0.05}>
+                <li key={area.slug}>
+                  <Reveal delay={index * 0.05}>
 
-                  <Link
-                    href={`/locations/${area.slug}`}
-                    className="group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl bg-white p-8 border border-black/5 shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(199,36,57,0.15)] hover:border-[color:var(--brand-red)]/30"
-                  >
+                    <Link
+                      href={`/locations/${area.slug}`}
+                      className="group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl bg-white p-8 border border-black/5 shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(199,36,57,0.15)] hover:border-[color:var(--brand-red)]/30"
+                    >
 
-                    {/* Top Section */}
-                    <div className="flex items-start justify-between mb-8">
+                      {/* Top Section */}
+                      <div className="flex items-start justify-between mb-8">
 
-                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[color:var(--brand-cream)] text-[color:var(--brand-gold-dark)] group-hover:bg-[color:var(--brand-red)] group-hover:text-white transition-colors duration-500 shadow-inner">
-                        <MapPinIcon />
+                        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[color:var(--brand-cream)] text-[color:var(--brand-gold-dark)] group-hover:bg-[color:var(--brand-red)] group-hover:text-white transition-colors duration-500 shadow-inner">
+                          <MapPinIcon />
+                        </div>
+
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black/5 text-[color:var(--brand-ink)]/40 group-hover:bg-[color:var(--brand-gold)] group-hover:text-white transition-all duration-500 group-hover:rotate-45">
+                          <DiagonalArrowIcon />
+                        </div>
+
                       </div>
 
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black/5 text-[color:var(--brand-ink)]/40 group-hover:bg-[color:var(--brand-gold)] group-hover:text-white transition-all duration-500 group-hover:rotate-45">
-                        <DiagonalArrowIcon />
+                      {/* Bottom Section */}
+                      <div>
+
+                        <h3 className="text-2xl font-bold text-[color:var(--brand-ink)] group-hover:text-[color:var(--brand-red-dark)] transition-colors duration-300">
+                          {area.name}, CA
+                        </h3>
+
+                        <p className="mt-3 text-sm leading-relaxed text-[color:var(--brand-ink)]/60 line-clamp-2">
+                          {area.description}
+                        </p>
+
                       </div>
 
-                    </div>
+                    </Link>
 
-                    {/* Bottom Section */}
-                    <div>
-
-                      <h3 className="text-2xl font-bold text-[color:var(--brand-ink)] group-hover:text-[color:var(--brand-red-dark)] transition-colors duration-300">
-                        {area.name}, CA
-                      </h3>
-
-                      <p className="mt-3 text-sm leading-relaxed text-[color:var(--brand-ink)]/60 line-clamp-2">
-                        {area.description}
-                      </p>
-
-                    </div>
-
-                  </Link>
-
-                </Reveal>
+                  </Reveal>
+                </li>
               ))}
 
-            </div>
+            </ul>
 
 
             {/* Divider */}
@@ -274,19 +282,21 @@ export default function LocationsDirectory() {
             </p>
           </Reveal>
 
-          <div className="mt-10 flex flex-wrap gap-3">
+          <ul className="mt-10 flex flex-wrap gap-3">
             {extendedCounties.map((county, idx) => (
-              <Reveal key={county} delay={idx * 0.03}>
-                <div className="group flex cursor-default items-center gap-2.5 rounded-full border border-[color:var(--brand-gold)]/30 bg-[color:var(--brand-cream)]/50 px-6 py-3 transition-all duration-300 hover:-translate-y-1 hover:bg-[color:var(--brand-red-dark)] hover:border-[color:var(--brand-red-dark)] hover:shadow-md">
-                  <div className="h-2 w-2 rounded-full bg-[color:var(--brand-gold)] group-hover:bg-white transition-colors" />
+              <li key={county}>
+                <Reveal delay={idx * 0.03}>
+                  <div className="group flex cursor-default items-center gap-2.5 rounded-full border border-[color:var(--brand-gold)]/30 bg-[color:var(--brand-cream)]/50 px-6 py-3 transition-all duration-300 hover:-translate-y-1 hover:bg-[color:var(--brand-red-dark)] hover:border-[color:var(--brand-red-dark)] hover:shadow-md">
+                    <div className="h-2 w-2 rounded-full bg-[color:var(--brand-gold)] group-hover:bg-white transition-colors" />
 
-                  <span className="text-sm font-bold text-[color:var(--brand-ink)] group-hover:text-white transition-colors">
-                    {county}
-                  </span>
-                </div>
-              </Reveal>
+                    <span className="text-sm font-bold text-[color:var(--brand-ink)] group-hover:text-white transition-colors">
+                      {county}
+                    </span>
+                  </div>
+                </Reveal>
+              </li>
             ))}
-          </div>
+          </ul>
 
         </div>
 

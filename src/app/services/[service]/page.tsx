@@ -4,6 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 
 import Container from "@/components/Container";
+import {ExpandableLocations} from "@/components/ExpandableLists";
+import { serviceAreas } from "@/data/locations";
 import Reveal from "@/components/Reveal";
 
 import { contactInfo, homeCallouts } from "@/data/global";
@@ -29,6 +31,8 @@ type IconProps = {
 const HeartIcon = ({ className = "h-10 w-10" }: IconProps) => (
   <svg
     className={className}
+    width={40}   // <-- Added explicit width
+    height={40}  // <-- Added explicit height
     fill="currentColor"
     viewBox="0 0 24 24"
     aria-hidden="true"
@@ -51,8 +55,11 @@ const ServiceItemIcon = ({
   icon: string;
   className?: string;
 }) => {
+  // ✅ FIXED: Added width and height directly to commonProps so all icons inherit it!
   const commonProps = {
     className,
+    width: 24,   // <-- Added explicit width
+    height: 24,  // <-- Added explicit height
     fill: "none",
     viewBox: "0 0 24 24",
     stroke: "currentColor",
@@ -891,7 +898,7 @@ const ServiceItemIcon = ({
       );
 
     /* ---------------------------------------------------------------------- */
-    /* FALLBACK                                                              */
+    /* FALLBACK                                                               */
     /* ---------------------------------------------------------------------- */
 
     default:
@@ -983,13 +990,15 @@ export default async function ServiceDetailPage({
         
         {/* Background Image Container */}
         <div className="absolute inset-0 z-0">
+          {/* ✅ FIXED: Removed fill, added explicit width/height + priority */}
           <Image 
             src={bannerImage}
             alt={`${title} Services in San Jose & The Bay Area`}
-            fill 
-            className="object-cover object-center"
-            sizes="100vw"
+            width={1584}
+            height={672}
             priority
+            className="absolute inset-0 w-full h-full object-cover object-center"
+            sizes="100vw"
           />
           
           {/* Smooth Left-to-Right White Fade Overlay */}
@@ -1034,20 +1043,15 @@ export default async function ServiceDetailPage({
       </section>
 
       {/* ------------------------------------------------------------------ */}
-      {/* 2. INTRODUCTION                                                    */}
+      {/* 2. INTRODUCTION                                                      */}
       {/* ------------------------------------------------------------------ */}
 
       <section className="bg-background pb-10 pt-16 md:pb-14 md:pt-24">
         <Container className="max-w-4xl text-center">
           <Reveal className="space-y-6">
-            <h2 className="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
-              <span className="block text-brand-red-dark">
-                {pageData.heading1.line1}
-              </span>
-
-              <span className="block text-brand-red">
-                {pageData.heading1.line2}
-              </span>
+            {/* ✅ FIXED: Removed <span> tags from inside the <h2> to fix SEO structural warnings. Used string interpolation and whitespace-pre-line CSS instead. */}
+            <h2 className="whitespace-pre-line text-4xl font-extrabold tracking-tight text-brand-red-dark sm:text-5xl lg:text-6xl">
+              {`${pageData.heading1.line1}\n${pageData.heading1.line2}`}
             </h2>
 
             <p className="mx-auto max-w-2xl text-lg font-medium leading-relaxed text-brand-red sm:text-xl">
@@ -1058,13 +1062,13 @@ export default async function ServiceDetailPage({
       </section>
 
       {/* ------------------------------------------------------------------ */}
-      {/* 3. SERVICE FEATURES / BENTO                                        */}
+      {/* 3. SERVICE FEATURES / BENTO                                          */}
       {/* ------------------------------------------------------------------ */}
 
       <section className="bg-background pb-16 md:pb-24">
         <Container className="max-w-6xl">
           <Reveal>
-            <div className="grid grid-flow-dense grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4 md:gap-6">
+            <ul className="grid grid-flow-dense grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4 md:gap-6">
               {pageData.bentoBox.items.map(
                 (item: ServiceItem, index: number, array: ServiceItem[]) => {
                   const totalItems = array.length;
@@ -1109,7 +1113,7 @@ export default async function ServiceDetailPage({
                   }
 
                   return (
-                    <div
+                    <li
                       key={`${item.icon}-${index}`}
                       className={`
                         group relative flex cursor-default flex-col justify-between
@@ -1190,11 +1194,11 @@ export default async function ServiceDetailPage({
                       >
                         {item.title}
                       </h3>
-                    </div>
+                    </li>
                   );
                 },
               )}
-            </div>
+            </ul>
 
             {pageData.bentoBox.disclaimer && (
               <p className="mx-auto mt-8 max-w-2xl text-center text-xs font-medium italic leading-relaxed text-muted md:mt-12 md:text-sm">
@@ -1225,7 +1229,6 @@ export default async function ServiceDetailPage({
         {/* Marquee heading */}
         <Container>
           <Reveal className="mb-12 mt-16 text-center md:mb-20 md:mt-20">
-            {/* SEO Fix: Used a div instead of an h3 to avoid duplicated/diluted heading structure */}
             <div className="text-xl font-bold uppercase tracking-[0.15em] text-brand-ink/50 sm:text-2xl md:text-3xl">
               {sharedServiceContent.areaHeading.replace(/\n/g, " ")}
             </div>
@@ -1238,9 +1241,9 @@ export default async function ServiceDetailPage({
           <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-20 bg-gradient-to-r from-white to-transparent sm:w-40 md:w-56" />
 
           {/* Track 1 */}
-          <div className="flex shrink-0 animate-service-marquee items-center gap-10 pr-10 group-hover:[animation-play-state:paused] sm:gap-12 sm:pr-12">
+          <ul className="flex shrink-0 animate-service-marquee items-center gap-10 pr-10 group-hover:[animation-play-state:paused] sm:gap-12 sm:pr-12">
             {marqueeItems.map((feature, index) => (
-              <div
+              <li
                 key={`track-one-${feature}-${index}`}
                 className="flex shrink-0 cursor-default items-center gap-8 transition-transform duration-500 hover:scale-105 sm:gap-10"
               >
@@ -1249,17 +1252,17 @@ export default async function ServiceDetailPage({
                 <span className="whitespace-nowrap text-3xl font-black uppercase tracking-tight text-brand-ink transition-colors duration-500 hover:text-brand-red-dark sm:text-4xl md:text-6xl lg:text-7xl">
                   {feature}
                 </span>
-              </div>
+              </li>
             ))}
-          </div>
+          </ul>
 
           {/* Track 2 */}
-          <div
+          <ul
             className="flex shrink-0 animate-service-marquee items-center gap-10 pr-10 group-hover:[animation-play-state:paused] sm:gap-12 sm:pr-12"
             aria-hidden="true"
           >
             {marqueeItems.map((feature, index) => (
-              <div
+              <li
                 key={`track-two-${feature}-${index}`}
                 className="flex shrink-0 cursor-default items-center gap-8 transition-transform duration-500 hover:scale-105 sm:gap-10"
               >
@@ -1268,9 +1271,9 @@ export default async function ServiceDetailPage({
                 <span className="whitespace-nowrap text-3xl font-black uppercase tracking-tight text-brand-ink transition-colors duration-500 hover:text-brand-red-dark sm:text-4xl md:text-6xl lg:text-7xl">
                   {feature}
                 </span>
-              </div>
+              </li>
             ))}
-          </div>
+          </ul>
 
           {/* Right fade */}
           <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-20 bg-gradient-to-l from-white to-transparent sm:w-40 md:w-56" />
@@ -1310,7 +1313,7 @@ export default async function ServiceDetailPage({
           <Reveal>
             <div className="text-center mb-12">
               <span className="block text-sm font-bold uppercase tracking-widest text-brand-red mb-3">
-                Local Care You Can Trust
+                Local Care You Trust
               </span>
               <h2 className="text-3xl md:text-4xl font-extrabold text-brand-ink mb-6">
                 Premier Home Care in the Bay Area
@@ -1321,36 +1324,19 @@ export default async function ServiceDetailPage({
             </div>
           </Reveal>
 
-          <div className="mb-12">
+          {/* DYNAMIC EXPANDABLE LOCATIONS GRID */}
+          <div className="mb-16 border-t border-brand-cream pt-12">
             <Reveal delay={0.1}>
               <h3 className="text-2xl font-extrabold text-brand-ink text-center mb-8">
                 Communities We Proudly Serve
               </h3>
             </Reveal>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 text-center">
-              {[
-                { city: "San Jose", term: "home care in San Jose", slug: "san-jose" },
-                { city: "San Mateo", term: "home care in San Mateo", slug: "san-mateo" },
-                { city: "Palo Alto", term: "home care in Palo Alto", slug: "palo-alto" },
-                { city: "San Francisco", term: "home care in San Francisco", slug: "san-francisco" },
-                { city: "Milpitas", term: "home care in Milpitas", slug: "milpitas" },
-                { city: "Los Gatos", term: "home care in Los Gatos", slug: "los-gatos" },
-                { city: "Santa Rosa", term: "home care in Santa Rosa", slug: "santa-rosa" },
-                { city: "Santa Clara", term: "home care in Santa Clara", slug: "santa-clara" },
-                { city: "Pleasanton", term: "home care in Pleasanton", slug: "pleasanton" },
-                { city: "Mountain View", term: "home care in Mountain View", slug: "mountain-view" }
-              ].map((loc, idx) => (
-                <Reveal key={loc.city} delay={idx * 0.05}>
-                  <Link href={`/locations/${loc.slug}`} className="block rounded-2xl border border-brand-cream bg-white p-4 shadow-sm transition-all hover:-translate-y-1 hover:border-brand-gold hover:shadow-md">
-                    <span className="font-bold text-brand-ink block text-sm mb-1">{loc.city}</span>
-                    <span className="text-[10px] uppercase tracking-wider text-muted block">{loc.term}</span>
-                  </Link>
-                </Reveal>
-              ))}
-            </div>
+            
+            {/* Passes ALL service areas (30+ items) into the DOM for maximum SEO internal backlinks */}
+            <ExpandableLocations locations={serviceAreas} />
           </div>
 
-          <Reveal delay={0.2}>
+          <Reveal delay={0.3}>
             <div className="rounded-3xl bg-white p-8 border border-brand-cream shadow-sm text-center max-w-4xl mx-auto">
               <p className="text-muted leading-relaxed">
                 Our mission is to elevate the standard of <strong>Home care in Bay area</strong> communities. Whether your family requires temporary respite care, daily assistance with activities of daily living, or specialized 24/7 care, our team is equipped to deliver. Experience the difference of premium <strong>at home senior care</strong> designed to keep your loved ones thriving in the comfort of their own home.
@@ -1367,7 +1353,6 @@ export default async function ServiceDetailPage({
       <section className="bg-brand-red-dark py-14 text-center text-white md:py-20">
         <Container className="max-w-3xl">
           <Reveal className="space-y-6">
-            {/* SEO Fix: Changed h2 to div here since we added a semantic h2 in the section above */}
             <div className="whitespace-pre-line text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
               {sharedServiceContent.bottomCta.message}
             </div>

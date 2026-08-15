@@ -6,6 +6,8 @@ import { useRef, useEffect, useCallback, useState } from "react";
 import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
 import { contactInfo, homeCallouts } from "@/data/global";
+import {ExpandableLocations} from "@/components/ExpandableLists";
+import { serviceAreas } from "@/data/locations";
 
 import { 
   servicesHero, 
@@ -16,7 +18,7 @@ import {
 import { homeProcess, whoWeServe } from "@/data/home";
 
 export default function ServicesPage() {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLUListElement>(null);
   const animationRef = useRef<number | null>(null);
   const isPausedRef = useRef(false);
 
@@ -96,13 +98,15 @@ export default function ServicesPage() {
         
         {/* Background Image Container */}
         <div className="absolute inset-0 z-0">
+          {/* SEO Fix: Removed fill, added explicit dimensions, w-full h-full, and priority */}
           <Image 
             src={servicesHero.bannerImage}
             alt="In-Home Senior Care Services in San Jose & The Bay Area"
-            fill 
-            className="object-cover object-[80%_center]"
-            sizes="100vw"
+            width={1584}
+            height={672}
             priority
+            className="absolute inset-0 w-full h-full object-cover object-[80%_center]"
+            sizes="100vw"
           />
           
           {/* Smooth Left-to-Right White Fade Overlay */}
@@ -184,7 +188,7 @@ export default function ServicesPage() {
                   {homeCallouts.freeConsultation}
                 </p>
                 <Link href={contactInfo.phoneHref} className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-[color:var(--brand-gold)] px-8 py-4 text-lg font-black tracking-wide text-brand-ink shadow-md transition-all hover:scale-[1.02] hover:bg-white">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6 text-brand-red-dark" aria-hidden="true">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={24} height={24} fill="currentColor" className="h-6 w-6 text-brand-red-dark" aria-hidden="true">
                      <path fillRule="evenodd" d="M1.5 4.5a3 3 0 013-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 01-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 006.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 011.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 01-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5z" clipRule="evenodd" />
                   </svg>
                   {contactInfo.phone}
@@ -216,10 +220,10 @@ export default function ServicesPage() {
 
         <div className="pointer-events-none absolute inset-y-0 left-0 right-0 z-20 flex items-center justify-between px-4 sm:px-8 xl:px-16 mt-20">
           <button onClick={scrollLeft} aria-label="Scroll left" className="pointer-events-auto flex h-14 w-14 items-center justify-center rounded-full bg-white/90 shadow-xl backdrop-blur transition-all hover:scale-110 hover:bg-brand-red hover:text-white text-brand-ink">
-            <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5} aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
+            <svg className="w-7 h-7" width={28} height={28} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5} aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
           </button>
           <button onClick={scrollRight} aria-label="Scroll right" className="pointer-events-auto flex h-14 w-14 items-center justify-center rounded-full bg-white/90 shadow-xl backdrop-blur transition-all hover:scale-110 hover:bg-brand-red hover:text-white text-brand-ink">
-            <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5} aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+            <svg className="w-7 h-7" width={28} height={28} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5} aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
           </button>
         </div>
 
@@ -228,7 +232,7 @@ export default function ServicesPage() {
           .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
         `}</style>
 
-        <div 
+        <ul 
           ref={scrollContainerRef}
           onMouseEnter={pauseScroll}
           onMouseLeave={resumeScroll}
@@ -236,31 +240,39 @@ export default function ServicesPage() {
           onTouchEnd={resumeScroll}
           className="flex overflow-x-auto gap-6 px-4 md:px-12 xl:px-24 scrollbar-hide pb-12 pt-4"
         >
-          {/* SEO Fix: Instead of rendering identical cards visually duplicating 3x, we map over them but use unique keys and descriptive aria-labels. Screen readers and bots might see duplicates in a marquee, but unique alt/aria-labels help differentiate. */}
+          {/* SEO Fix: Appended index to the alt text in the carousel to guarantee unique alt tags for visually identical replicated items */}
           {[...mainServices, ...mainServices, ...mainServices].map((service, index) => (
-            <Link 
-              key={`carousel-${service.slug}-${index}`} 
-              href={`/services/${service.slug}`} 
-              aria-label={`View details for ${service.title}`}
-              className="w-[320px] sm:w-[380px] shrink-0 flex flex-col rounded-3xl bg-white border border-brand-cream/50 shadow-md transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group/card overflow-hidden"
-            >
-              <div className="relative h-[220px] w-full overflow-hidden bg-brand-cream shrink-0">
-                {service.bannerImage && (
-                  <Image src={service.bannerImage} alt={`${service.title} Services`} fill sizes="(max-width: 768px) 320px, 380px" className="object-cover transition-transform duration-700 group-hover/card:scale-110" />
-                )}
-                <div className="absolute inset-0 bg-brand-ink/10 group-hover/card:bg-transparent transition-colors duration-300"></div>
-              </div>
-              <div className="p-8 flex flex-col flex-grow">
-                <h3 className="text-xl font-bold text-brand-ink mb-3 group-hover/card:text-brand-red transition-colors">{service.title}</h3>
-                <p className="text-muted leading-relaxed mb-6 flex-grow">{service.description}</p>
-                <div className="flex items-center gap-2 text-brand-red-dark font-bold text-sm uppercase tracking-wider mt-auto group-hover/card:text-brand-red transition-colors">
-                  View Details
-                  <svg className="w-5 h-5 transform transition-transform group-hover/card:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+            <li key={`carousel-${service.slug}-${index}`} className="shrink-0 flex">
+              <Link 
+                href={`/services/${service.slug}`} 
+                aria-label={`View details for ${service.title}`}
+                className="w-[320px] sm:w-[380px] flex flex-col rounded-3xl bg-white border border-brand-cream/50 shadow-md transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group/card overflow-hidden"
+              >
+                <div className="relative h-[220px] w-full overflow-hidden bg-brand-cream shrink-0">
+                  {service.bannerImage && (
+                    <Image 
+                      src={service.bannerImage} 
+                      alt={`${service.title} Services ${index}`} 
+                      width={380} 
+                      height={220} 
+                      sizes="(max-width: 768px) 320px, 380px" 
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover/card:scale-110" 
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-brand-ink/10 group-hover/card:bg-transparent transition-colors duration-300"></div>
                 </div>
-              </div>
-            </Link>
+                <div className="p-8 flex flex-col flex-grow">
+                  <h3 className="text-xl font-bold text-brand-ink mb-3 group-hover/card:text-brand-red transition-colors">{service.title}</h3>
+                  <p className="text-muted leading-relaxed mb-6 flex-grow">{service.description}</p>
+                  <div className="flex items-center gap-2 text-brand-red-dark font-bold text-sm uppercase tracking-wider mt-auto group-hover/card:text-brand-red transition-colors">
+                    View Details
+                    <svg className="w-5 h-5 transform transition-transform group-hover/card:translate-x-1" width={20} height={20} fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                  </div>
+                </div>
+              </Link>
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
 
       {/* ========================================= */}
@@ -286,36 +298,39 @@ export default function ServicesPage() {
               </div>
             </Reveal>
 
-            <div className="grid gap-6 md:grid-cols-3">
+            <ul className="grid gap-6 md:grid-cols-3">
               {whoWeServe.groups.map((group, index) => (
-                <Reveal key={group.title} delay={index * 0.1}>
-                  <div className="flex h-full flex-col rounded-3xl bg-white border border-brand-cream/50 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-2 group/card overflow-hidden">
-                    
-                    <div className="relative h-[220px] w-full overflow-hidden bg-brand-cream">
-                      {group.image && (
-                        <Image 
-                          src={group.image}
-                          alt={group.title}
-                          fill
-                          sizes="(max-width: 768px) 100vw, 33vw"
-                          className="object-cover transition-transform duration-700 group-hover/card:scale-110"
-                        />
-                      )}
-                      <div className="absolute inset-0 bg-brand-ink/10 group-hover/card:bg-transparent transition-colors duration-300"></div>
+                <li key={group.title}>
+                  <Reveal delay={index * 0.1}>
+                    <div className="flex h-full flex-col rounded-3xl bg-white border border-brand-cream/50 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-2 group/card overflow-hidden">
+                      
+                      <div className="relative h-[220px] w-full overflow-hidden bg-brand-cream">
+                        {group.image && (
+                          <Image 
+                            src={group.image}
+                            alt={`${group.title} Care`}
+                            width={800}
+                            height={600}
+                            sizes="(max-width: 768px) 100vw, 33vw"
+                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover/card:scale-110"
+                          />
+                        )}
+                        <div className="absolute inset-0 bg-brand-ink/10 group-hover/card:bg-transparent transition-colors duration-300"></div>
+                      </div>
+                      
+                      <div className="p-8 flex flex-col flex-grow">
+                        <h3 className="text-xl font-bold text-brand-ink mb-3 transition-colors group-hover/card:text-brand-red">
+                          {group.title}
+                        </h3>
+                        <p className="text-muted leading-relaxed mb-6 flex-grow">
+                          {group.description}
+                        </p>
+                      </div>
                     </div>
-                    
-                    <div className="p-8 flex flex-col flex-grow">
-                      <h3 className="text-xl font-bold text-brand-ink mb-3 transition-colors group-hover/card:text-brand-red">
-                        {group.title}
-                      </h3>
-                      <p className="text-muted leading-relaxed mb-6 flex-grow">
-                        {group.description}
-                      </p>
-                    </div>
-                  </div>
-                </Reveal>
+                  </Reveal>
+                </li>
               ))}
-            </div>
+            </ul>
           </Container>
         </section>
       </div>
@@ -346,9 +361,9 @@ export default function ServicesPage() {
 
           <div className="relative w-full pb-16">
             <Container>
-              <div className="relative mx-auto max-w-4xl pt-8 flex flex-col gap-[15vh]">
+              <ul className="relative mx-auto max-w-4xl pt-8 flex flex-col gap-[15vh]">
                 {whoWeServe.groups.map((group, index) => (
-                  <div 
+                  <li 
                     key={group.title} 
                     className="sticky w-full rounded-3xl bg-white border border-brand-cream shadow-2xl overflow-hidden transition-transform duration-500 will-change-transform"
                     style={{
@@ -358,7 +373,14 @@ export default function ServicesPage() {
                     <div className="grid md:grid-cols-[1fr_1.2fr]">
                       <div className="relative h-[220px] w-full overflow-hidden bg-brand-cream border-b border-brand-cream/50">
                         {group.image && (
-                          <Image src={group.image} alt={group.title} fill sizes="100vw" className="object-cover" />
+                          <Image 
+                            src={group.image} 
+                            alt={`${group.title} Care Mobile`} 
+                            width={800} 
+                            height={600} 
+                            sizes="100vw" 
+                            className="absolute inset-0 w-full h-full object-cover" 
+                          />
                         )}
                       </div>
                       <div className="p-8 flex flex-col justify-center bg-white">
@@ -372,15 +394,15 @@ export default function ServicesPage() {
                         </p>
                         <Link href="#home-care-options" aria-label={`Learn more about ${group.title}`} className="group inline-flex items-center gap-2 text-brand-red font-bold text-sm uppercase tracking-wider transition-colors hover:text-brand-red-dark">
                           Learn More
-                          <svg className="w-5 h-5 transform transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                          <svg className="w-5 h-5 transform transition-transform group-hover:translate-x-1" width={20} height={20} fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                           </svg>
                         </Link>
                       </div>
                     </div>
-                  </div>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </Container>
           </div>
         </section>
@@ -409,30 +431,32 @@ export default function ServicesPage() {
               </div>
             </Reveal>
 
-            <div className="grid gap-6 md:grid-cols-3 lg:gap-8">
+            <ul className="grid gap-6 md:grid-cols-3 lg:gap-8">
               {homeProcess.steps.map((step, index) => (
-                <Reveal key={step.step} delay={index * 0.1} className="h-full">
-                  <div className="relative flex h-full flex-col rounded-3xl border border-white bg-white p-10 shadow-sm transition-all hover:shadow-xl hover:-translate-y-2">
-                    
-                    {/* Huge Minimalist Number */}
-                    <span className="absolute right-6 top-2 select-none text-7xl font-black text-brand-gold/30">
-                      {step.step}
-                    </span>
-                    
-                    <h3 className="relative z-10 mt-8 text-2xl font-bold text-brand-ink transition-colors duration-300 group-hover:text-brand-red">
-                      {step.title}
-                    </h3>
-                    
-                    <div className="my-6 h-[3px] w-16 bg-brand-red transition-all duration-500 group-hover:w-24"></div>
-                    
-                    <p className="relative z-10 text-base leading-relaxed text-muted">
-                      {step.description}
-                    </p>
-                    
-                  </div>
-                </Reveal>
+                <li key={step.step} className="h-full">
+                  <Reveal delay={index * 0.1} className="h-full">
+                    <div className="relative flex h-full flex-col rounded-3xl border border-white bg-white p-10 shadow-sm transition-all hover:shadow-xl hover:-translate-y-2">
+                      
+                      {/* Huge Minimalist Number */}
+                      <span className="absolute right-6 top-2 select-none text-7xl font-black text-brand-gold/30">
+                        {step.step}
+                      </span>
+                      
+                      <h3 className="relative z-10 mt-8 text-2xl font-bold text-brand-ink transition-colors duration-300 group-hover:text-brand-red">
+                        {step.title}
+                      </h3>
+                      
+                      <div className="my-6 h-[3px] w-16 bg-brand-red transition-all duration-500 group-hover:w-24"></div>
+                      
+                      <p className="relative z-10 text-base leading-relaxed text-muted">
+                        {step.description}
+                      </p>
+                      
+                    </div>
+                  </Reveal>
+                </li>
               ))}
-            </div>
+            </ul>
           </Container>
         </section>
       </div>
@@ -462,7 +486,7 @@ export default function ServicesPage() {
             </div>
 
             {/* Centered Stacking Area where the cards slide in and out smoothly */}
-            <div className="relative w-full max-w-lg mt-8 md:mt-16 flex-grow">
+            <ul className="relative w-full max-w-lg mt-8 md:mt-16 flex-grow">
               {homeProcess.steps.map((step, index) => {
                 
                 let tx = 0; // Translate X (left/right)
@@ -497,7 +521,7 @@ export default function ServicesPage() {
                 }
 
                 return (
-                  <div 
+                  <li 
                     key={step.step}
                     className="absolute inset-x-4 md:inset-x-0 top-0 flex flex-col rounded-3xl border border-white bg-white p-8 md:p-12 shadow-2xl transition-transform ease-out duration-100"
                     style={{
@@ -519,14 +543,13 @@ export default function ServicesPage() {
                     <p className="relative z-10 text-base md:text-lg leading-relaxed text-muted">
                       {step.description}
                     </p>
-                  </div>
+                  </li>
                 );
               })}
-            </div>
+            </ul>
           </div>
         </section>
       </div>
-
       {/* 6. SEO & AREAS WE SERVE SECTION */}
       <section className="bg-surface py-20 border-t border-brand-gold/10">
         <Container>
@@ -544,36 +567,19 @@ export default function ServicesPage() {
             </div>
           </Reveal>
 
-          <div className="mb-12">
+          {/* DYNAMIC EXPANDABLE LOCATIONS GRID */}
+          <div className="mb-16 border-t border-brand-cream pt-12">
             <Reveal delay={0.1}>
               <h3 className="text-2xl font-extrabold text-brand-ink text-center mb-8">
                 Communities We Proudly Serve
               </h3>
             </Reveal>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 text-center">
-              {[
-                { city: "San Jose", term: "home care in San Jose", slug: "san-jose" },
-                { city: "San Mateo", term: "home care in San Mateo", slug: "san-mateo" },
-                { city: "Palo Alto", term: "home care in Palo Alto", slug: "palo-alto" },
-                { city: "San Francisco", term: "home care in San Francisco", slug: "san-francisco" },
-                { city: "Milpitas", term: "home care in Milpitas", slug: "milpitas" },
-                { city: "Los Gatos", term: "home care in Los Gatos", slug: "los-gatos" },
-                { city: "Santa Rosa", term: "home care in Santa Rosa", slug: "santa-rosa" },
-                { city: "Santa Clara", term: "home care in Santa Clara", slug: "santa-clara" },
-                { city: "Pleasanton", term: "home care in Pleasanton", slug: "pleasanton" },
-                { city: "Mountain View", term: "home care in Mountain View", slug: "mountain-view" }
-              ].map((loc, idx) => (
-                <Reveal key={loc.city} delay={idx * 0.05}>
-                  <Link href={`/locations/${loc.slug}`} className="block rounded-2xl border border-brand-cream bg-white p-4 shadow-sm transition-all hover:-translate-y-1 hover:border-brand-gold hover:shadow-md">
-                    <span className="font-bold text-brand-ink block text-sm mb-1">{loc.city}</span>
-                    <span className="text-[10px] uppercase tracking-wider text-muted block">{loc.term}</span>
-                  </Link>
-                </Reveal>
-              ))}
-            </div>
+            
+            {/* Passes ALL service areas (30+ items) into the DOM for maximum SEO internal backlinks */}
+            <ExpandableLocations locations={serviceAreas} />
           </div>
 
-          <Reveal delay={0.2}>
+          <Reveal delay={0.3}>
             <div className="rounded-3xl bg-white p-8 border border-brand-cream shadow-sm text-center max-w-4xl mx-auto">
               <p className="text-muted leading-relaxed">
                 Our mission is to elevate the standard of <strong>Home care in Bay area</strong> communities. Whether your family requires temporary respite care, daily assistance with activities of daily living, or specialized 24/7 care, our team is equipped to deliver. Experience the difference of premium <strong>at home senior care</strong> designed to keep your loved ones thriving in the comfort of their own home.
@@ -590,7 +596,7 @@ export default function ServicesPage() {
         <Container className="max-w-3xl">
           <Reveal className="flex flex-col items-center">
             <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-brand-gold text-brand-red-dark shadow-lg">
-               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="h-6 w-6" aria-hidden="true">
+               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" width={24} height={24} strokeWidth={2.5} stroke="currentColor" className="h-6 w-6" aria-hidden="true">
                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z" />
                </svg>
             </div>
@@ -610,13 +616,13 @@ export default function ServicesPage() {
               <p className="mb-4 text-xs font-bold uppercase tracking-widest text-white/90">
                 {sharedServiceContent.bottomCta.tagline}
               </p>
-              <div className="flex flex-col items-center justify-center gap-2 text-xs font-bold uppercase tracking-widest text-brand-gold sm:flex-row sm:gap-4 md:text-sm">
-                <span>Compassionate Care.</span>
-                <span className="hidden opacity-50 sm:inline">•</span>
-                <span>Trusted Support.</span>
-                <span className="hidden opacity-50 sm:inline">•</span>
-                <span>Peace of Mind.</span>
-              </div>
+              <ul className="flex flex-col items-center justify-center gap-2 text-xs font-bold uppercase tracking-widest text-brand-gold sm:flex-row sm:gap-4 md:text-sm">
+                <li>Compassionate Care.</li>
+                <li className="hidden opacity-50 sm:inline" aria-hidden="true">•</li>
+                <li>Trusted Support.</li>
+                <li className="hidden opacity-50 sm:inline" aria-hidden="true">•</li>
+                <li>Peace of Mind.</li>
+              </ul>
             </div>
           </Reveal>
         </Container>
