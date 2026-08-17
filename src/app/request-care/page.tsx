@@ -13,6 +13,7 @@ import {
   locationOptions 
 } from "@/data/request-care";
 
+import RequestCareForm from "@/components/RequestCareForm";
 export const metadata: Metadata = {
   // SEO Fix: Shortened the title and packed it with target keywords (under 60 chars)
   title: "Request In-Home Care in San Jose | Glorious Home Care",
@@ -106,58 +107,7 @@ export default function RequestCarePage() {
             </p>
 
             {/* Upgraded Premium Form */}
-            <form className="w-full space-y-6 rounded-3xl border border-white bg-white p-8 shadow-xl shadow-brand-ink/5 sm:p-10 transition-all hover:shadow-2xl hover:shadow-brand-ink/10">
-              
-              <div className="grid gap-6 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <label htmlFor="name" className="text-sm font-bold text-brand-ink">Full Name <span className="text-brand-red">*</span></label>
-                  <input type="text" id="name" name="name" required className="w-full rounded-xl border border-gray-200 bg-gray-50 px-5 py-3.5 text-sm transition-all focus:border-brand-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-red/10" placeholder="John Doe" />
-                </div>
-                <div className="space-y-2">
-                  <label htmlFor="phone" className="text-sm font-bold text-brand-ink">Phone Number <span className="text-brand-red">*</span></label>
-                  <input type="tel" id="phone" name="phone" required className="w-full rounded-xl border border-gray-200 bg-gray-50 px-5 py-3.5 text-sm transition-all focus:border-brand-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-red/10" placeholder="(408) 555-0123" />
-                </div>
-              </div>
-
-              <div className="grid gap-6 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <label htmlFor="email" className="text-sm font-bold text-brand-ink">Email Address <span className="text-brand-red">*</span></label>
-                  <input type="email" id="email" name="email" required className="w-full rounded-xl border border-gray-200 bg-gray-50 px-5 py-3.5 text-sm transition-all focus:border-brand-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-red/10" placeholder="john@example.com" />
-                </div>
-                <div className="space-y-2">
-                  <label htmlFor="location" className="text-sm font-bold text-brand-ink">City / Location</label>
-                  <select id="location" name="location" defaultValue="" className="w-full rounded-xl border border-gray-200 bg-gray-50 px-5 py-3.5 text-sm text-brand-ink transition-all focus:border-brand-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-red/10">
-                    <option value="" disabled>Select a city</option>
-                    {locationOptions.map((loc) => (
-                      <option key={loc} value={loc}>{loc}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label htmlFor="careType" className="text-sm font-bold text-brand-ink">Type of Care Needed</label>
-                <select id="careType" name="careType" defaultValue="" className="w-full rounded-xl border border-gray-200 bg-gray-50 px-5 py-3.5 text-sm text-brand-ink transition-all focus:border-brand-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-red/10">
-                  <option value="" disabled>Select care type</option>
-                  {careTypeOptions.map((care) => (
-                    <option key={care} value={care}>{care}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="space-y-2">
-                <label htmlFor="message" className="text-sm font-bold text-brand-ink">Briefly describe your situation</label>
-                <textarea id="message" name="message" rows={4} className="w-full rounded-xl border border-gray-200 bg-gray-50 px-5 py-3.5 text-sm transition-all focus:border-brand-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-red/10 resize-none" placeholder="How can we help your loved one?"></textarea>
-              </div>
-
-              <button type="button" className="group inline-flex w-full items-center justify-center gap-3 rounded-full bg-brand-red px-8 py-4 text-sm font-bold uppercase tracking-wide text-white shadow-[0_8px_30px_rgb(255,49,49,0.2)] transition-all hover:-translate-y-1 hover:bg-brand-red-dark hover:shadow-[0_8px_30px_rgb(199,36,57,0.3)] sm:w-auto">
-                <span>Submit Request</span>
-                {/* SEO Fix: Added explicit SVG dimensions */}
-                <svg width={20} height={20} className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-              </button>
-            </form>
+            <RequestCareForm />
           </Reveal>
           
           {/* Right Column: Direct Contact Sidebar */}
@@ -233,7 +183,7 @@ export default function RequestCarePage() {
         </Container>
       </section>
 
-      {/* 4. GOOGLE MAPS EMBED SECTION */}
+{/* 4. GOOGLE MAPS EMBED SECTION */}
       <section className="bg-background py-16 md:py-24 border-t border-brand-gold/20">
         <Container>
           <Reveal>
@@ -246,10 +196,10 @@ export default function RequestCarePage() {
               </p>
             </div>
           </Reveal>
-
           <Reveal delay={0.1}>
             <div className="w-full overflow-hidden rounded-3xl border-4 border-white shadow-lg bg-white h-[400px] md:h-[500px] relative">
               <iframe
+                // ✅ FIX: Using the official embed URL centered on the exact office address
                 src="https://maps.google.com/maps?q=2528%20Qume%20Drive,%20Ste.%204,%20San%20Jose,%20CA%2095131&t=&z=14&ie=UTF8&iwloc=&output=embed"
                 width="100%"
                 height="100%"
@@ -258,7 +208,7 @@ export default function RequestCarePage() {
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 className="absolute inset-0"
-                title="Glorious Home Care Service Area Map"
+                title="Glorious Home Care Office Location Map"
               />
             </div>
           </Reveal>
