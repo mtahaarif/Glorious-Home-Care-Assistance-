@@ -2,7 +2,7 @@
 
 **A premium, conversion-optimized Next.js web platform for home care services across the Bay Area**
 
----
+----
 
 ## 📋 Table of Contents
 
