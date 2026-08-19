@@ -45,11 +45,16 @@ export default function AboutPage() {
   const visionSectionRef = useRef<HTMLDivElement>(null);
   const [visionProgress, setVisionProgress] = useState(0);
   
+  // SEO Fix: mounted state prevents mobile markup from causing duplicate text penalties during SSR
+  const [mounted, setMounted] = useState(false); 
+  
   // Tracks coordinates to convert horizontal swipe into vertical scroll
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
 
   useEffect(() => {
+    setMounted(true);
+    
     const handleScroll = () => {
       if (!visionSectionRef.current) return;
       const rect = visionSectionRef.current.getBoundingClientRect();
@@ -100,7 +105,6 @@ export default function AboutPage() {
     touchStartY.current = 0;
   };
 
-
   return (
     <div className="flex flex-col">
 
@@ -109,7 +113,6 @@ export default function AboutPage() {
         
         {/* Background Image Container */}
         <div className="absolute inset-0 z-0">
-          {/* SEO Fix: Removed fill, added explicit dimensions, priority, and w-full h-full */}
           <Image 
             src={aboutHero.bannerImage}
             alt="About Glorious Home Care Assistance"
@@ -127,7 +130,6 @@ export default function AboutPage() {
         <Container className="relative z-20 w-full">
           <div className="max-w-2xl space-y-4">
             <Reveal delay={0.05}>
-              {/* SEO Fix: Hardcoded a longer, keyword-rich H1 instead of a short "About Us" */}
               <h1 className="text-3xl font-extrabold leading-tight text-brand-ink sm:text-4xl lg:text-5xl drop-shadow-sm">
                 About Glorious Home Care Assistance
               </h1>
@@ -143,14 +145,14 @@ export default function AboutPage() {
               <div className="flex flex-col sm:flex-row flex-wrap gap-3 pt-2">
                 <Link
                   href={contactInfo.phoneHref}
-                  aria-label="Call Glorious Home Care Assistance"
+                  aria-label="Call Glorious Home Care Assistance for a Free Consultation"
                   className="inline-flex w-full sm:w-auto items-center justify-center rounded-full bg-brand-red px-6 py-3 text-sm font-bold tracking-wide text-white shadow-lg transition-all hover:-translate-y-1 hover:bg-brand-red-dark"
                 >
                   {homeCallouts.callToAction}
                 </Link>
                 <Link
                   href="/services"
-                  aria-label="View our In-Home Care Services"
+                  aria-label="View our In-Home Care Services and Options"
                   className="inline-flex w-full sm:w-auto items-center justify-center rounded-full border-2 border-brand-ink/20 bg-white/80 backdrop-blur-sm px-6 py-3 text-sm font-bold tracking-wide text-brand-ink transition-all hover:-translate-y-1 hover:bg-white"
                 >
                   {homeCallouts.optionsPrompt}
@@ -169,7 +171,6 @@ export default function AboutPage() {
           <Reveal className="space-y-6">
             <div className="flex items-center gap-4 mb-4">
               <span className="h-[2px] w-12 bg-brand-red"></span>
-              {/* Changed from H2 to div to prevent duplicate empty/decorative headings */}
               <div className="text-sm font-bold uppercase tracking-[0.2em] text-brand-red">
                 Our Background
               </div>
@@ -207,7 +208,7 @@ export default function AboutPage() {
                 </div>
                 <Link
                   href={contactInfo.phoneHref}
-                  aria-label={`Call us at ${contactInfo.phone}`}
+                  aria-label={`Call Glorious Home Care directly at ${contactInfo.phone}`}
                   className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-[color:var(--brand-gold)] px-8 py-4 text-lg font-black tracking-wide text-brand-ink shadow-md transition-all hover:scale-[1.02] hover:bg-white"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={24} height={24} fill="currentColor" className="h-6 w-6 text-brand-red-dark" aria-hidden="true">
@@ -278,72 +279,76 @@ export default function AboutPage() {
       </div>
 
       {/* MOBILE VERSION (Hidden on Desktop) */}
-      {/* SEO Fix: aria-hidden hides duplicate text from screen readers, semantic tags changed to avoid duplicate headings */}
+      {/* SEO Fix: Conditional rendering prevents duplicate Vision & Mission text in raw HTML for crawlers */}
       <div className="block md:hidden" aria-hidden="true">
-        <section ref={visionSectionRef} className="bg-surface relative z-10 h-[200vh]">
-          
-          <div className="sticky top-[72px] md:top-[88px] w-full flex flex-col pt-10 h-[calc(100vh-72px)] overflow-hidden">
-            
-            {/* Mobile Title */}
-            <div className="w-full pb-6">
-              <Reveal>
-                <div className="mx-auto max-w-3xl text-center px-4">
-                  <div className="flex items-center justify-center gap-4 mb-2">
-                    <span className="h-[2px] w-12 bg-brand-gold"></span>
-                    <div className="text-xs font-bold uppercase tracking-[0.2em] text-brand-gold">
-                      Our Purpose
-                    </div>
-                    <span className="h-[2px] w-12 bg-brand-gold"></span>
-                  </div>
-                  <div className="text-2xl font-extrabold text-brand-ink leading-tight">
-                    Guided by Excellence
-                  </div>
-                </div>
-              </Reveal>
-            </div>
-
-            {/* TOUCH AREA: Parallax Stacking Cards */}
-            <div 
-              className="relative w-full flex-grow mt-2 touch-pan-y border-y border-brand-cream bg-brand-cream/30"
-              onTouchStart={handleTouchStart}
-              onTouchMove={handleTouchMove}
-              onTouchEnd={handleTouchEnd}
-            >
+        {mounted ? (
+          <section ref={visionSectionRef} className="bg-surface relative z-10 h-[200vh]">
+            <div className="sticky top-[72px] md:top-[88px] w-full flex flex-col pt-10 h-[calc(100vh-72px)] overflow-hidden">
               
-              {/* Card 1: Vision */}
-              <div className="absolute left-4 top-4 bottom-12 w-[85vw] rounded-3xl border border-brand-cream bg-white p-8 shadow-xl flex flex-col z-10 overflow-y-auto">
-                <div className="flex items-center gap-4 mb-6">
-                  <span className="h-[2px] w-8 bg-brand-gold"></span>
-                  <div className="text-xs font-bold uppercase tracking-[0.2em] text-brand-gold">Our Vision</div>
-                </div>
-                <div className="text-2xl font-extrabold text-brand-ink mb-4">{visionAndMission.vision.title}</div>
-                <div className="h-[2px] w-12 bg-brand-gold/20 mb-6"></div>
-                <p className="leading-relaxed text-muted text-base">{visionAndMission.vision.body}</p>
+              {/* Mobile Title */}
+              <div className="w-full pb-6">
+                <Reveal>
+                  <div className="mx-auto max-w-3xl text-center px-4">
+                    <div className="flex items-center justify-center gap-4 mb-2">
+                      <span className="h-[2px] w-12 bg-brand-gold"></span>
+                      <div className="text-xs font-bold uppercase tracking-[0.2em] text-brand-gold">
+                        Our Purpose
+                      </div>
+                      <span className="h-[2px] w-12 bg-brand-gold"></span>
+                    </div>
+                    <div className="text-2xl font-extrabold text-brand-ink leading-tight">
+                      Guided by Excellence
+                    </div>
+                  </div>
+                </Reveal>
               </div>
 
-              {/* Card 2: Mission */}
+              {/* TOUCH AREA: Parallax Stacking Cards */}
               <div 
-                className="absolute left-8 top-8 bottom-8 w-[85vw] rounded-3xl bg-brand-red-dark p-8 text-white shadow-2xl flex flex-col z-20 overflow-y-auto will-change-transform"
-                style={{
-                  transform: `translateX(${Math.max(0, 100 - visionProgress * 100)}vw)`,
-                  transition: 'transform 0.1s ease-out'
-                }}
+                className="relative w-full flex-grow mt-2 touch-pan-y border-y border-brand-cream bg-brand-cream/30"
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
               >
-                <div className="absolute top-0 right-0 w-48 h-48 bg-brand-red rounded-full blur-3xl opacity-50 pointer-events-none"></div>
-                <div className="relative z-10">
+                
+                {/* Card 1: Vision */}
+                <div className="absolute left-4 top-4 bottom-12 w-[85vw] rounded-3xl border border-brand-cream bg-white p-8 shadow-xl flex flex-col z-10 overflow-y-auto">
                   <div className="flex items-center gap-4 mb-6">
                     <span className="h-[2px] w-8 bg-brand-gold"></span>
-                    <div className="text-xs font-bold uppercase tracking-[0.2em] text-brand-gold">Our Mission</div>
+                    <div className="text-xs font-bold uppercase tracking-[0.2em] text-brand-gold">Our Vision</div>
                   </div>
-                  <div className="text-2xl font-extrabold mb-4 text-brand-cream">{visionAndMission.mission.title}</div>
-                  <div className="h-[2px] w-12 bg-brand-cream/20 mb-6"></div>
-                  <p className="leading-relaxed text-white/90 text-base">{visionAndMission.mission.body}</p>
+                  <div className="text-2xl font-extrabold text-brand-ink mb-4">{visionAndMission.vision.title}</div>
+                  <div className="h-[2px] w-12 bg-brand-gold/20 mb-6"></div>
+                  <p className="leading-relaxed text-muted text-base">{visionAndMission.vision.body}</p>
                 </div>
-              </div>
 
+                {/* Card 2: Mission */}
+                <div 
+                  className="absolute left-8 top-8 bottom-8 w-[85vw] rounded-3xl bg-brand-red-dark p-8 text-white shadow-2xl flex flex-col z-20 overflow-y-auto will-change-transform"
+                  style={{
+                    transform: `translateX(${Math.max(0, 100 - visionProgress * 100)}vw)`,
+                    transition: 'transform 0.1s ease-out'
+                  }}
+                >
+                  <div className="absolute top-0 right-0 w-48 h-48 bg-brand-red rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+                  <div className="relative z-10">
+                    <div className="flex items-center gap-4 mb-6">
+                      <span className="h-[2px] w-8 bg-brand-gold"></span>
+                      <div className="text-xs font-bold uppercase tracking-[0.2em] text-brand-gold">Our Mission</div>
+                    </div>
+                    <div className="text-2xl font-extrabold mb-4 text-brand-cream">{visionAndMission.mission.title}</div>
+                    <div className="h-[2px] w-12 bg-brand-cream/20 mb-6"></div>
+                    <p className="leading-relaxed text-white/90 text-base">{visionAndMission.mission.body}</p>
+                  </div>
+                </div>
+
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        ) : (
+          /* Safe Fallback block to prevent Hydration Errors on load */
+          <div className="h-[200vh]"></div>
+        )}
       </div>
 
       {/* 4. THE GHCA DIFFERENCE & GOOGLE REVIEWS */}
@@ -479,8 +484,9 @@ export default function AboutPage() {
               <h2 className="text-3xl md:text-4xl font-extrabold text-brand-ink mb-6">
                 Premier Home Care in the Bay Area
               </h2>
+              {/* SEO Fix: Changed duplicated strong tag 'at home senior care' to 'elderly care services' */}
               <p className="max-w-4xl mx-auto text-lg text-muted leading-relaxed">
-                Finding the right support for a loved one is crucial. If you're searching for <strong>home care near me</strong>, Glorious Home Care Assistance is dedicated to providing compassionate, top-tier <strong>senior care at home</strong>. Our trained caregivers specialize in comprehensive <strong>personal care San Jose</strong> families can rely on, ensuring safety, dignity, and peace of mind. We are proud to be a leading provider of <strong>in-home care San Jose</strong> residents trust, offering tailored plans for <strong>at home senior care</strong>.
+                Finding the right support for a loved one is crucial. If you're searching for <strong>home care near me</strong>, Glorious Home Care Assistance is dedicated to providing compassionate, top-tier <strong>senior care at home</strong>. Our trained caregivers specialize in comprehensive <strong>personal care San Jose</strong> families can rely on, ensuring safety, dignity, and peace of mind. We are proud to be a leading provider of <strong>in-home care San Jose</strong> residents trust, offering tailored plans for <strong>elderly care services</strong>.
               </p>
             </div>
           </Reveal>
