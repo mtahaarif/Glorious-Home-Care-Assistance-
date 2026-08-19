@@ -91,13 +91,13 @@ export default async function CityLocationPage({ params }: { params: Promise<{ c
             
             <Reveal delay={0.1}>
               <p className="text-base leading-relaxed text-brand-ink/80 sm:text-lg font-medium max-w-lg">
-                {area.description}
+                {/* SEO Fix: Embedded exact H1 words into paragraph text to clear H1 match warnings */}
+                As a premier provider of In-Home Care Services in {area.name}, CA, {area.description.toLowerCase()}
               </p>
             </Reveal>
             
             <Reveal delay={0.15}>
               <div className="flex flex-col sm:flex-row flex-wrap gap-3 pt-2">
-                {/* SEO Fix: Unique anchor text */}
                 <Link
                   href={contactInfo.phoneHref}
                   aria-label={`Call us about care in ${area.name}`}
@@ -105,7 +105,6 @@ export default async function CityLocationPage({ params }: { params: Promise<{ c
                 >
                   Call for {area.name} Care
                 </Link>
-                {/* SEO Fix: Unique anchor text */}
                 <Link
                   href="/request-care"
                   aria-label={`Request care in ${area.name}`}
@@ -131,7 +130,6 @@ export default async function CityLocationPage({ params }: { params: Promise<{ c
                   Aging Safely at Home
                 </span>
               </div>
-              {/* SEO Fix: Ensures exact words from H1 are found in the body text */}
               <h2 className="text-3xl md:text-4xl font-extrabold text-brand-ink">
                 Compassionate In-Home Care Services for {area.name} Families
               </h2>
@@ -156,7 +154,7 @@ export default async function CityLocationPage({ params }: { params: Promise<{ c
               href="/about" 
               className="mt-4 inline-block font-semibold text-brand-red hover:underline"
             >
-              Learn more about our local agency &rarr;
+              Learn more about our {area.name} caregivers &rarr;
             </Link>
           </Reveal>
 
@@ -179,7 +177,6 @@ export default async function CityLocationPage({ params }: { params: Promise<{ c
                   Our care coordinators are standing by to answer your questions and schedule a free in-home assessment.
                 </p>
                 
-                {/* SEO Fix: Unique anchor text isolated by area name */}
                 <Link
                   href={contactInfo.phoneHref}
                   aria-label={`Call our service coordinators at ${contactInfo.phone}`}
@@ -224,7 +221,6 @@ export default async function CityLocationPage({ params }: { params: Promise<{ c
               <ul className="flex gap-6 pr-6">
                 {homeServices.services.map((service, index) => (
                   <li key={`original-${index}`} className="shrink-0 flex">
-                    {/* SEO Fix: Changed outer wrapper to div to avoid massive anchor texts. Applied after:absolute to title */}
                     <div className="w-[320px] sm:w-[380px] flex flex-col rounded-3xl bg-white border border-brand-cream/50 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-2 group/card overflow-hidden relative">
                       <div className="relative h-[220px] w-full overflow-hidden bg-brand-cream shrink-0">
                         {service.image && (
@@ -253,8 +249,9 @@ export default async function CityLocationPage({ params }: { params: Promise<{ c
                         <p className="text-muted leading-relaxed mb-6 flex-grow">
                           {service.description}
                         </p>
+                        {/* SEO Fix: Replaced generic 'Service Details' with dynamically unique anchor texts to clear link duplicate warnings */}
                         <div className="flex items-center gap-2 text-brand-red-dark font-bold text-sm uppercase tracking-wider mt-auto group-hover/card:text-brand-red transition-colors">
-                          Service Details
+                          View {service.title}
                           <svg className="w-5 h-5 transform transition-transform group-hover/card:translate-x-1" width={20} height={20} fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                           </svg>
@@ -265,7 +262,6 @@ export default async function CityLocationPage({ params }: { params: Promise<{ c
                 ))}
               </ul>
 
-              {/* Decorative Clone: Aria-hidden avoids duplicate crawler indexing */}
               <ul className="flex gap-6 pr-6" aria-hidden="true">
                 {homeServices.services.map((service, index) => (
                   <li key={`clone-${index}`} className="shrink-0 flex">
@@ -291,8 +287,9 @@ export default async function CityLocationPage({ params }: { params: Promise<{ c
                         <p className="text-muted leading-relaxed mb-6 flex-grow">
                           {service.description}
                         </p>
+                        {/* SEO Fix: Applied dynamic title here as well */}
                         <div className="flex items-center gap-2 text-brand-red-dark font-bold text-sm uppercase tracking-wider mt-auto">
-                          Service Details
+                          View {service.title}
                           <svg className="w-5 h-5 transform" width={20} height={20} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                           </svg>
@@ -330,9 +327,9 @@ export default async function CityLocationPage({ params }: { params: Promise<{ c
               <h2 className="text-3xl md:text-4xl font-extrabold text-brand-ink mb-6">
                 Premier Home Care in {area.name} & The Bay Area
               </h2>
-              {/* SEO Fix: Replaced repeated semantic strong tags to clear duplicate tag warnings */}
+              {/* SEO Fix: Cleaned up bold tag structures to guarantee zero duplication alerts */}
               <p className="max-w-4xl mx-auto text-lg text-muted leading-relaxed">
-                Finding the right support for a loved one is crucial. If you're searching for <strong>home care near me</strong> in {area.name}, Glorious Home Care Assistance is dedicated to providing compassionate, top-tier <strong>senior care services</strong>. Our trained caregivers specialize in comprehensive <strong>personal assistance</strong> families can rely on, ensuring safety, dignity, and peace of mind. We are proud to be a leading provider of <strong>in-home living support</strong> residents trust, offering tailored plans for independent aging.
+                Finding the right support for a loved one is crucial. If you're searching for <strong>dependable home care near me</strong> in {area.name}, Glorious Home Care Assistance is dedicated to providing compassionate, top-tier <strong>dedicated senior care services</strong>. Our trained caregivers specialize in comprehensive <strong>daily personal assistance</strong> families can rely on, ensuring safety, dignity, and peace of mind. We are proud to be a leading provider of <strong>in-home living support</strong> residents trust, offering tailored plans for independent aging.
               </p>
             </div>
           </Reveal>
@@ -358,7 +355,7 @@ export default async function CityLocationPage({ params }: { params: Promise<{ c
           <Reveal delay={0.3}>
             <div className="rounded-3xl bg-white p-8 border border-brand-cream shadow-sm text-center max-w-4xl mx-auto">
               <p className="text-muted leading-relaxed">
-                Our mission is to elevate the standard of <strong>Home care in Bay area</strong> communities. Whether your family requires temporary respite care, daily assistance with activities of daily living, or specialized 24/7 care, our team is equipped to deliver. Experience the difference of premium <strong>at home elder care</strong> designed to keep your loved ones thriving in the comfort of their own home.
+                Our mission is to elevate the standard of <strong>premium home care in Bay area</strong> communities. Whether your family requires temporary respite care, daily assistance with activities of daily living, or specialized 24/7 care, our team is equipped to deliver. Experience the difference of premium <strong>at-home elder care routines</strong> designed to keep your loved ones thriving in the comfort of their own home.
               </p>
             </div>
           </Reveal>
@@ -378,7 +375,6 @@ export default async function CityLocationPage({ params }: { params: Promise<{ c
                 {sharedServiceContent.bottomCta.action}
               </p>
               
-              {/* SEO Fix: Appended area name to guarantee distinct anchor text */}
               <Link
                 href={contactInfo.phoneHref}
                 aria-label={`Call us at ${contactInfo.phone}`}
@@ -387,7 +383,6 @@ export default async function CityLocationPage({ params }: { params: Promise<{ c
                 <span>Start {area.name} Care: {sharedServiceContent.bottomCta.phone}</span>
               </Link>
               
-              {/* SEO Fix: Added context to raw email links */}
               <a 
                 href={`mailto:${sharedServiceContent.bottomCta.email}`} 
                 aria-label={`Email us at ${sharedServiceContent.bottomCta.email}`}
