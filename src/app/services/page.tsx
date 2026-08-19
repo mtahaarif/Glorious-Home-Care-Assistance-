@@ -6,7 +6,7 @@ import { useRef, useEffect, useCallback, useState } from "react";
 import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
 import { contactInfo, homeCallouts } from "@/data/global";
-import {ExpandableLocations} from "@/components/ExpandableLists";
+import { ExpandableLocations } from "@/components/ExpandableLists";
 import { serviceAreas } from "@/data/locations";
 
 import { 
@@ -22,17 +22,13 @@ export default function ServicesPage() {
   const animationRef = useRef<number | null>(null);
   const isPausedRef = useRef(false);
 
-  // Refs and State for the "How Home Care Works" Parallax Scroll
   const processSectionRef = useRef<HTMLElement>(null);
   const [processProgress, setProcessProgress] = useState(0);
-  
-  // SEO Fix: mounted state prevents mobile markup and carousel clones from causing duplicate text/heading penalties during SSR
   const [mounted, setMounted] = useState(false);
 
-  const SCROLL_SPEED = 0.6; // px per frame
+  const SCROLL_SPEED = 0.6;
   const resumeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Helper functions for the horizontal carousel
   const nudgeScroll = (amount: number) => {
     const el = scrollContainerRef.current;
     if (!el) return;
@@ -50,9 +46,7 @@ export default function ServicesPage() {
   const scrollLeft = () => nudgeScroll(-400);
   const scrollRight = () => nudgeScroll(400);
 
-  // Main Animation Loop for Auto-Carousel and Parallax Scroll progress
   const animate = useCallback(() => {
-    // 1. Horizontal Carousel Auto-Scroll
     const el = scrollContainerRef.current;
     if (el && !isPausedRef.current && mounted) {
       el.scrollLeft += SCROLL_SPEED;
@@ -62,7 +56,6 @@ export default function ServicesPage() {
       }
     }
 
-    // 2. Vertical Parallax Scroll Logic for "How Home Care Works"
     if (processSectionRef.current) {
       const rect = processSectionRef.current.getBoundingClientRect();
       const windowHeight = window.innerHeight;
@@ -70,7 +63,7 @@ export default function ServicesPage() {
       const scrollableDistance = rect.height - windowHeight;
       if (scrollableDistance > 0) {
         let p = -rect.top / scrollableDistance;
-        p = Math.max(0, Math.min(1, p)); // Clamp between 0 and 1
+        p = Math.max(0, Math.min(1, p));
         setProcessProgress(p);
       }
     }
@@ -78,17 +71,14 @@ export default function ServicesPage() {
     animationRef.current = requestAnimationFrame(animate);
   }, [mounted]);
 
-  // Handle Hydration cleanly
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Sync scroll position once clones are rendered
   useEffect(() => {
     if (mounted) {
       const el = scrollContainerRef.current;
       if (el) {
-        // Automatically jump to the middle (original set) so clones safely pad the left and right without flickering
         el.scrollLeft = el.scrollWidth / 3;
       }
       animationRef.current = requestAnimationFrame(animate);
@@ -101,13 +91,10 @@ export default function ServicesPage() {
   const pauseScroll = () => { isPausedRef.current = true; };
   const resumeScroll = () => { isPausedRef.current = false; };
 
-  // Helper to render individual Service Cards cleanly for SEO
+  // SEO Fix: Changed outer wrapper to div to avoid "Anchor text too long" penalties.
   const renderServiceCard = (service: typeof mainServices[0], index: number, isOriginal: boolean) => (
-    <Link 
-      href={`/services/${service.slug}`} 
-      aria-label={!isOriginal ? undefined : `View details for ${service.title}`}
-      tabIndex={!isOriginal ? -1 : 0}
-      className="w-[320px] sm:w-[380px] flex flex-col rounded-3xl bg-white border border-brand-cream/50 shadow-md transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group/card overflow-hidden"
+    <div 
+      className="w-[320px] sm:w-[380px] flex flex-col rounded-3xl bg-white border border-brand-cream/50 shadow-md transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group/card overflow-hidden relative"
     >
       <div className="relative h-[220px] w-full overflow-hidden bg-brand-cream shrink-0">
         {service.bannerImage && (
@@ -124,32 +111,38 @@ export default function ServicesPage() {
       </div>
       <div className="p-8 flex flex-col flex-grow">
         
-        {/* Semantic HTML toggle for duplicates: Only original gets an h3 tag to prevent heading hierarchy bloat */}
         {isOriginal ? (
-          <h3 className="text-xl font-bold text-brand-ink mb-3 group-hover/card:text-brand-red transition-colors">{service.title}</h3>
+          <h3 className="text-xl font-bold text-brand-ink mb-3 group-hover/card:text-brand-red transition-colors">
+            {/* SEO Fix: Minimal anchor text, CSS trick stretches clickable area */}
+            <Link 
+              href={`/services/${service.slug}`} 
+              aria-label={`View details for ${service.title}`}
+              className="after:absolute after:inset-0 focus:outline-none"
+            >
+              {service.title}
+            </Link>
+          </h3>
         ) : (
-          <div className="text-xl font-bold text-brand-ink mb-3 group-hover/card:text-brand-red transition-colors">{service.title}</div>
+          <div className="text-xl font-bold text-brand-ink mb-3 group-hover/card:text-brand-red transition-colors">
+            {service.title}
+          </div>
         )}
         
         <p className="text-muted leading-relaxed mb-6 flex-grow">{service.description}</p>
         
-        {/* Unique anchor text context strictly reserved for crawlers to prevent identical link texts */}
         <div className="flex items-center gap-2 text-brand-red-dark font-bold text-sm uppercase tracking-wider mt-auto group-hover/card:text-brand-red transition-colors">
-          <span>View Details {isOriginal && <span className="sr-only"> {service.title}</span>}</span>
+          <span>View {service.title} Details</span>
           <svg className="w-5 h-5 transform transition-transform group-hover/card:translate-x-1" width={20} height={20} fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
         </div>
       </div>
-    </Link>
+    </div>
   );
 
   return (
-    // Crucial: Use overflow-x-clip instead of overflow-hidden so mobile sticky positioning works
     <div className="flex flex-col overflow-x-clip">
       
       {/* 1. HERO BANNER */}
       <section className="relative overflow-hidden bg-background min-h-[400px] md:min-h-[450px] lg:min-h-[500px] flex items-center py-12 md:py-16">
-        
-        {/* Background Image Container */}
         <div className="absolute inset-0 z-0">
           <Image 
             src={servicesHero.bannerImage}
@@ -160,8 +153,6 @@ export default function ServicesPage() {
             className="absolute inset-0 w-full h-full object-cover object-[80%_center]"
             sizes="100vw"
           />
-          
-          {/* Smooth Left-to-Right White Fade Overlay */}
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/30 to-transparent z-10 pointer-events-none" />
         </div>
         
@@ -188,12 +179,13 @@ export default function ServicesPage() {
                 >
                   {homeCallouts.callToAction}
                 </Link>
+                {/* SEO Fix: Unique Anchor Text */}
                 <Link
                   href="/request-care"
                   aria-label="Request Care Today"
                   className="inline-flex w-full sm:w-auto items-center justify-center rounded-full border-2 border-brand-ink/20 bg-white/80 backdrop-blur-sm px-6 py-3 text-sm font-bold tracking-wide text-brand-ink transition-all hover:-translate-y-1 hover:bg-white"
                 >
-                  Request Care Today!
+                  Schedule Care Services
                 </Link>
               </div>
             </Reveal>
@@ -228,9 +220,10 @@ export default function ServicesPage() {
             <div className="relative overflow-hidden rounded-3xl border border-brand-cream/80 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-brand-gold/40 hover:shadow-xl sm:p-10 lg:p-12">
               <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-brand-cream/60 blur-3xl"></div>
               <div className="relative z-10 flex flex-col h-full">
-                <h3 className="mb-6 text-3xl font-extrabold text-brand-ink">
+                {/* SEO Fix: Downgraded semantic h3 to styling-equivalent div to prevent heading bloat */}
+                <div className="mb-6 text-3xl font-extrabold text-brand-ink">
                   Free In-Home Assessment
-                </h3>
+                </div>
                 <div className="mb-6 h-[2px] w-full bg-brand-cream transition-colors duration-300 group-hover:bg-brand-red/20"></div>
                 <p className="mb-10 text-lg leading-relaxed text-muted flex-grow">
                   {homeCallouts.freeConsultation}
@@ -247,7 +240,7 @@ export default function ServicesPage() {
         </Container>
       </section>
 
-      {/* 3. HOME CARE OPTIONS (Interactive Horizontal Carousel) */}
+      {/* 3. HOME CARE OPTIONS */}
       <section id="home-care-options" className="bg-white border-y border-white py-20 md:py-32 relative">
         <Container>
           <Reveal>
@@ -288,21 +281,18 @@ export default function ServicesPage() {
           onTouchEnd={resumeScroll}
           className="flex overflow-x-auto gap-6 px-4 md:px-12 xl:px-24 scrollbar-hide pb-12 pt-4"
         >
-          {/* LEFT CLONES (Client-side only) - Prevents duplicate text and heading penalties on SSR HTML */}
           {mounted && mainServices.map((service, index) => (
             <li key={`clone-left-${service.slug}-${index}`} className="shrink-0 flex" aria-hidden="true">
               {renderServiceCard(service, index, false)}
             </li>
           ))}
 
-          {/* ORIGINAL CARDS (Server-side & Client-side) */}
           {mainServices.map((service, index) => (
             <li key={`orig-${service.slug}-${index}`} className="shrink-0 flex">
               {renderServiceCard(service, index, true)}
             </li>
           ))}
 
-          {/* RIGHT CLONES (Client-side only) - Prevents duplicate text and heading penalties on SSR HTML */}
           {mounted && mainServices.map((service, index) => (
             <li key={`clone-right-${service.slug}-${index}`} className="shrink-0 flex" aria-hidden="true">
               {renderServiceCard(service, index, false)}
@@ -311,11 +301,7 @@ export default function ServicesPage() {
         </ul>
       </section>
 
-      {/* ========================================= */}
-      {/* 4. WHO WE SERVE SECTION                   */}
-      {/* ========================================= */}
-
-      {/* DESKTOP VERSION (Hidden on Mobile) */}
+      {/* 4. WHO WE SERVE SECTION */}
       <div className="hidden md:block">
         <section className="bg-surface py-20 md:py-32">
           <Container>
@@ -339,7 +325,6 @@ export default function ServicesPage() {
                 <li key={group.title}>
                   <Reveal delay={index * 0.1}>
                     <div className="flex h-full flex-col rounded-3xl bg-white border border-brand-cream/50 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-2 group/card overflow-hidden">
-                      
                       <div className="relative h-[220px] w-full overflow-hidden bg-brand-cream">
                         {group.image && (
                           <Image 
@@ -355,9 +340,10 @@ export default function ServicesPage() {
                       </div>
                       
                       <div className="p-8 flex flex-col flex-grow">
-                        <h3 className="text-xl font-bold text-brand-ink mb-3 transition-colors group-hover/card:text-brand-red">
+                        {/* SEO Fix: Downgraded to styling div to prevent heading bloat */}
+                        <div className="text-xl font-bold text-brand-ink mb-3 transition-colors group-hover/card:text-brand-red">
                           {group.title}
-                        </h3>
+                        </div>
                         <p className="text-muted leading-relaxed mb-6 flex-grow">
                           {group.description}
                         </p>
@@ -371,13 +357,9 @@ export default function ServicesPage() {
         </section>
       </div>
 
-      {/* MOBILE VERSION (Hidden on Desktop) */}
-      {/* SEO Fix: Conditional rendering completely removes the duplicate text & links from SSR HTML for crawler bots */}
       <div className="block md:hidden" aria-hidden="true">
         {mounted ? (
           <section className="bg-surface relative">
-            
-            {/* Full-width Sticky Header */}
             <div className="sticky top-[72px] md:top-[88px] z-30 w-full bg-surface/90 backdrop-blur-md py-8 transition-all border-b border-brand-ink/5 shadow-sm">
               <Reveal>
                 <div className="mx-auto max-w-3xl text-center px-4">
@@ -402,9 +384,7 @@ export default function ServicesPage() {
                     <li 
                       key={group.title} 
                       className="sticky w-full rounded-3xl bg-white border border-brand-cream shadow-2xl overflow-hidden transition-transform duration-500 will-change-transform"
-                      style={{
-                        top: `calc(180px + ${index * 24}px)`,
-                      }}
+                      style={{ top: `calc(180px + ${index * 24}px)` }}
                     >
                       <div className="grid md:grid-cols-[1fr_1.2fr]">
                         <div className="relative h-[220px] w-full overflow-hidden bg-brand-cream border-b border-brand-cream/50">
@@ -427,9 +407,9 @@ export default function ServicesPage() {
                           <p className="text-muted leading-relaxed mb-8 text-base">
                             {group.description}
                           </p>
-                          <Link href="#home-care-options" aria-label={`Learn more about ${group.title}`} className="group inline-flex items-center gap-2 text-brand-red font-bold text-sm uppercase tracking-wider transition-colors hover:text-brand-red-dark">
-                            {/* Unique anchor text context */}
-                            <span>Learn More <span className="sr-only"> {group.title}</span></span>
+                          {/* SEO Fix: Descriptive unique anchor texts instead of 'Learn More' */}
+                          <Link href="#home-care-options" className="group inline-flex items-center gap-2 text-brand-red font-bold text-sm uppercase tracking-wider transition-colors hover:text-brand-red-dark">
+                            <span>Explore {group.title} Options</span>
                             <svg className="w-5 h-5 transform transition-transform group-hover:translate-x-1" width={20} height={20} fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                             </svg>
@@ -447,11 +427,7 @@ export default function ServicesPage() {
         )}
       </div>
 
-      {/* ========================================= */}
-      {/* 5. OUR CARE PROCESS                       */}
-      {/* ========================================= */}
-
-      {/* DESKTOP VERSION (Hidden on Mobile) */}
+      {/* 5. OUR CARE PROCESS */}
       <div className="hidden md:block">
         <section className="bg-white border-t border-brand-gold/20 py-20 md:py-32">
           <Container>
@@ -475,22 +451,17 @@ export default function ServicesPage() {
                 <li key={step.step} className="h-full">
                   <Reveal delay={index * 0.1} className="h-full">
                     <div className="relative flex h-full flex-col rounded-3xl border border-white bg-white p-10 shadow-sm transition-all hover:shadow-xl hover:-translate-y-2">
-                      
-                      {/* Huge Minimalist Number */}
                       <span className="absolute right-6 top-2 select-none text-7xl font-black text-brand-gold/30">
                         {step.step}
                       </span>
-                      
-                      <h3 className="relative z-10 mt-8 text-2xl font-bold text-brand-ink transition-colors duration-300 group-hover:text-brand-red">
+                      {/* SEO Fix: Downgraded to a styling div to prevent H3 bloat */}
+                      <div className="relative z-10 mt-8 text-2xl font-bold text-brand-ink transition-colors duration-300 group-hover:text-brand-red">
                         {step.title}
-                      </h3>
-                      
+                      </div>
                       <div className="my-6 h-[3px] w-16 bg-brand-red transition-all duration-500 group-hover:w-24"></div>
-                      
                       <p className="relative z-10 text-base leading-relaxed text-muted">
                         {step.description}
                       </p>
-                      
                     </div>
                   </Reveal>
                 </li>
@@ -500,13 +471,10 @@ export default function ServicesPage() {
         </section>
       </div>
 
-      {/* MOBILE VERSION (Hidden on Desktop) */}
-      {/* SEO Fix: Conditional rendering prevents massive duplicate text counts on load */}
       <div className="block md:hidden" aria-hidden="true">
         {mounted ? (
           <section ref={processSectionRef} className="bg-white border-t border-brand-gold/20 relative h-[300vh]">
             <div className="sticky top-0 h-screen w-full flex flex-col items-center justify-start overflow-hidden pt-20 md:pt-24">
-              
               <div className="z-40 w-full bg-white backdrop-blur-xl py-8 text-center px-4">
                 <Reveal>
                   <div className="flex items-center justify-center gap-4 mb-4">
@@ -524,10 +492,7 @@ export default function ServicesPage() {
 
               <ul className="relative w-full max-w-lg mt-8 md:mt-16 flex-grow">
                 {homeProcess.steps.map((step, index) => {
-                  let tx = 0;
-                  let ty = 0;
-
-                  // Smooth Parallax Logic
+                  let tx = 0, ty = 0;
                   if (index === 0) {
                     const p = Math.min(1, processProgress / 0.33);
                     tx = -(p * 150); 
@@ -541,35 +506,25 @@ export default function ServicesPage() {
                       tx = p * 150; 
                     }
                   } else if (index === 2) {
-                    if (processProgress < 0.33) {
-                      ty = 150;
-                    } else if (processProgress < 0.66) {
+                    if (processProgress < 0.33) ty = 150;
+                    else if (processProgress < 0.66) {
                       const p = (processProgress - 0.33) / 0.33;
                       ty = 150 - (p * 150);
-                    } else {
-                      ty = 0;
-                    }
+                    } else ty = 0;
                   }
-
                   return (
                     <li 
                       key={step.step}
                       className="absolute inset-x-4 md:inset-x-0 top-0 flex flex-col rounded-3xl border border-white bg-white p-8 md:p-12 shadow-2xl transition-transform ease-out duration-100"
-                      style={{
-                        transform: `translate(${tx}vw, ${ty}vh)`,
-                        willChange: 'transform'
-                      }}
+                      style={{ transform: `translate(${tx}vw, ${ty}vh)`, willChange: 'transform' }}
                     >
                       <span className="absolute right-6 top-2 select-none text-7xl font-black text-brand-gold/30">
                         {step.step}
                       </span>
-                      
                       <div className="relative z-10 mt-8 text-2xl md:text-3xl font-bold text-brand-ink">
                         {step.title}
                       </div>
-                      
                       <div className="my-6 h-[3px] w-16 bg-brand-red"></div>
-                      
                       <p className="relative z-10 text-base md:text-lg leading-relaxed text-muted">
                         {step.description}
                       </p>
@@ -601,14 +556,12 @@ export default function ServicesPage() {
             </div>
           </Reveal>
 
-          {/* DYNAMIC EXPANDABLE LOCATIONS GRID */}
           <div className="mb-16 border-t border-brand-cream pt-12">
             <Reveal delay={0.1}>
               <h3 className="text-2xl font-extrabold text-brand-ink text-center mb-8">
                 Communities We Proudly Serve
               </h3>
             </Reveal>
-            
             <ExpandableLocations locations={serviceAreas} />
           </div>
 
@@ -622,9 +575,7 @@ export default function ServicesPage() {
         </Container>
       </section>
 
-      {/* ========================================= */}
-      {/* 7. BOTTOM CTA SECTION                       */}
-      {/* ========================================= */}
+      {/* 7. BOTTOM CTA SECTION */}
       <section className="bg-brand-red-dark py-12 md:py-16 text-center text-white border-t-4 border-brand-gold relative z-30">
         <Container className="max-w-3xl">
           <Reveal className="flex flex-col items-center">
@@ -641,8 +592,9 @@ export default function ServicesPage() {
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-gold">
                 {sharedServiceContent.bottomCta.action}
               </p>
+              {/* SEO Fix: Unique CTA anchor text */}
               <Link href={contactInfo.phoneHref} aria-label={`Call us at ${contactInfo.phone}`} className="inline-block transform rounded-full bg-brand-gold px-10 py-4 text-lg font-black tracking-wide text-brand-ink shadow-xl transition-all hover:scale-105 hover:bg-white sm:text-2xl">
-                {sharedServiceContent.bottomCta.phone}
+                <span>Start Home Care Services: {sharedServiceContent.bottomCta.phone}</span>
               </Link>
             </div>
             <div className="mx-auto mt-12 w-full max-w-2xl border-t border-white/20 pt-8">
