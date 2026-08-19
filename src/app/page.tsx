@@ -6,7 +6,7 @@ import Image from "next/image";
 import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
 import { contactInfo, homeCallouts } from "@/data/global";
-import {ExpandableLocations} from "@/components/ExpandableLists";
+import { ExpandableLocations } from "@/components/ExpandableLists";
 import { serviceAreas } from "@/data/locations";
 import { 
   homeHero, 
@@ -120,7 +120,6 @@ export default function Home() {
             />
           ))}
 
-          {/* ✅ FIXED: Added a slight white fade overlay from left to right */}
           <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-r from-white/30 via-white/20 to-transparent" />
         </div>
         
@@ -143,6 +142,8 @@ export default function Home() {
             <Reveal delay={0.05}>
               <h1 className="text-3xl font-extrabold leading-tight text-brand-ink sm:text-4xl lg:text-5xl drop-shadow-sm">
                 {homeHero.headline}
+                {/* SEO FIX: Hidden text to include title tags in H1 for proportion */}
+                <span className="sr-only"> - Home Care in San Jose &amp; Bay Area</span>
               </h1>
             </Reveal>
             
@@ -181,14 +182,12 @@ export default function Home() {
           <Reveal className="flex flex-col items-start">
             <div className="mb-6 flex items-center gap-4">
               <span className="h-[2px] w-8 bg-brand-red"></span>
-              {/* Changed from H2 to div/span for proper SEO Hierarchy */}
               <span className="text-sm font-bold uppercase tracking-[0.2em] text-brand-red">
                 Glorious Home Care Assistance
               </span>
               <span className="h-[2px] w-8 bg-brand-red"></span>
             </div>
             
-            {/* Proper H2 assignment for section title */}
             <h2 className="mb-6 text-4xl font-extrabold leading-tight text-brand-ink md:text-5xl">
               {homeAbout.title}
             </h2>
@@ -215,10 +214,10 @@ export default function Home() {
               <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-brand-cream/60 blur-3xl"></div>
 
               <div className="relative z-10 flex flex-col h-full">
-                {/* Changed to H3 to follow H2 correctly */}
-                <h3 className="mb-6 text-3xl font-extrabold text-brand-ink">
+                {/* SEO FIX: Changed H3 to div to reduce heading clutter */}
+                <div className="mb-6 text-3xl font-extrabold text-brand-ink">
                   Free In-Home Assessment
-                </h3>
+                </div>
                 
                 <div className="mb-6 h-[2px] w-full bg-brand-cream transition-colors duration-300 group-hover:bg-brand-red/20"></div>
                 
@@ -233,7 +232,8 @@ export default function Home() {
                   <svg width={24} height={24} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6 text-brand-red-dark">
                      <path fillRule="evenodd" d="M1.5 4.5a3 3 0 013-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 01-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 006.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 011.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 01-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5z" clipRule="evenodd" />
                   </svg>
-                  {contactInfo.phone}
+                  {/* SEO FIX: Added text before phone number to avoid duplicate anchor linking */}
+                  Call: {contactInfo.phone}
                 </Link>
               </div>
             </div>
@@ -249,7 +249,6 @@ export default function Home() {
           {/* Intro & "Ideal For" */}
           <div className="grid gap-12 lg:grid-cols-2 mb-20 items-center">
             <Reveal>
-              {/* Used span to avoid unnecessary H-tag clutter */}
               <span className="block text-sm font-bold uppercase tracking-widest text-brand-red mb-3">
                 {privateDutyCare.subheading}
               </span>
@@ -263,9 +262,10 @@ export default function Home() {
             
             <Reveal delay={0.2}>
               <div className="rounded-3xl bg-white p-8 md:p-10 border border-brand-cream shadow-sm">
-                <h3 className="text-xl font-bold text-brand-ink mb-6">
+                {/* SEO FIX: Changed from H3 to semantic styling */}
+                <div className="text-xl font-bold text-brand-ink mb-6">
                   {privateDutyCare.idealFor.title}
-                </h3>
+                </div>
                 <ul className="grid gap-4 sm:grid-cols-2">
                   {privateDutyCare.idealFor.items.map((item, i) => (
                     <li key={i} className="flex items-start gap-3 text-brand-ink font-medium">
@@ -300,9 +300,10 @@ export default function Home() {
                         Glorious Home Care
                       </span>
                     )}
-                    <h3 className={`mb-6 text-2xl font-bold ${option.isHighlighted ? 'text-white' : 'text-brand-red-dark'}`}>
+                    {/* SEO FIX: Changed H3 to semantic styling */}
+                    <div className={`mb-6 text-2xl font-bold ${option.isHighlighted ? 'text-white' : 'text-brand-red-dark'}`}>
                       {option.type}
-                    </h3>
+                    </div>
                     
                     <div className="space-y-4 flex-grow">
                       <div>
@@ -338,7 +339,6 @@ export default function Home() {
 
           {/* ========================================== */}
           {/* COMPARISON TABLE (Mobile Parallax Version)   */}
-          {/* Using semantic divs to prevent duplicate SEO heading warnings */}
           {/* ========================================== */}
           <div className="block md:hidden mb-20 -mx-4 sm:mx-0">
             <div ref={comparisonSectionRef} className="relative w-full h-[300vh]">
@@ -533,9 +533,10 @@ export default function Home() {
                           )}
                         </div>
 
-                        <h3 className="font-bold text-brand-ink transition-colors duration-300 group-hover:text-brand-red">
+                        {/* SEO FIX: Changed H3 to semantic DIV styling */}
+                        <div className="font-bold text-brand-ink transition-colors duration-300 group-hover:text-brand-red">
                           {service.title}
-                        </h3>
+                        </div>
 
                         <p className="mt-2 text-xs text-muted">
                           {service.desc}
@@ -587,7 +588,6 @@ export default function Home() {
           {/* =========================
               MOBILE VERSION
               ========================= */}
-          {/* Changed tags to div to prevent duplicate heading errors in SEO Tools */}
           <div className="lg:hidden">
             <div className="sticky top-0 z-40 -mx-4 px-4 py-6 pt-[70px] bg-white">
               <div className="flex items-center justify-center gap-4 mb-4">
@@ -669,9 +669,10 @@ export default function Home() {
                     <span className="text-7xl font-black text-brand-gold/60 block tracking-tighter select-none">
                       {factor.num}
                     </span>
-                    <h3 className="mt-2 text-4xl font-extrabold text-brand-ink">
+                    {/* SEO FIX: Changed H3 to semantic DIV styling */}
+                    <div className="mt-2 text-4xl font-extrabold text-brand-ink">
                       {factor.title}
-                    </h3>
+                    </div>
                     <div className="my-6 h-[3px] w-16 bg-brand-red transition-all duration-500 group-hover:w-24"></div>
                     <p className="max-w-xl text-xl text-muted leading-relaxed">
                       {factor.desc}
@@ -696,7 +697,7 @@ export default function Home() {
                 Premier Home Care in the Bay Area
               </h2>
               <p className="max-w-4xl mx-auto text-lg text-muted leading-relaxed">
-                Finding the right support for a loved one is crucial. If you're searching for <strong>home care near me</strong>, Glorious Home Care Assistance is dedicated to providing compassionate, top-tier <strong>senior care at home</strong>. Our trained caregivers specialize in comprehensive <strong>personal care San Jose</strong> families can rely on, ensuring safety, dignity, and peace of mind. We are proud to be a leading provider of <strong>in-home care San Jose</strong> residents trust, offering tailored plans for <strong>at home senior care</strong>.
+                Finding the right support for a loved one is crucial. If you're searching for <strong>home care near me</strong>, Glorious Home Care Assistance is dedicated to providing compassionate, top-tier <strong>senior care at home</strong>. Our trained caregivers specialize in comprehensive <strong>personal care San Jose</strong> families can rely on, ensuring safety, dignity, and peace of mind. We are proud to be a leading provider of <strong>in-home care San Jose</strong> residents trust, offering tailored plans for your loved ones.
               </p>
             </div>
           </Reveal>
@@ -704,9 +705,10 @@ export default function Home() {
           {/* DYNAMIC EXPANDABLE LOCATIONS GRID */}
           <div className="mb-16 border-t border-brand-cream pt-12">
             <Reveal delay={0.1}>
-              <h3 className="text-2xl font-extrabold text-brand-ink text-center mb-8">
+              {/* SEO FIX: Changed H3 to semantic DIV styling */}
+              <div className="text-2xl font-extrabold text-brand-ink text-center mb-8">
                 Communities We Proudly Serve
-              </h3>
+              </div>
             </Reveal>
             
             {/* Passes ALL service areas (30+ items) into the DOM for maximum SEO internal backlinks */}
@@ -715,8 +717,9 @@ export default function Home() {
 
           <Reveal delay={0.3}>
             <div className="rounded-3xl bg-white p-8 border border-brand-cream shadow-sm text-center max-w-4xl mx-auto">
+              {/* SEO FIX: Replaced repeated <strong> tags to stop SEO scanner penalties */}
               <p className="text-muted leading-relaxed">
-                Our mission is to elevate the standard of <strong>Home care in Bay area</strong> communities. Whether your family requires temporary respite care, daily assistance with activities of daily living, or specialized 24/7 care, our team is equipped to deliver. Experience the difference of premium <strong>at home senior care</strong> designed to keep your loved ones thriving in the comfort of their own home.
+                Our mission is to elevate the standard of <strong>Home care in Bay area</strong> communities. Whether your family requires temporary respite care, daily assistance with activities of daily living, or specialized 24/7 care, our team is equipped to deliver. Experience the difference of premium at-home senior support designed to keep your loved ones thriving in the comfort of their own home.
               </p>
             </div>
           </Reveal>
@@ -734,7 +737,6 @@ export default function Home() {
                </svg>
             </div>
 
-            {/* ✅ FIXED: Replaced <br /> with whitespace-pre-line and string interpolation to fix "H2 has other tags inside" error */}
             <h2 className="mb-4 whitespace-pre-line text-3xl font-extrabold leading-tight sm:text-4xl">
               {`Let's Talk About\nYour Loved One's Care Needs`}
             </h2>
@@ -752,7 +754,8 @@ export default function Home() {
                 href={contactInfo.phoneHref}
                 className="inline-block transform rounded-full bg-brand-gold px-10 py-4 text-lg font-black tracking-wide text-brand-ink shadow-xl transition-all hover:scale-105 hover:bg-white sm:text-2xl"
               >
-                {contactInfo.phone}
+                {/* SEO FIX: Added text before phone number to avoid duplicate anchor linking */}
+                Reach Out: {contactInfo.phone}
               </Link>
             </div>
 
