@@ -5,7 +5,6 @@ import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import { serviceAreas, serviceCounties } from "@/data/locations";
 
-// SEO Fix: Re-wrote grouped region descriptions to guarantee they are 100% unique and prevent duplicate content penalties.
 const groupedRegions = [
   {
     id: "santa-clara",
@@ -39,12 +38,10 @@ const groupedRegions = [
   }
 ];
 
-// Extracting the extended counties
 const extendedCounties = serviceCounties.filter(
   c => !["Santa Clara County", "Alameda County", "Contra Costa County", "San Francisco County", "San Mateo County"].includes(c)
 );
 
-// Modern Minimal Icons
 const MapPinIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="h-6 w-6">
     <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -61,7 +58,6 @@ const DiagonalArrowIcon = () => (
 export default function LocationsDirectory() {
   const [activeSection, setActiveSection] = useState<string>("santa-clara");
 
-  // Intersection Observer to smoothly transition sidebar state on scroll
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -71,7 +67,7 @@ export default function LocationsDirectory() {
           }
         });
       },
-      { rootMargin: "-20% 0px -75% 0px" } // Triggers transition smoothly as content enters upper third
+      { rootMargin: "-20% 0px -75% 0px" } 
     );
 
     groupedRegions.forEach((region) => {
@@ -85,7 +81,6 @@ export default function LocationsDirectory() {
     return () => observer.disconnect();
   }, []);
 
-  // Smooth scroll handler for sidebar links
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -94,7 +89,7 @@ export default function LocationsDirectory() {
   return (
     <div className="flex flex-col lg:flex-row gap-16 items-start">
       
-      {/* LEFT: STICKY SIDEBAR (Modern Tab Navigation) */}
+      {/* LEFT: STICKY SIDEBAR */}
       <aside className="w-full lg:w-[28%] shrink-0 lg:sticky lg:top-32 z-10">
         <h2 className="text-[0.65rem] font-black uppercase tracking-[0.2em] text-[color:var(--brand-ink)]/50 mb-6 pl-4">
           Service Districts
@@ -115,7 +110,6 @@ export default function LocationsDirectory() {
                         : "bg-transparent text-[color:var(--brand-ink)]/70 hover:bg-white hover:shadow-sm"
                     }`}
                   >
-                    {/* Active Indicator Line */}
                     {isActive && (
                       <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-[color:var(--brand-gold)]" />
                     )}
@@ -176,36 +170,19 @@ export default function LocationsDirectory() {
             className="scroll-mt-20"
           >
 
-            {/* MOBILE STICKY REGION HEADER */}
-            <div className="lg:hidden sticky top-0 z-30 -mx-4 w-[calc(100%+2rem)] bg-white px-4 pt-20 pb-6 text-center" aria-hidden="true">
-
-              <div className="text-3xl font-extrabold text-[color:var(--brand-ink)] tracking-tight">
-                {region.name}
+            {/* SEO FIX: UNIFIED REGION HEADER 
+                Combined the separate mobile and desktop headers into a single DOM element 
+                using responsive classes to eliminate duplicate text penalties. */}
+            <Reveal>
+              <div className="sticky top-0 z-30 -mx-4 w-[calc(100%+2rem)] bg-white/95 backdrop-blur-sm px-4 pt-20 pb-6 text-center lg:static lg:mx-0 lg:w-full lg:bg-transparent lg:p-0 lg:text-left">
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-[color:var(--brand-ink)] tracking-tight">
+                  {region.name}
+                </h2>
+                <p className="mx-auto mt-3 max-w-3xl text-base leading-relaxed text-[color:var(--brand-ink)]/70 lg:mx-0 lg:mt-4 lg:max-w-2xl lg:text-lg">
+                  {region.description}
+                </p>
               </div>
-
-              <p className="mx-auto mt-3 max-w-3xl text-base leading-relaxed text-[color:var(--brand-ink)]/70">
-                {region.description}
-              </p>
-
-            </div>
-
-
-            {/* =========================
-                DESKTOP REGION HEADER
-                ========================= */}
-            <Reveal className="hidden lg:block">
-
-              {/* SEO Fix: Maintained structural h2 for the overarching region */}
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-[color:var(--brand-ink)] tracking-tight">
-                {region.name}
-              </h2>
-
-              <p className="mt-4 text-lg leading-relaxed text-[color:var(--brand-ink)]/70 max-w-2xl">
-                {region.description}
-              </p>
-
             </Reveal>
-
 
             {/* =========================
                 CITY CARDS
@@ -216,44 +193,30 @@ export default function LocationsDirectory() {
                 <li key={area.slug}>
                   <Reveal delay={index * 0.05}>
 
-                    {/* SEO Fix: Changed the wrapper to a div instead of a Link to prevent massive "long anchor text" penalties. 
-                        The interaction is maintained via the 'after:absolute after:inset-0' trick on the actual link below. */}
-                    <div
-                      className="group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl bg-white p-8 border border-black/5 shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(199,36,57,0.15)] hover:border-[color:var(--brand-red)]/30"
-                    >
+                    <div className="group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl bg-white p-8 border border-black/5 shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(199,36,57,0.15)] hover:border-[color:var(--brand-red)]/30">
 
-                      {/* Top Section */}
                       <div className="flex items-start justify-between mb-8">
-
                         <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[color:var(--brand-cream)] text-[color:var(--brand-gold-dark)] group-hover:bg-[color:var(--brand-red)] group-hover:text-white transition-colors duration-500 shadow-inner">
                           <MapPinIcon />
                         </div>
-
                         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black/5 text-[color:var(--brand-ink)]/40 group-hover:bg-[color:var(--brand-gold)] group-hover:text-white transition-all duration-500 group-hover:rotate-45">
                           <DiagonalArrowIcon />
                         </div>
-
                       </div>
 
-                      {/* Bottom Section */}
                       <div>
-
-                        {/* SEO Fix: Downgraded 27 individual h3 tags to a div. The internal Link serves as the only anchor text. */}
                         <div className="text-2xl font-bold text-[color:var(--brand-ink)] group-hover:text-[color:var(--brand-red-dark)] transition-colors duration-300">
                           <Link 
                             href={`/locations/${area.slug}`} 
-                            // The after:absolute trick stretches the clickable area of this specific text link to cover the entire parent card.
                             className="after:absolute after:inset-0 focus:outline-none"
                             aria-label={`View home care services in ${area.name}`}
                           >
                             {area.name}, CA
                           </Link>
                         </div>
-
                         <p className="mt-3 text-sm leading-relaxed text-[color:var(--brand-ink)]/60 line-clamp-2">
                           {area.description}
                         </p>
-
                       </div>
 
                     </div>
@@ -264,7 +227,6 @@ export default function LocationsDirectory() {
 
             </ul>
 
-
             {/* Divider */}
             {idx !== groupedRegions.length - 1 && (
               <div className="mt-20 h-[1px] w-full bg-gradient-to-r from-transparent via-black/10 to-transparent" />
@@ -273,18 +235,12 @@ export default function LocationsDirectory() {
           </div>
         ))}
 
-
         {/* EXTENDED REGIONS */}
-        <div
-          id="extended-regions"
-          className="scroll-mt-32 pt-10 border-t border-black/10"
-        >
-
+        <div id="extended-regions" className="scroll-mt-32 pt-10 border-t border-black/10">
           <Reveal>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-[color:var(--brand-ink)] tracking-tight">
               Extended California Coverage
             </h2>
-
             <p className="mt-4 text-lg leading-relaxed text-[color:var(--brand-ink)]/70 max-w-2xl">
               Glorious Home Care Assistance proudly extends our premium private duty home care and senior companionship across these additional California communities.
             </p>
@@ -296,7 +252,6 @@ export default function LocationsDirectory() {
                 <Reveal delay={idx * 0.03}>
                   <div className="group flex cursor-default items-center gap-2.5 rounded-full border border-[color:var(--brand-gold)]/30 bg-[color:var(--brand-cream)]/50 px-6 py-3 transition-all duration-300 hover:-translate-y-1 hover:bg-[color:var(--brand-red-dark)] hover:border-[color:var(--brand-red-dark)] hover:shadow-md">
                     <div className="h-2 w-2 rounded-full bg-[color:var(--brand-gold)] group-hover:bg-white transition-colors" />
-
                     <span className="text-sm font-bold text-[color:var(--brand-ink)] group-hover:text-white transition-colors">
                       {county}
                     </span>
@@ -305,7 +260,6 @@ export default function LocationsDirectory() {
               </li>
             ))}
           </ul>
-
         </div>
 
       </div>

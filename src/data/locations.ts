@@ -5,12 +5,15 @@ export const locationsHero = {
 };
 
 export const locationsIntro = {
-  title: "Trusted Care in Your Community",
+  // SEO Fix: Added exact title keyword matching
+  title: "Trusted Home Care Locations in Your Community",
   paragraphs: [
-    "Glorious Home Care Assistance is proud to serve families throughout the Bay Area, Northern California, and surrounding communities.",
+    "Glorious Home Care Assistance is proud to serve families across our Bay Area home care locations, Northern California, and surrounding communities.",
     "We understand the importance of finding reliable, local caregivers who can provide personalized support right where you live. Our locally managed team ensures prompt, high-quality care, giving families peace of mind knowing help is always nearby."
   ]
 };
+
+// ... keep the rest of your cities/counties array exactly as is! ...
 
 // Extracted from the California map flyer
 export const serviceCounties = [
