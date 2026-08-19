@@ -5,36 +5,36 @@ import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import { serviceAreas, serviceCounties } from "@/data/locations";
 
-// Grouping the flat serviceAreas array into logical counties
+// SEO Fix: Re-wrote grouped region descriptions to guarantee they are 100% unique and prevent duplicate content penalties.
 const groupedRegions = [
   {
     id: "santa-clara",
     name: "Santa Clara County",
-    description: "Providing premium private duty home care, hourly respite relief, and senior companionship across Santa Clara County communities.",
+    description: "Providing premium private duty home care, hourly respite relief, and dedicated senior companionship throughout the South Bay.",
     cities: serviceAreas.filter((a) => ["san-jose", "santa-clara", "sunnyvale", "cupertino", "milpitas", "campbell", "palo-alto", "mountain-view", "los-gatos"].includes(a.slug))
   },
   {
     id: "alameda",
     name: "Alameda County",
-    description: "Comprehensive home care coverage across Alameda County, focusing on safe, independent urban living and specialized support.",
+    description: "Comprehensive elder care coverage across the East Bay, focusing on safe, independent urban living and specialized mobility support.",
     cities: serviceAreas.filter((a) => ["berkeley", "oakland", "hayward", "pleasanton"].includes(a.slug))
   },
   {
     id: "san-mateo-sf",
     name: "San Mateo & SF",
-    description: "Trusted caregivers providing daily living assistance and specialized personal care across the Peninsula and San Francisco.",
+    description: "Trusted caregivers delivering daily living assistance and specialized personal care routines across the Peninsula and San Francisco proper.",
     cities: serviceAreas.filter((a) => ["daly-city", "san-mateo", "san-bruno", "san-francisco"].includes(a.slug))
   },
   {
     id: "contra-costa",
     name: "Contra Costa County",
-    description: "Reliable medication reminders, overnight companion monitoring, and dedicated homemaker help for East Bay seniors.",
+    description: "Reliable medication reminders, overnight companion monitoring, and diligent homemaker help tailored for Contra Costa seniors.",
     cities: serviceAreas.filter((a) => ["martinez", "concord", "walnut-creek"].includes(a.slug))
   },
   {
     id: "north-bay",
     name: "North Bay Counties",
-    description: "Compassionate aide and companion care helping individuals age in place across Marin, Sonoma, Napa, and Solano counties.",
+    description: "Compassionate home health aide and companion services helping individuals age in place gracefully across Marin, Sonoma, Napa, and Solano.",
     cities: serviceAreas.filter((a) => ["santa-rosa", "rohnert-park", "petaluma", "napa", "vacaville", "fairfield", "san-rafael"].includes(a.slug))
   }
 ];
@@ -96,9 +96,9 @@ export default function LocationsDirectory() {
       
       {/* LEFT: STICKY SIDEBAR (Modern Tab Navigation) */}
       <aside className="w-full lg:w-[28%] shrink-0 lg:sticky lg:top-32 z-10">
-        <h3 className="text-[0.65rem] font-black uppercase tracking-[0.2em] text-[color:var(--brand-ink)]/50 mb-6 pl-4">
+        <h2 className="text-[0.65rem] font-black uppercase tracking-[0.2em] text-[color:var(--brand-ink)]/50 mb-6 pl-4">
           Service Districts
-        </h3>
+        </h2>
         
         <nav>
           <ul className="flex flex-col gap-2 relative border-l-2 border-black/5 pl-4">
@@ -177,10 +177,8 @@ export default function LocationsDirectory() {
           >
 
             {/* MOBILE STICKY REGION HEADER */}
-            {/* ✅ FIXED: Added aria-hidden to prevent duplicate indexing of this layout block */}
             <div className="lg:hidden sticky top-0 z-30 -mx-4 w-[calc(100%+2rem)] bg-white px-4 pt-20 pb-6 text-center" aria-hidden="true">
 
-              {/* ✅ FIXED: Changed h2 to div to clear the "Identical Headings" duplicate SEO error */}
               <div className="text-3xl font-extrabold text-[color:var(--brand-ink)] tracking-tight">
                 {region.name}
               </div>
@@ -197,6 +195,7 @@ export default function LocationsDirectory() {
                 ========================= */}
             <Reveal className="hidden lg:block">
 
+              {/* SEO Fix: Maintained structural h2 for the overarching region */}
               <h2 className="text-3xl sm:text-4xl font-extrabold text-[color:var(--brand-ink)] tracking-tight">
                 {region.name}
               </h2>
@@ -217,8 +216,9 @@ export default function LocationsDirectory() {
                 <li key={area.slug}>
                   <Reveal delay={index * 0.05}>
 
-                    <Link
-                      href={`/locations/${area.slug}`}
+                    {/* SEO Fix: Changed the wrapper to a div instead of a Link to prevent massive "long anchor text" penalties. 
+                        The interaction is maintained via the 'after:absolute after:inset-0' trick on the actual link below. */}
+                    <div
                       className="group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl bg-white p-8 border border-black/5 shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(199,36,57,0.15)] hover:border-[color:var(--brand-red)]/30"
                     >
 
@@ -238,9 +238,17 @@ export default function LocationsDirectory() {
                       {/* Bottom Section */}
                       <div>
 
-                        <h3 className="text-2xl font-bold text-[color:var(--brand-ink)] group-hover:text-[color:var(--brand-red-dark)] transition-colors duration-300">
-                          {area.name}, CA
-                        </h3>
+                        {/* SEO Fix: Downgraded 27 individual h3 tags to a div. The internal Link serves as the only anchor text. */}
+                        <div className="text-2xl font-bold text-[color:var(--brand-ink)] group-hover:text-[color:var(--brand-red-dark)] transition-colors duration-300">
+                          <Link 
+                            href={`/locations/${area.slug}`} 
+                            // The after:absolute trick stretches the clickable area of this specific text link to cover the entire parent card.
+                            className="after:absolute after:inset-0 focus:outline-none"
+                            aria-label={`View home care services in ${area.name}`}
+                          >
+                            {area.name}, CA
+                          </Link>
+                        </div>
 
                         <p className="mt-3 text-sm leading-relaxed text-[color:var(--brand-ink)]/60 line-clamp-2">
                           {area.description}
@@ -248,7 +256,7 @@ export default function LocationsDirectory() {
 
                       </div>
 
-                    </Link>
+                    </div>
 
                   </Reveal>
                 </li>
