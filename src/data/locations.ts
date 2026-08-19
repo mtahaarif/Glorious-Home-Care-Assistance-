@@ -1,7 +1,7 @@
 export const locationsHero = {
   title: "Areas We Serve",
   subtitle: "Proudly Serving Communities Across the Bay Area and California",
-  bannerImage: "/areas-we-serve.jpg", // Path to your banner image in public/images/
+  bannerImage: "/areas-we-serve.jpg", 
 };
 
 export const locationsIntro = {
@@ -26,13 +26,12 @@ export const serviceCounties = [
   "Stanislaus County"
 ];
 
-// Extracted from the Bay Area map flyer pins, updated with SEO description2
 // Extracted from the Bay Area map flyer pins
 export const serviceAreas = [
   { 
     name: "Santa Rosa", 
     slug: "santa-rosa", 
-    description: "Comprehensive home care and companion services for seniors and adults in Santa Rosa.",
+    description: "Comprehensive home care and companion services tailored for seniors living in Santa Rosa.",
     aboutBody: [
       "At Glorious Home Care Assistance, we are deeply committed to helping seniors and older adults in Santa Rosa maintain their independence in the comfort of their own homes.",
       "From the quiet neighborhoods of Bennett Valley to the historic McDonald district, our locally-managed caregivers understand the unique lifestyle of Sonoma County residents. We provide highly personalized care plans designed to keep your loved ones safe, engaged, and thriving without the need for stressful facility relocation.",
@@ -42,7 +41,7 @@ export const serviceAreas = [
   { 
     name: "Rohnert Park", 
     slug: "rohnert-park", 
-    description: "Dedicated in-home support, personal care, and respite care in Rohnert Park.",
+    description: "Dedicated in-home support, personal care assistance, and respite relief for families in Rohnert Park.",
     aboutBody: [
       "Families across Rohnert Park trust Glorious Home Care Assistance to deliver compassionate, dignified home care tailored to the specific needs of their aging loved ones.",
       "Known as the 'Friendly City,' Rohnert Park is a wonderful place to retire. We help seniors continue to enjoy their community safely by assisting with daily chores, medication management, and mobility support directly within their familiar living spaces.",
@@ -52,7 +51,7 @@ export const serviceAreas = [
   { 
     name: "Petaluma", 
     slug: "petaluma", 
-    description: "Trusted caregivers providing daily living assistance and transportation in Petaluma.",
+    description: "Trusted caregivers providing daily living support, mobility assistance, and transportation throughout Petaluma.",
     aboutBody: [
       "Preserving the dignity and independence of seniors in Petaluma is at the very heart of the Glorious Home Care Assistance mission.",
       "Whether it involves helping a loved one navigate the historic downtown area safely or providing vigilant post-hospital recovery support at home, our dedicated Petaluma caregivers are equipped to handle a wide spectrum of non-medical care needs.",
@@ -62,7 +61,7 @@ export const serviceAreas = [
   { 
     name: "Napa", 
     slug: "napa", 
-    description: "Personalized non-medical home care and post-hospital recovery services in Napa.",
+    description: "Personalized non-medical home health solutions and post-hospital recovery care located in Napa.",
     aboutBody: [
       "We believe that seniors living in Napa County deserve to enjoy the beauty of the wine country from the absolute comfort and safety of their own homes.",
       "Glorious Home Care Assistance provides Napa families with premium, customized home care solutions. Our caregivers assist with vital daily routines, personal hygiene, and cognitive engagement, ensuring that age-related challenges never compromise a client's quality of life.",
@@ -72,7 +71,7 @@ export const serviceAreas = [
   { 
     name: "Vacaville", 
     slug: "vacaville", 
-    description: "Reliable respite, companionship, and daily living support for residents of Vacaville.",
+    description: "Reliable respite, engaging companionship, and vital daily living support for residents of Vacaville.",
     aboutBody: [
       "Glorious Home Care Assistance is proud to provide the Vacaville community with dependable, professional in-home care that prioritizes senior safety and familial peace of mind.",
       "We understand that every individual ages differently. That is why our Vacaville care plans are built entirely around the specific routines, preferences, and health requirements of your loved one, allowing them to age in place gracefully.",
@@ -82,7 +81,7 @@ export const serviceAreas = [
   { 
     name: "Fairfield", 
     slug: "fairfield", 
-    description: "Compassionate aide and companion care helping individuals age in place in Fairfield.",
+    description: "Compassionate aide services and dedicated companion care helping older adults age in place in Fairfield.",
     aboutBody: [
       "For families in Fairfield seeking a trustworthy alternative to assisted living facilities, Glorious Home Care Assistance offers the highest standard of in-home care.",
       "Our approach focuses on empowering older adults to remain self-sufficient. Our Fairfield caregivers seamlessly integrate into the home environment, providing respectful assistance with bathing, grooming, meal preparation, and light housekeeping.",
@@ -92,7 +91,7 @@ export const serviceAreas = [
   { 
     name: "San Rafael", 
     slug: "san-rafael", 
-    description: "Comprehensive home care and companion services for seniors and adults in San Rafael.",
+    description: "Holistic in-home assistance and expert senior companionship covering the San Rafael community.",
     aboutBody: [
       "Glorious Home Care Assistance provides San Rafael families with specialized, non-medical home care designed to elevate the daily lives of local seniors.",
       "From the peaceful streets of Terra Linda to Peacock Gap, we help San Rafael residents overcome the physical and cognitive hurdles of aging. Our caregivers are thoroughly trained to manage daily living activities while encouraging joy, movement, and mental stimulation.",
@@ -102,7 +101,7 @@ export const serviceAreas = [
   { 
     name: "Martinez", 
     slug: "martinez", 
-    description: "Dedicated in-home support, personal care, and respite care in Martinez.",
+    description: "Professional personal care, overnight monitoring, and flexible respite support based in Martinez.",
     aboutBody: [
       "At Glorious Home Care Assistance, we understand the incredible value of keeping seniors in Martinez connected to the homes and neighborhoods they have known for years.",
       "Our locally managed caregiving team is deeply familiar with the Martinez community. We provide attentive, one-on-one personal care that ensures your loved one receives prompt support exactly when they need it, avoiding the rigid schedules of institutional care.",
@@ -112,7 +111,7 @@ export const serviceAreas = [
   { 
     name: "Concord", 
     slug: "concord", 
-    description: "Trusted caregivers providing daily living assistance and transportation in Concord.",
+    description: "Dependable local caregivers offering household assistance and safe transportation within Concord.",
     aboutBody: [
       "Helping seniors in Concord stay active, secure, and independent is the primary focus of the team at Glorious Home Care Assistance.",
       "We recognize that remaining at home requires a robust support system. Our Concord caregivers provide vital assistance with everything from safe shower transfers and medication reminders to grocery shopping and preparing healthy, delicious meals.",
@@ -122,7 +121,7 @@ export const serviceAreas = [
   { 
     name: "Berkeley", 
     slug: "berkeley", 
-    description: "Personalized non-medical home care and post-hospital recovery services in Berkeley.",
+    description: "Customized aging-in-place solutions and transitional post-hospital care serving Berkeley.",
     aboutBody: [
       "Glorious Home Care Assistance provides the vibrant Berkeley community with holistic, client-centered home care designed to promote physical safety and emotional well-being.",
       "We know that Berkeley seniors value their independence and intellectual engagement. Our caregivers do more than just assist with daily chores; they foster meaningful connections, engage in stimulating conversation, and help clients safely explore their local community.",
@@ -132,7 +131,7 @@ export const serviceAreas = [
   { 
     name: "Walnut Creek", 
     slug: "walnut-creek", 
-    description: "Reliable respite, companionship, and daily living support for residents of Walnut Creek.",
+    description: "Premium respite relief, daily hygiene support, and heartfelt companionship for Walnut Creek families.",
     aboutBody: [
       "Families throughout Walnut Creek rely on Glorious Home Care Assistance to provide seamless, premium care coordination right in the comfort of home.",
       "Aging gracefully requires addressing both physical and emotional needs. Our Walnut Creek caregivers are dedicated to assisting with personal hygiene, meal preparation, and mobility, while also ensuring your loved one feels heard, respected, and valued.",
@@ -142,7 +141,7 @@ export const serviceAreas = [
   { 
     name: "San Francisco", 
     slug: "san-francisco", 
-    description: "Compassionate aide and companion care helping individuals age in place in San Francisco.",
+    description: "Specialized urban home care, dementia support, and dedicated aides for seniors in San Francisco.",
     aboutBody: [
       "Navigating life in San Francisco can become increasingly difficult with age, but Glorious Home Care Assistance ensures seniors can continue to enjoy city living safely and comfortably.",
       "Our highly vetted San Francisco caregivers provide the essential support needed to make living at home stress-free. From navigating stairs and managing household errands to providing vigilant fall-prevention monitoring, we cover all aspects of daily living.",
@@ -152,7 +151,7 @@ export const serviceAreas = [
   { 
     name: "Oakland", 
     slug: "oakland", 
-    description: "Comprehensive home care and companion services for seniors and adults in Oakland.",
+    description: "Culturally competent, respectful personal care and daily living assistance provided throughout Oakland.",
     aboutBody: [
       "Glorious Home Care Assistance is deeply committed to serving families across Oakland with trustworthy, culturally competent care that respects every individual’s dignity.",
       "We believe that every senior deserves to age in the environment they love most. Our Oakland caregivers assist with vital routines like dressing, bathing, and medication reminders, while always fostering a warm, joyful atmosphere inside the home.",
@@ -162,7 +161,7 @@ export const serviceAreas = [
   { 
     name: "Daly City", 
     slug: "daly-city", 
-    description: "Dedicated in-home support, personal care, and respite care in Daly City.",
+    description: "Attentive 24-hour support, light housekeeping, and mobility care designed for Daly City residents.",
     aboutBody: [
       "Our locally-based Daly City caregivers ensure that your loved ones never have to face the physical or emotional challenges of aging alone.",
       "At Glorious Home Care Assistance, we specialize in making homes safer and more manageable. We assist Daly City residents with light housekeeping, nutritious meal preparation, and personal grooming, removing the daily frictions that can lead to frustration or injury.",
@@ -172,7 +171,7 @@ export const serviceAreas = [
   { 
     name: "Hayward", 
     slug: "hayward", 
-    description: "Trusted caregivers providing daily living assistance and transportation in Hayward.",
+    description: "Empowering senior care options including meal preparation and errand assistance available in Hayward.",
     aboutBody: [
       "We empower seniors in Hayward to maintain their daily routines safely, providing expert in-home assistance that honors their personal preferences and lifestyle.",
       "From the East Bay hills to the shoreline, our dedicated aides support Hayward families by stepping in to manage the heavy lifting of caregiving. We assist with mobility, personal hygiene, and cognitive stimulation to keep clients thriving at home.",
@@ -182,7 +181,7 @@ export const serviceAreas = [
   { 
     name: "San Mateo", 
     slug: "san-mateo", 
-    description: "Personalized non-medical home care and post-hospital recovery services in San Mateo.",
+    description: "Exceptional non-medical care plans and post-operative recovery monitoring in San Mateo.",
     aboutBody: [
       "Families across San Mateo trust Glorious Home Care Assistance to provide dignified, high-quality care that enables older adults to safely age in place.",
       "Whether assisting with intimate personal hygiene, offering steady physical support during walks, or providing gentle reminders for daily medications, our San Mateo team delivers exceptional care right to your door with absolute professionalism.",
@@ -192,7 +191,7 @@ export const serviceAreas = [
   { 
     name: "Pleasanton", 
     slug: "pleasanton", 
-    description: "Reliable respite, companionship, and daily living support for residents of Pleasanton.",
+    description: "Consistent caregiver support, engaging social interaction, and safety monitoring in Pleasanton.",
     aboutBody: [
       "Families in Pleasanton rely on Glorious Home Care Assistance for seamless, highly communicative home care coordination and support.",
       "We know that isolation and physical limitations are common challenges for seniors. Our Pleasanton caregivers are trained to provide both robust physical assistance and deeply engaging companionship, ensuring clients remain socially active and emotionally supported.",
@@ -202,7 +201,7 @@ export const serviceAreas = [
   { 
     name: "San Bruno", 
     slug: "san-bruno", 
-    description: "Compassionate aide and companion care helping individuals age in place in San Bruno.",
+    description: "Heartfelt daily assistance, medication reminders, and memory care helping seniors in San Bruno.",
     aboutBody: [
       "Glorious Home Care Assistance provides comprehensive, non-medical care solutions to the San Bruno community, ensuring seniors can enjoy a high quality of life without leaving their cherished homes.",
       "Our caregivers are experts at adapting to the unique home environments and personal routines of our clients. In San Bruno, we assist with everything from safe shower transfers and grooming to preparing fresh meals and maintaining a tidy household.",
@@ -212,7 +211,7 @@ export const serviceAreas = [
   { 
     name: "Milpitas", 
     slug: "milpitas", 
-    description: "Comprehensive home care and companion services for seniors and adults in Milpitas.",
+    description: "Fast, responsive home care coordination and dedicated companion aides serving the Milpitas area.",
     aboutBody: [
       "Located right here in the South Bay, our Milpitas caregivers are uniquely positioned to offer fast, responsive, and deeply compassionate care to local families.",
       "We understand that the decision to seek in-home care is often made during stressful times. Our Milpitas team works rapidly to implement customized care plans that address safety risks, assist with personal care, and stabilize daily routines for older adults.",
@@ -222,7 +221,7 @@ export const serviceAreas = [
   { 
     name: "Palo Alto", 
     slug: "palo-alto", 
-    description: "Dedicated in-home support, personal care, and respite care in Palo Alto.",
+    description: "Highly customized, premium non-medical care and vigilant safety monitoring for Palo Alto families.",
     aboutBody: [
       "We bring premium, highly customized home care to Palo Alto residents, focusing on holistic wellness, robust safety management, and dignified personal assistance.",
       "Our caregivers understand the high standards of Palo Alto families. We go beyond basic chores to provide proactive care—encouraging cognitive engagement, assisting safely with mobility, and ensuring nutritional needs are meticulously met.",
@@ -232,7 +231,7 @@ export const serviceAreas = [
   { 
     name: "San Jose", 
     slug: "san-jose", 
-    description: "Trusted caregivers providing daily living assistance and transportation in San Jose.",
+    description: "Top-tier daily living support, transportation, and comprehensive elder care located in San Jose.",
     aboutBody: [
       "As a trusted provider across San Jose, Glorious Home Care Assistance helps local seniors navigate everything from daily chores to complex post-operative recovery, right in their own homes.",
       "San Jose is a vast and diverse city, and our locally managed caregivers are deeply embedded in the community. We provide personalized support that respects cultural preferences, family routines, and individual health requirements to ensure optimal aging in place.",
@@ -242,7 +241,7 @@ export const serviceAreas = [
   { 
     name: "Santa Clara", 
     slug: "santa-clara", 
-    description: "Dedicated in-home support, personal care, and respite care in Santa Clara.",
+    description: "Seamless transition care, rigorous personal hygiene support, and 24/7 assistance in Santa Clara.",
     aboutBody: [
       "Our Santa Clara care team works closely with local families and medical facilities to ensure seamless transitions home and incredibly dependable ongoing support.",
       "We know that true caregiving is about more than just tasks; it is about building trust. Our caregivers in Santa Clara assist with vital daily living activities while fostering warm, meaningful connections that drastically improve a senior's daily outlook.",
@@ -252,7 +251,7 @@ export const serviceAreas = [
   { 
     name: "Mountain View", 
     slug: "mountain-view", 
-    description: "Personalized non-medical home care and post-hospital recovery services in Mountain View.",
+    description: "Empathetic aging-in-place services and specialized physical support assisting Mountain View seniors.",
     aboutBody: [
       "Glorious Home Care Assistance provides specialized aging-in-place services for Mountain View residents, combining expert care coordination with deeply empathetic daily assistance.",
       "Our caregivers remove the friction from daily living. We help seniors in Mountain View maintain their independence by managing medication schedules, preparing nutritious meals, and providing steady physical support to prevent dangerous falls.",
@@ -262,7 +261,7 @@ export const serviceAreas = [
   { 
     name: "Sunnyvale", 
     slug: "sunnyvale", 
-    description: "Reliable respite, companionship, and daily living support for residents of Sunnyvale.",
+    description: "Flexible hourly companionship and intensive long-term care solutions for the Sunnyvale community.",
     aboutBody: [
       "From medication reminders to joyful companionship, our Sunnyvale caregivers are dedicated to elevating the daily lives of the seniors and older adults they serve.",
       "We understand that many families in Sunnyvale are juggling demanding careers and caregiving responsibilities. Our team steps in to provide reliable, professional support—handling the physical and logistical challenges of elder care with grace and expertise.",
@@ -272,7 +271,7 @@ export const serviceAreas = [
   { 
     name: "Cupertino", 
     slug: "cupertino", 
-    description: "Compassionate aide and companion care helping individuals age in place in Cupertino.",
+    description: "Discreet, respectful personal care and household management tailored for Cupertino residents.",
     aboutBody: [
       "We offer highly personalized, premium care plans for families in Cupertino, ensuring every client receives the precise level of support they need to thrive at home.",
       "Our rigorously screened Cupertino caregivers are trained to provide discreet, respectful assistance with personal care, mobility, and household management, allowing seniors to maintain their dignity and preferred routines.",
@@ -282,7 +281,7 @@ export const serviceAreas = [
   { 
     name: "Campbell", 
     slug: "campbell", 
-    description: "Comprehensive home care and companion services for seniors and adults in Campbell.",
+    description: "One-on-one home care, fall prevention, and nutritional meal prep focused on Campbell seniors.",
     aboutBody: [
       "Our Campbell-based care professionals are deeply committed to preserving the independence, health, and dignity of local seniors through attentive, one-on-one home care.",
       "We help Campbell residents stay safely engaged with their daily lives. By taking over strenuous household chores, managing meal preparation, and providing steady physical support, our caregivers eliminate the daily hazards that can threaten a senior's independence.",
@@ -292,7 +291,7 @@ export const serviceAreas = [
   { 
     name: "Los Gatos", 
     slug: "los-gatos", 
-    description: "Dedicated in-home support, personal care, and respite care in Los Gatos.",
+    description: "Bespoke senior care, cognitive engagement, and absolute peace of mind for families in Los Gatos.",
     aboutBody: [
       "We provide families in Los Gatos with exceptional, customized care solutions, allowing seniors to safely enjoy the beauty of their community from the comfort of their own homes.",
       "Our caregivers are carefully selected not just for their technical skills, but for their warmth and empathy. In Los Gatos, we provide a holistic approach to care that encompasses physical assistance, cognitive engagement, and genuine companionship.",

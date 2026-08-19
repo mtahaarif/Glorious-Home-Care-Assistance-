@@ -26,7 +26,7 @@ export default function ServicesPage() {
   const processSectionRef = useRef<HTMLElement>(null);
   const [processProgress, setProcessProgress] = useState(0);
   
-  // SEO Fix: mounted state prevents mobile markup from causing duplicate text/heading penalties during SSR
+  // SEO Fix: mounted state prevents mobile markup and carousel clones from causing duplicate text/heading penalties during SSR
   const [mounted, setMounted] = useState(false);
 
   const SCROLL_SPEED = 0.6; // px per frame
@@ -54,7 +54,7 @@ export default function ServicesPage() {
   const animate = useCallback(() => {
     // 1. Horizontal Carousel Auto-Scroll
     const el = scrollContainerRef.current;
-    if (el && !isPausedRef.current) {
+    if (el && !isPausedRef.current && mounted) {
       el.scrollLeft += SCROLL_SPEED;
       const oneSetWidth = el.scrollWidth / 3;
       if (el.scrollLeft >= oneSetWidth * 2) {
@@ -76,22 +76,71 @@ export default function ServicesPage() {
     }
 
     animationRef.current = requestAnimationFrame(animate);
-  }, []);
+  }, [mounted]);
 
+  // Handle Hydration cleanly
   useEffect(() => {
     setMounted(true);
-    const el = scrollContainerRef.current;
-    if (el) {
-      el.scrollLeft = el.scrollWidth / 3;
+  }, []);
+
+  // Sync scroll position once clones are rendered
+  useEffect(() => {
+    if (mounted) {
+      const el = scrollContainerRef.current;
+      if (el) {
+        // Automatically jump to the middle (original set) so clones safely pad the left and right without flickering
+        el.scrollLeft = el.scrollWidth / 3;
+      }
+      animationRef.current = requestAnimationFrame(animate);
+      return () => {
+        if (animationRef.current) cancelAnimationFrame(animationRef.current);
+      };
     }
-    animationRef.current = requestAnimationFrame(animate);
-    return () => {
-      if (animationRef.current) cancelAnimationFrame(animationRef.current);
-    };
-  }, [animate]);
+  }, [mounted, animate]);
 
   const pauseScroll = () => { isPausedRef.current = true; };
   const resumeScroll = () => { isPausedRef.current = false; };
+
+  // Helper to render individual Service Cards cleanly for SEO
+  const renderServiceCard = (service: typeof mainServices[0], index: number, isOriginal: boolean) => (
+    <Link 
+      href={`/services/${service.slug}`} 
+      aria-label={!isOriginal ? undefined : `View details for ${service.title}`}
+      tabIndex={!isOriginal ? -1 : 0}
+      className="w-[320px] sm:w-[380px] flex flex-col rounded-3xl bg-white border border-brand-cream/50 shadow-md transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group/card overflow-hidden"
+    >
+      <div className="relative h-[220px] w-full overflow-hidden bg-brand-cream shrink-0">
+        {service.bannerImage && (
+          <Image 
+            src={service.bannerImage} 
+            alt={`${service.title} In-Home Care Services`} 
+            width={380} 
+            height={220} 
+            sizes="(max-width: 768px) 320px, 380px" 
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover/card:scale-110" 
+          />
+        )}
+        <div className="absolute inset-0 bg-brand-ink/10 group-hover/card:bg-transparent transition-colors duration-300"></div>
+      </div>
+      <div className="p-8 flex flex-col flex-grow">
+        
+        {/* Semantic HTML toggle for duplicates: Only original gets an h3 tag to prevent heading hierarchy bloat */}
+        {isOriginal ? (
+          <h3 className="text-xl font-bold text-brand-ink mb-3 group-hover/card:text-brand-red transition-colors">{service.title}</h3>
+        ) : (
+          <div className="text-xl font-bold text-brand-ink mb-3 group-hover/card:text-brand-red transition-colors">{service.title}</div>
+        )}
+        
+        <p className="text-muted leading-relaxed mb-6 flex-grow">{service.description}</p>
+        
+        {/* Unique anchor text context strictly reserved for crawlers to prevent identical link texts */}
+        <div className="flex items-center gap-2 text-brand-red-dark font-bold text-sm uppercase tracking-wider mt-auto group-hover/card:text-brand-red transition-colors">
+          <span>View Details {isOriginal && <span className="sr-only"> {service.title}</span>}</span>
+          <svg className="w-5 h-5 transform transition-transform group-hover/card:translate-x-1" width={20} height={20} fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+        </div>
+      </div>
+    </Link>
+  );
 
   return (
     // Crucial: Use overflow-x-clip instead of overflow-hidden so mobile sticky positioning works
@@ -239,52 +288,26 @@ export default function ServicesPage() {
           onTouchEnd={resumeScroll}
           className="flex overflow-x-auto gap-6 px-4 md:px-12 xl:px-24 scrollbar-hide pb-12 pt-4"
         >
-          {/* SEO Fix: Only the middle array renders semantically for crawlers to prevent duplicate heading and duplicate content warnings */}
-          {[...mainServices, ...mainServices, ...mainServices].map((service, index) => {
-            const isOriginal = index >= mainServices.length && index < mainServices.length * 2;
-            
-            return (
-              <li key={`carousel-${service.slug}-${index}`} className="shrink-0 flex" aria-hidden={!isOriginal ? "true" : undefined}>
-                <Link 
-                  href={`/services/${service.slug}`} 
-                  aria-label={!isOriginal ? undefined : `View details for ${service.title}`}
-                  tabIndex={!isOriginal ? -1 : 0}
-                  className="w-[320px] sm:w-[380px] flex flex-col rounded-3xl bg-white border border-brand-cream/50 shadow-md transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group/card overflow-hidden"
-                >
-                  <div className="relative h-[220px] w-full overflow-hidden bg-brand-cream shrink-0">
-                    {service.bannerImage && (
-                      <Image 
-                        src={service.bannerImage} 
-                        alt={isOriginal ? `${service.title} Services` : ""} 
-                        width={380} 
-                        height={220} 
-                        sizes="(max-width: 768px) 320px, 380px" 
-                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover/card:scale-110" 
-                      />
-                    )}
-                    <div className="absolute inset-0 bg-brand-ink/10 group-hover/card:bg-transparent transition-colors duration-300"></div>
-                  </div>
-                  <div className="p-8 flex flex-col flex-grow">
-                    
-                    {/* Semantic HTML toggle for duplicates */}
-                    {isOriginal ? (
-                      <h3 className="text-xl font-bold text-brand-ink mb-3 group-hover/card:text-brand-red transition-colors">{service.title}</h3>
-                    ) : (
-                      <div className="text-xl font-bold text-brand-ink mb-3 group-hover/card:text-brand-red transition-colors">{service.title}</div>
-                    )}
-                    
-                    <p className="text-muted leading-relaxed mb-6 flex-grow">{service.description}</p>
-                    
-                    {/* Unique anchor text context */}
-                    <div className="flex items-center gap-2 text-brand-red-dark font-bold text-sm uppercase tracking-wider mt-auto group-hover/card:text-brand-red transition-colors">
-                      <span>View Details <span className="sr-only">about {service.title}</span></span>
-                      <svg className="w-5 h-5 transform transition-transform group-hover/card:translate-x-1" width={20} height={20} fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                    </div>
-                  </div>
-                </Link>
-              </li>
-            );
-          })}
+          {/* LEFT CLONES (Client-side only) - Prevents duplicate text and heading penalties on SSR HTML */}
+          {mounted && mainServices.map((service, index) => (
+            <li key={`clone-left-${service.slug}-${index}`} className="shrink-0 flex" aria-hidden="true">
+              {renderServiceCard(service, index, false)}
+            </li>
+          ))}
+
+          {/* ORIGINAL CARDS (Server-side & Client-side) */}
+          {mainServices.map((service, index) => (
+            <li key={`orig-${service.slug}-${index}`} className="shrink-0 flex">
+              {renderServiceCard(service, index, true)}
+            </li>
+          ))}
+
+          {/* RIGHT CLONES (Client-side only) - Prevents duplicate text and heading penalties on SSR HTML */}
+          {mounted && mainServices.map((service, index) => (
+            <li key={`clone-right-${service.slug}-${index}`} className="shrink-0 flex" aria-hidden="true">
+              {renderServiceCard(service, index, false)}
+            </li>
+          ))}
         </ul>
       </section>
 
@@ -321,7 +344,7 @@ export default function ServicesPage() {
                         {group.image && (
                           <Image 
                             src={group.image}
-                            alt={`${group.title} Care`}
+                            alt={`${group.title} Care Services for Seniors`}
                             width={800}
                             height={600}
                             sizes="(max-width: 768px) 100vw, 33vw"
@@ -349,7 +372,7 @@ export default function ServicesPage() {
       </div>
 
       {/* MOBILE VERSION (Hidden on Desktop) */}
-      {/* SEO Fix: Conditional rendering completely removes the duplicate text from SSR HTML for crawler bots */}
+      {/* SEO Fix: Conditional rendering completely removes the duplicate text & links from SSR HTML for crawler bots */}
       <div className="block md:hidden" aria-hidden="true">
         {mounted ? (
           <section className="bg-surface relative">
@@ -388,7 +411,7 @@ export default function ServicesPage() {
                           {group.image && (
                             <Image 
                               src={group.image} 
-                              alt={`${group.title} Care Mobile`} 
+                              alt={`${group.title} In-Home Care Mobile View`} 
                               width={800} 
                               height={600} 
                               sizes="100vw" 
@@ -406,7 +429,7 @@ export default function ServicesPage() {
                           </p>
                           <Link href="#home-care-options" aria-label={`Learn more about ${group.title}`} className="group inline-flex items-center gap-2 text-brand-red font-bold text-sm uppercase tracking-wider transition-colors hover:text-brand-red-dark">
                             {/* Unique anchor text context */}
-                            <span>Learn More <span className="sr-only">about {group.title}</span></span>
+                            <span>Learn More <span className="sr-only"> {group.title}</span></span>
                             <svg className="w-5 h-5 transform transition-transform group-hover:translate-x-1" width={20} height={20} fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                             </svg>
@@ -592,7 +615,6 @@ export default function ServicesPage() {
           <Reveal delay={0.3}>
             <div className="rounded-3xl bg-white p-8 border border-brand-cream shadow-sm text-center max-w-4xl mx-auto">
               <p className="text-muted leading-relaxed">
-                {/* SEO Fix: Changed duplicate 'at home senior care' bold text to professional caregiver services */}
                 Our mission is to elevate the standard of <strong>Home care in Bay area</strong> communities. Whether your family requires temporary respite care, daily assistance with activities of daily living, or specialized 24/7 care, our team is equipped to deliver. Experience the difference of premium <strong>professional caregiver services</strong> designed to keep your loved ones thriving in the comfort of their own home.
               </p>
             </div>

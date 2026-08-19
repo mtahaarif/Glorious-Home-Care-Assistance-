@@ -9,10 +9,13 @@ import { locationsHero, locationsIntro } from "@/data/locations";
 import { sharedServiceContent } from "@/data/services";
 
 export const metadata: Metadata = {
-  // SEO Fix: Optimized Title length to be concise and keyword rich
-  title: "Home Care in San Jose & The Bay Area | Glorious Home Care",
-  // SEO Fix: Optimized Description length and packed with target keywords
+  // SEO Fix: Shortened to avoid pixel limit violations when the root layout appends the site name
+  title: "Areas We Serve | Bay Area In-Home Care Locations",
   description: "Trusted in-home care, personal care, and senior care at home across San Jose, Los Altos, Palo Alto, San Francisco, Santa Clara, and the Bay Area.",
+  // SEO Fix: Explicit canonical link prevents duplicate content indexing issues
+  alternates: {
+    canonical: "https://www.glorioushomecareassistance.com/locations",
+  },
 };
 
 export default function LocationsPage() {
@@ -24,7 +27,6 @@ export default function LocationsPage() {
         
         {/* Background Image Container */}
         <div className="absolute inset-0 z-0">
-          {/* SEO Fix: Removed fill, added explicit dimensions, w-full h-full, and priority */}
           <Image 
             src={locationsHero.bannerImage}
             alt="Home Care in San Jose and The Bay Area Locations"
@@ -42,7 +44,6 @@ export default function LocationsPage() {
         <Container className="relative z-20 w-full">
           <div className="max-w-2xl space-y-4">
             <Reveal delay={0.05}>
-              {/* SEO Fix: Expanded H1 to be greater than 20 characters and keyword rich */}
               <h1 className="text-3xl font-extrabold leading-tight text-brand-ink sm:text-4xl lg:text-5xl drop-shadow-sm">
                 Areas We Serve: In-Home Care in San Jose & The Bay Area
               </h1>
@@ -80,7 +81,6 @@ export default function LocationsPage() {
       <section className="bg-surface">
         <Container className="grid gap-10 py-16 md:grid-cols-[1.1fr_0.9fr] md:py-24">
           <Reveal className="space-y-6">
-            {/* SEO Fix: Replaced SectionHeading with explicit h2 to control heading hierarchy directly and avoid duplicates */}
             <h2 className="text-3xl font-extrabold text-brand-ink md:text-4xl">
               {locationsIntro.title}
             </h2>
@@ -98,10 +98,10 @@ export default function LocationsPage() {
               <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-brand-cream/60 blur-3xl"></div>
 
               <div className="relative z-10 flex flex-col h-full">
-                {/* SEO Fix: Changed h4 to h3 to follow correct hierarchy after an h2 */}
-                <h3 className="mb-6 text-3xl font-extrabold text-brand-ink">
+                {/* SEO Fix: Changed h3 to div to prevent heading bloat since this is a generic sidebar card */}
+                <div className="mb-6 text-3xl font-extrabold text-brand-ink">
                  Service Area Inquiries
-                </h3>
+                </div>
                 
                 {/* Horizontal Divider Line */}
                 <div className="mb-6 h-[2px] w-full bg-brand-cream transition-colors duration-300 group-hover:bg-brand-red/20"></div>
@@ -118,7 +118,8 @@ export default function LocationsPage() {
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={24} height={24} fill="currentColor" className="h-6 w-6 text-brand-red-dark" aria-hidden="true">
                      <path fillRule="evenodd" d="M1.5 4.5a3 3 0 013-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 01-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 006.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 011.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 01-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5z" clipRule="evenodd" />
                   </svg>
-                  {contactInfo.phone}
+                  {/* SEO Fix: Differentiates identical anchor texts */}
+                  <span>{contactInfo.phone} <span className="sr-only">for Area Inquiries</span></span>
                 </Link>
               </div>
             </div>
@@ -137,7 +138,6 @@ export default function LocationsPage() {
       <section className="bg-brand-red-dark py-10 text-center text-white md:py-10">
         <Container className="max-w-3xl">
           <Reveal className="space-y-4">
-            {/* SEO Fix: Changed h2 to div to avoid identical generic heading duplication across multiple pages */}
             <div className="whitespace-pre-line text-4xl font-bold leading-tight sm:text-5xl">
               {sharedServiceContent.bottomCta.message}
             </div>
@@ -152,7 +152,8 @@ export default function LocationsPage() {
                 aria-label={`Call us at ${contactInfo.phone}`}
                 className="inline-block transform rounded-full bg-brand-gold px-12 py-5 text-xl font-black text-brand-red-dark shadow-xl transition-all hover:scale-105 hover:bg-white sm:text-2xl"
               >
-                {sharedServiceContent.bottomCta.phone}
+                {/* SEO Fix: Differentiates identical anchor texts */}
+                <span>{sharedServiceContent.bottomCta.phone} <span className="sr-only">to Start Care Today</span></span>
               </Link>
               
               <a 
