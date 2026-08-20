@@ -142,8 +142,6 @@ export default function Home() {
             <Reveal delay={0.05}>
               <h1 className="text-3xl font-extrabold leading-tight text-brand-ink sm:text-4xl lg:text-5xl drop-shadow-sm">
                 {homeHero.headline}
-                {/* SEO FIX: Hidden text to include title tags in H1 for proportion */}
-                <span className="sr-only"> - Home Care in San Jose &amp; Bay Area</span>
               </h1>
             </Reveal>
             
