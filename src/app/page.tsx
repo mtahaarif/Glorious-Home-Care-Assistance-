@@ -113,7 +113,7 @@ export default function Home() {
               alt={`Glorious Home Care Banner ${index + 1}`}
               width={1584}   
               height={672}   
-              priority={index === 0}
+              loading="lazy"
               className={`absolute inset-0 w-full h-full object-cover object-center md:object-right transition-opacity duration-[2000ms] ease-in-out ${
                 index === currentImageIndex ? "opacity-100" : "opacity-0"
               }`}

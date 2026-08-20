@@ -16,10 +16,10 @@ import {
 } from "@/data/referrals";
 
 export const metadata: Metadata = {
-  // SEO Fix: Shortened title to stay under 60 characters (~580px) and included target keyword
-  title: "Healthcare Referral Partners | San Jose Home Care",
-  // SEO Fix: Optimized description with local keywords
-  description: "Partner with our agency for reliable hospital discharge transitions and premium in-home care services across San Jose and the Bay Area.",
+  title: {
+    absolute: "Referral Partners | Glorious Home Care",
+  },
+  description: "Partner with Glorious Home Care Assistance to provide seamless, compassionate in-home care transitions for your patients.",
 };
 
 // Dynamic Benefit Icon Component (Automatically assigns a unique icon based on index)
@@ -78,7 +78,7 @@ export default function ReferralPartnersPage() {
             alt="Healthcare Referral Partners in San Jose"
             width={1925}
             height={817}
-            priority
+            loading="lazy"
             className="absolute inset-0 w-full h-full object-cover object-right"
             sizes="100vw"
           />

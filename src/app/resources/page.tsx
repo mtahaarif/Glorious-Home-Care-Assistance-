@@ -10,10 +10,10 @@ import { resourcesHero, resourcesIntro, resourceCategories } from "@/data/resour
 import { sharedServiceContent } from "@/data/services";
 
 export const metadata: Metadata = {
-  // SEO Fix: Optimized Title length to be under 60 characters
-  title: "Home Care Resources & Guides | Glorious Home Care",
-  // SEO Fix: Rich description that hits exact location keywords
-  description: "Explore our comprehensive guides on home care costs, preventing caregiver burnout, and safe hospital-to-home transitions in San Jose and the Bay Area.",
+  title: {
+    absolute: "Family Home Care Resources | Glorious Home Care",
+  },
+  description: "Helpful guides and resources for family caregivers navigating senior care, Alzheimer's support, and aging in place in California.",
 };
 
 // Custom Document Icon for the article links
@@ -53,7 +53,7 @@ export default function ResourcesPage() {
             alt="Family Resources for At Home Senior Care"
             width={1584}  // <-- Replaced 'fill' with explicit dimensions
             height={672}
-            priority      // <-- Added priority for LCP optimization
+            loading="lazy"
             className="absolute inset-0 w-full h-full object-cover object-[70%_center]"
             sizes="100vw"
           />

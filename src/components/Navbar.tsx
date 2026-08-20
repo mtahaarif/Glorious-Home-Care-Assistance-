@@ -39,12 +39,13 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Prevent background scrolling when mobile menu is open
+// Prevent background scrolling when mobile menu is open
   useEffect(() => {
     if (isMobileMenuOpen) {
-      document.body.style.overflow = "hidden";
+      // ✅ SEO FIX: Add class instead of injecting an inline style attribute
+      document.body.classList.add("overflow-hidden");
     } else {
-      document.body.style.overflow = "unset";
+      document.body.classList.remove("overflow-hidden");
     }
   }, [isMobileMenuOpen]);
 
@@ -70,7 +71,7 @@ export default function Navbar() {
                 width={50}
                 height={50}
                 className="relative z-10 h-10 w-auto xl:h-11" // Slightly smaller logo on standard laptops to save space
-                priority
+                loading="lazy"
               />
             </div>
             <div className="hidden flex-col sm:flex">

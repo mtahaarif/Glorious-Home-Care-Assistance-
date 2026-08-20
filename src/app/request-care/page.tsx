@@ -15,11 +15,14 @@ import {
 
 import RequestCareForm from "@/components/RequestCareForm";
 export const metadata: Metadata = {
-  // SEO Fix: Shortened the title and packed it with target keywords (under 60 chars)
-  title: "Request In-Home Care in San Jose | Glorious Home Care",
-  // SEO Fix: Expanded description with local keywords
+  // ✅ SEO FIX: 'absolute' forces Next.js to use exactly this 54-character string and ignore the root template
+  title: {
+    absolute: "Request In-Home Care in San Jose | Glorious Home Care",
+  },
   description: "Schedule a free consultation for in-home care, personal care, and senior care at home in San Jose and the Bay Area with Glorious Home Care Assistance.",
 };
+
+
 
 export default function RequestCarePage() {
   return (
@@ -36,7 +39,7 @@ export default function RequestCarePage() {
             alt="Request In-Home Care Services"
             width={1926}
             height={816}
-            priority
+            loading="lazy"
             className="absolute inset-0 w-full h-full object-cover object-center"
             sizes="100vw"
           />

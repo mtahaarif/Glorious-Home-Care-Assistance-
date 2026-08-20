@@ -195,6 +195,10 @@ export function generateStaticParams() {
 /* METADATA                                                                   */
 /* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
+/* METADATA                                                                   */
+/* -------------------------------------------------------------------------- */
+
 export async function generateMetadata({
   params,
 }: {
@@ -213,25 +217,31 @@ export async function generateMetadata({
     };
   }
 
-  // SEO Fix: Ensure absolute control over the title to prevent word repetition penalties.
+  // SEO Fix: Ensure absolute control over the title
   const cleanTitle = (currentService.pageData?.seoTitle || `${currentService.title} in San Jose & Bay Area`)
     .replace(/\s*\|\s*Glorious Home Care.*/gi, "");
     
   const optimizedTitle = cleanTitle.length > 50 ? cleanTitle.substring(0, 47) + "..." : cleanTitle;
 
-  // SEO Fix: Restrict description to max 160 characters (well under the 1000px limit)
+  // SEO Fix: Restrict description to max 160 characters
   const shortDesc = currentService.description.length > 75 
     ? currentService.description.substring(0, 75).trim() + "..." 
     : currentService.description;
+
+  // Create a single source of truth for the URL
+  const pageUrl = `https://www.glorioushomecareassistance.com/services/${currentService.slug}`;
 
   return {
     title: {
       absolute: `${optimizedTitle} | Glorious Home Care`,
     },
     description: `Trusted ${currentService.title.toLowerCase()} in San Jose and the Bay Area. ${shortDesc}`,
-    // SEO Fix: Explicitly link canonical to this dynamic slug to clear indexing duplication errors
     alternates: {
-      canonical: `https://www.glorioushomecareassistance.com/services/${currentService.slug}`,
+      canonical: pageUrl,
+    },
+    // ✅ SEO FIX: Ensure Open Graph URL is explicitly matching
+    openGraph: {
+      url: pageUrl,
     }
   };
 }
@@ -278,7 +288,7 @@ export default async function ServiceDetailPage({
             alt={`${title} Services in San Jose & The Bay Area`}
             width={1584}
             height={672}
-            priority
+            loading="lazy"
             className="absolute inset-0 w-full h-full object-cover object-center"
             sizes="100vw"
           />

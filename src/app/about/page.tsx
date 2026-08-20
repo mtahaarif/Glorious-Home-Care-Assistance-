@@ -118,7 +118,7 @@ export default function AboutPage() {
             alt="About Glorious Home Care Assistance"
             width={1584}
             height={672}
-            priority
+            loading="lazy"
             className="absolute inset-0 w-full h-full object-cover object-[70%_center]"
             sizes="100vw"
           />

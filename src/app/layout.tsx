@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Manrope } from "next/font/google";
+import { GoogleTagManager } from '@next/third-parties/google'; // ✅ SEO FIX: Import GTM Component
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import "./globals.css";
@@ -100,10 +101,17 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Replace this placeholder with your actual GTM Container ID when you get it from Google
+  const GTM_ID = "GTM-XXXXXXX"; 
+
   return (
     <html lang="en" className={`${manrope.variable} h-full antialiased`}>
       {/* Viewport & head tags are automatically handled by Next.js */}
       <body className="min-h-full bg-background text-foreground">
+        
+        {/* ✅ SEO FIX: Injects Google Tag Manager cleanly across all 59 pages without breaking hydration */}
+        <GoogleTagManager gtmId={GTM_ID} />
+
         <div className="flex min-h-screen flex-col">
           <Navbar />
           <main className="flex-1 pt-24">{children}</main>

@@ -1,23 +1,25 @@
 import type { Metadata } from "next";
 
+
 export const metadata: Metadata = {
-  // SEO Fix: 'absolute' forces Next.js to ignore the site-wide suffix template, keeping this perfectly under 580 pixels.
+  // SEO Fix: 'absolute' prevents the root layout from appending the site name, clearing word repetition penalties
   title: {
-    absolute: "In-Home Senior Care Services in San Jose & Bay Area",
+    absolute: "In-Home Senior Care Services | Glorious Home Care",
   },
-  
-  description:
-    "Providing compassionate in-home care, personal care, and senior care at home across San Jose, Los Altos, Palo Alto, San Francisco, and the wider Bay Area.",
-    
+  description: "Explore our comprehensive in-home care services across San Jose and the Bay Area, including personal care, companion care, respite care, and specialized 24/7 support.",
   alternates: {
     canonical: "https://www.glorioushomecareassistance.com/services",
+  },
+  // ✅ SEO FIX: Explicitly set the Open Graph URL to match the canonical URL
+  openGraph: {
+    url: "https://www.glorioushomecareassistance.com/services",
   },
 };
 
 export default function ServicesLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return <>{children}</>;
 }

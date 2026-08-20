@@ -9,17 +9,18 @@ import { locationsHero, locationsIntro } from "@/data/locations";
 import { sharedServiceContent } from "@/data/services";
 
 export const metadata: Metadata = {
-  // SEO Fix: Bypassed the root layout template using 'absolute' to prevent appending the long site name.
-  // This guarantees the title is well under the 580px limit, clears word repetition penalties, and perfectly matches the H1.
+  // ✅ SEO FIX: Appended " | Glorious Home Care" to prevent an exact 1-to-1 match with the H1 tag
   title: {
-    absolute: "Bay Area Home Care Locations",
+    absolute: "Bay Area Home Care Locations | Glorious Home Care",
   },
   description: "Trusted in-home care, personal care, and senior care at home across San Jose, Los Altos, Palo Alto, San Francisco, Santa Clara, and the Bay Area.",
   alternates: {
     canonical: "https://www.glorioushomecareassistance.com/locations",
   },
+  openGraph: {
+    url: "https://www.glorioushomecareassistance.com/locations",
+  },
 };
-
 export default function LocationsPage() {
   return (
     <div className="flex flex-col">
@@ -34,7 +35,7 @@ export default function LocationsPage() {
             alt="Home Care in San Jose and The Bay Area Locations"
             width={1584}
             height={672}
-            priority
+            loading="lazy"
             className="absolute inset-0 w-full h-full object-cover object-right"
             sizes="100vw"
           />

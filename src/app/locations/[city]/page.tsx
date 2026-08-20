@@ -28,16 +28,24 @@ export async function generateMetadata({ params }: { params: Promise<{ city: str
     };
   }
 
+  // Create a single source of truth for the URL to ensure Canonical and OG match perfectly
+  const pageUrl = `https://www.glorioushomecareassistance.com/locations/${area.slug}`;
+
   return {
-    // SEO Fix: 'absolute' prevents the root layout from appending the site name, clearing word repetition & length penalties
+    // ✅ SEO FIX: Appended " | Glorious Home Care" so it no longer identically matches the H1 on the page
     title: {
-      absolute: `In-Home Care Services in ${area.name}, CA`,
+      absolute: `In-Home Care Services in ${area.name}, CA | Glorious Home Care`,
     },
     // SEO Fix: Shortened to stay safely under the 1000px limit
     description: `Trusted in-home care services in ${area.name}, CA. We provide compassionate personal care and senior assistance to help your loved ones safely age at home.`,
+    
     // SEO Fix: Points directly to this exact city page to clear the "Canonical link points to a different page" error
     alternates: {
-      canonical: `https://www.glorioushomecareassistance.com/locations/${area.slug}`,
+      canonical: pageUrl,
+    },
+    // SEO FIX: Mirrors the canonical URL exactly to clear the Open Graph mismatch penalty
+    openGraph: {
+      url: pageUrl,
     },
   };
 }
@@ -74,7 +82,7 @@ export default async function CityLocationPage({ params }: { params: Promise<{ c
             alt={`${area.name} Home Care Services`}
             width={1584}
             height={672}
-            priority
+            loading="lazy"
             className="absolute inset-0 w-full h-full object-cover object-right"
             sizes="100vw"
           />
@@ -202,18 +210,22 @@ export default async function CityLocationPage({ params }: { params: Promise<{ c
             </h2>
           </div>
         
-          <style>{`
-            @keyframes infinite-scroll {
-              0% { transform: translateX(0); }
-              100% { transform: translateX(-50%); }
-            }
-            .animate-infinite-scroll {
-              animation: infinite-scroll 45s linear infinite;
-            }
-            .ticker-wrapper:hover .animate-infinite-scroll {
-              animation-play-state: paused;
-            }
-          `}</style>
+            <style
+            dangerouslySetInnerHTML={{
+              __html: `
+                @keyframes infinite-scroll {
+                  0% { transform: translateX(0); }
+                  100% { transform: translateX(-50%); }
+                }
+                .animate-infinite-scroll {
+                  animation: infinite-scroll 45s linear infinite;
+                }
+                .ticker-wrapper:hover .animate-infinite-scroll {
+                  animation-play-state: paused;
+                }
+              `,
+            }}
+          />
         
           <div className="relative mt-8 flex overflow-hidden ticker-wrapper">
             <div className="flex w-max animate-infinite-scroll gap-6 px-3">

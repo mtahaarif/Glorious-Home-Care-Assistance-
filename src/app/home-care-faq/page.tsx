@@ -10,10 +10,10 @@ import { contactInfo, homeCallouts } from "@/data/global";
 import { faqHero, faqIntro, faqCategories } from "@/data/faqs";
 
 export const metadata: Metadata = {
-  // SEO Fix: Concise, keyword-rich title under 60 characters
-  title: "Home Care FAQ | San Jose & Bay Area Senior Care",
-  // SEO Fix: Description packed with relevant local keywords
-  description: "Get answers to common questions about home care services, caregiver screening, costs, and insurance coverage in San Jose and the Bay Area.",
+  title: {
+    absolute: "Home Care FAQs | Glorious Home Care",
+  },
+  description: "Get answers to frequently asked questions about private-duty home care, caregiver matching, and senior support in the Bay Area.",
 };
 
 export default function FaqPage() {
@@ -31,7 +31,7 @@ export default function FaqPage() {
             alt="Frequently Asked Questions About Home Care"
             width={1677}
             height={938}
-            priority
+            loading="lazy"
             className="absolute inset-0 w-full h-full object-cover object-right"
             sizes="100vw"
           />

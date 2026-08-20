@@ -149,7 +149,7 @@ export default function ServicesPage() {
             alt="In-Home Senior Care Services in San Jose & The Bay Area"
             width={1584}
             height={672}
-            priority
+            loading="lazy"
             className="absolute inset-0 w-full h-full object-cover object-[80%_center]"
             sizes="100vw"
           />
